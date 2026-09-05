@@ -16,9 +16,21 @@ export default function MessageBubble({ role, content, timestamp }) {
         {emojis.map((emoji, index) => {
           const url = getNotoEmojiUrl(emoji);
           return (
-            <picture key={index}>
+            <picture key={index} className="emoji-picture">
               <source srcSet={url.webp} type="image/webp" />
-              <img src={url.gif} alt={emoji} width={48} height={48} />
+              <img 
+                src={url.gif} 
+                alt={emoji} 
+                width={48} 
+                height={48} 
+                onError={(e) => {
+                  e.target.parentElement.style.display = 'none';
+                  const fallback = document.createElement('span');
+                  fallback.textContent = emoji;
+                  fallback.style.fontSize = '32px';
+                  e.target.parentElement.parentElement.appendChild(fallback);
+                }}
+              />
             </picture>
           );
         })}
