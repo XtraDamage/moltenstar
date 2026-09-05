@@ -12,10 +12,11 @@ export default function ChatArea({ messages, isLoading, messagesEndRef }) {
         </div>
       ) : (
         <div className="chat-area__messages">
-          {messages.map(msg => (
-            <MessageBubble key={msg.id} role={msg.role} content={msg.content} timestamp={msg.timestamp} />
-          ))}
-          {isLoading && (
+          {messages.map(msg => {
+            if (msg.role === 'assistant' && !msg.content) return null;
+            return <MessageBubble key={msg.id} role={msg.role} content={msg.content} timestamp={msg.timestamp} />;
+          })}
+          {isLoading && (!messages.length || messages[messages.length - 1].role !== 'assistant' || !messages[messages.length - 1].content) && (
             <div className="message message--assistant">
               <div className="message__bubble message__bubble--assistant">
                 <div className="typing-indicator">
