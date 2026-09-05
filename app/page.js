@@ -14,7 +14,7 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [settings, setSettings] = useState({ theme: 'auto', colorScheme: 'baseline' });
+  const [settings, setSettings] = useState({ theme: 'auto', colorScheme: 'graphite' });
 
   const messagesEndRef = useRef(null);
   const abortControllerRef = useRef(null);
