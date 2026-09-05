@@ -1,0 +1,34 @@
+'use client';
+import MessageBubble from './MessageBubble';
+
+export default function ChatArea({ messages, isLoading, messagesEndRef }) {
+  return (
+    <div className="chat-area">
+      {messages.length === 0 && !isLoading ? (
+        <div className="chat-area__welcome">
+          <img src="/logo.svg" alt="MoltenStar" className="chat-area__welcome-icon logo-img" draggable={false} />
+          <h2 className="chat-area__welcome-title">MoltenStar</h2>
+          <p className="chat-area__welcome-subtitle">AI assistant powered by Grok. Start a conversation!</p>
+        </div>
+      ) : (
+        <div className="chat-area__messages">
+          {messages.map(msg => (
+            <MessageBubble key={msg.id} role={msg.role} content={msg.content} timestamp={msg.timestamp} />
+          ))}
+          {isLoading && (
+            <div className="message message--assistant">
+              <div className="message__bubble message__bubble--assistant">
+                <div className="typing-indicator">
+                  <div className="typing-indicator__dot" />
+                  <div className="typing-indicator__dot" />
+                  <div className="typing-indicator__dot" />
+                </div>
+              </div>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+      )}
+    </div>
+  );
+}
