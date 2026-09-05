@@ -90,13 +90,6 @@ export default function SettingsDialog({ isOpen, onClose, theme, colorScheme, pb
           <div className="settings-section">
             <div className="settings-section__title">Cloud Sync (PocketBase)</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <input 
-                type="text" 
-                placeholder="Server URL (Optional if set by admin)" 
-                value={pbUrl || ''} 
-                onChange={handleUrlChange}
-                style={{ padding: '12px', borderRadius: '12px', border: '1px solid var(--md-sys-color-outline-variant)', background: 'var(--md-sys-color-surface-container-highest)', color: 'var(--md-sys-color-on-surface)', outline: 'none' }}
-              />
               
               {isAuth ? (
                 <div style={{ padding: '12px', borderRadius: '12px', background: 'var(--md-sys-color-secondary-container)', color: 'var(--md-sys-color-on-secondary-container)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
