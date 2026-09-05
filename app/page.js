@@ -137,7 +137,7 @@ export default function Page() {
 
     try {
       const chatToUse = chats.find(c => c.id === currentChatId) || { messages: [] };
-      const systemPrompt = "You are MoltenStar, a neutral, adaptable, and helpful AI assistant. You tailor your communication style, tone, and verbosity to match the user's conversational style. Be concise, polite, and avoid lecturing or being overly stuffy.";
+      const systemPrompt = "You are MoltenStar. You adopt a natural, highly conversational tone and adapt seamlessly to the user's communication style. Converse normally like a peer rather than an AI or assistant. Be concise, direct, and completely drop all corporate or formal phrasing.";
       const messagesForApi = [
         { role: 'system', content: systemPrompt },
         ...chatToUse.messages,
