@@ -1,14 +1,34 @@
 'use client';
+import { useState, useEffect } from 'react';
 import MessageBubble from './MessageBubble';
 
+const TIPS = [
+  "What are the best practices for React?",
+  "Help me debug this error",
+  "Write a polite email to my boss",
+  "Explain black holes simply",
+  "Give me a recipe for pasta"
+];
+
 export default function ChatArea({ messages, isLoading, messagesEndRef }) {
+  const [suggestions, setSuggestions] = useState([]);
+
+  useEffect(() => {
+    const shuffled = [...TIPS].sort(() => 0.5 - Math.random());
+    setSuggestions(shuffled.slice(0, 3));
+  }, []);
+
   return (
     <div className="chat-area">
       {messages.length === 0 && !isLoading ? (
-        <div className="chat-area__welcome">
-          <img src="/logo.svg" alt="MoltenStar" className="chat-area__welcome-icon logo-img" draggable={false} />
+        <div className="chat-area__welcome animate-fade-in-up">
+          <img src="/logo.svg" alt="MoltenStar" className="chat-area__welcome-icon logo-img animate-bounce-in" draggable={false} />
           <h2 className="chat-area__welcome-title">MoltenStar</h2>
-          <p className="chat-area__welcome-subtitle">AI assistant powered by Grok. Start a conversation!</p>
+          <div className="chat-area__suggestions">
+            {suggestions.map((tip, idx) => (
+              <div key={idx} className="chat-area__suggestion-chip">"{tip}"</div>
+            ))}
+          </div>
         </div>
       ) : (
         <div className="chat-area__messages">
