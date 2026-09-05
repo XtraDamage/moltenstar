@@ -92,7 +92,7 @@ export default function SettingsDialog({ isOpen, onClose, theme, colorScheme, pb
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <input 
                 type="text" 
-                placeholder="Server URL (e.g. http://1.2.3.4:8090)" 
+                placeholder="Server URL (Optional if set by admin)" 
                 value={pbUrl || ''} 
                 onChange={handleUrlChange}
                 style={{ padding: '12px', borderRadius: '12px', border: '1px solid var(--md-sys-color-outline-variant)', background: 'var(--md-sys-color-surface-container-highest)', color: 'var(--md-sys-color-on-surface)', outline: 'none' }}
