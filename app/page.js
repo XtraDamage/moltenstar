@@ -5,7 +5,7 @@ import Sidebar from '../components/Sidebar';
 import ChatArea from '../components/ChatArea';
 import InputBar from '../components/InputBar';
 import SettingsDialog from '../components/SettingsDialog';
-import { getAllChats, saveChat, deleteChat as deleteStoredChat, getSettings, saveSettings } from '../lib/storage';
+import { getAllChatsLocally, syncChatsFromCloud, saveChat, deleteChat as deleteStoredChat, getSettings, saveSettings } from '../lib/storage';
 import { applyColorScheme, getSystemThemePreference, MONET_SCHEMES } from '../lib/monet';
 
 export default function Page() {
@@ -14,19 +14,30 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [settings, setSettings] = useState({ theme: 'auto', colorScheme: 'baseline' });
+  const [settings, setSettings] = useState({ theme: 'auto', colorScheme: 'baseline', pbUrl: '' });
 
   const messagesEndRef = useRef(null);
   const abortControllerRef = useRef(null);
 
-  useEffect(() => {
-    const loadedChats = getAllChats();
-    setChats(loadedChats);
-    if (loadedChats.length > 0) {
-      setActiveChatId(loadedChats[0].id);
+  const loadChats = async (currentActiveId = null) => {
+    const localChats = getAllChatsLocally();
+    if (chats.length === 0) {
+      setChats(localChats);
+      if (localChats.length > 0 && !currentActiveId) {
+        setActiveChatId(localChats[0].id);
+      }
     }
+    const cloudChats = await syncChatsFromCloud();
+    setChats(cloudChats);
+    if (cloudChats.length > 0 && !currentActiveId) {
+      setActiveChatId(cloudChats[0].id);
+    }
+  };
+
+  useEffect(() => {
     const loadedSettings = getSettings();
     setSettings(loadedSettings);
+    loadChats(activeChatId);
   }, []);
 
   useEffect(() => {
@@ -268,8 +279,11 @@ export default function Page() {
         onClose={() => setSettingsOpen(false)}
         theme={settings.theme}
         colorScheme={settings.colorScheme}
+        pbUrl={settings.pbUrl}
         onThemeChange={handleThemeChange}
         onColorSchemeChange={handleColorSchemeChange}
+        onPbUrlChange={(url) => setSettings(prev => ({ ...prev, pbUrl: url }))}
+        onAuthChange={() => loadChats(activeChatId)}
       />
     </div>
   );
