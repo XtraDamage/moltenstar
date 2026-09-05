@@ -137,7 +137,12 @@ export default function Page() {
 
     try {
       const chatToUse = chats.find(c => c.id === currentChatId) || { messages: [] };
-      const messagesForApi = [...chatToUse.messages, userMessage].map(m => ({ role: m.role, content: m.content }));
+      const systemPrompt = "You are MoltenStar, an advanced AI assistant.";
+      const messagesForApi = [
+        { role: 'system', content: systemPrompt },
+        ...chatToUse.messages,
+        userMessage
+      ].map(m => ({ role: m.role, content: m.content }));
 
       const response = await fetch('/api/chat', {
         method: 'POST',
