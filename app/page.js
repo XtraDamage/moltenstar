@@ -1,12 +1,13 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import TopBar from '../components/TopBar';
 import Sidebar from '../components/Sidebar';
 import ChatArea from '../components/ChatArea';
 import InputBar from '../components/InputBar';
 import SettingsDialog from '../components/SettingsDialog';
 import { getAllChats, saveChat, deleteChat as deleteStoredChat, getSettings, saveSettings } from '../lib/storage';
-import { applyColorScheme, getSystemThemePreference, MONET_SCHEMES } from '../lib/monet';
+import { applyColorScheme, getSystemThemePreference } from '../lib/monet';
+import { AGENTS, AGENT_IDS, buildMessagesForAgent } from '../lib/agents';
 
 export default function Page() {
   const [chats, setChats] = useState([]);
@@ -15,9 +16,13 @@ export default function Page() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [settings, setSettings] = useState({ theme: 'auto', colorScheme: 'graphite' });
+  const [typingAgents, setTypingAgents] = useState([]);
+  const [round, setRound] = useState(0);
+  const [roundComplete, setRoundComplete] = useState(false);
+  const [replyTarget, setReplyTarget] = useState(null);
 
   const messagesEndRef = useRef(null);
-  const abortControllerRef = useRef(null);
+  const abortControllersRef = useRef({});
 
   useEffect(() => {
     const loadedChats = getAllChats();
@@ -53,7 +58,7 @@ export default function Page() {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages, isLoading]);
+  }, [messages, isLoading, typingAgents]);
 
   const createNewChat = () => {
     const id = crypto.randomUUID();
@@ -64,10 +69,16 @@ export default function Page() {
       return updated;
     });
     setActiveChatId(id);
+    setRound(0);
+    setRoundComplete(false);
+    setReplyTarget(null);
   };
 
   const selectChat = (id) => {
     setActiveChatId(id);
+    setRound(0);
+    setRoundComplete(false);
+    setReplyTarget(null);
   };
 
   const deleteChatHandler = (id) => {
@@ -81,79 +92,24 @@ export default function Page() {
     });
   };
 
-  const handleSendMessage = async (text) => {
-    let currentChatId = activeChatId;
-    let currentChats = chats;
+  const abortAllStreams = useCallback(() => {
+    Object.values(abortControllersRef.current).forEach(ctrl => ctrl.abort());
+    abortControllersRef.current = {};
+  }, []);
 
-    if (!currentChatId) {
-      currentChatId = crypto.randomUUID();
-      const newChat = { id: currentChatId, title: 'New Chat', createdAt: Date.now(), messages: [] };
-      setChats(prev => {
-        const updated = [newChat, ...prev];
-        saveChat(newChat);
-        return updated;
-      });
-      setActiveChatId(currentChatId);
-      currentChats = [newChat, ...currentChats];
-    }
-
-    const userMessageId = crypto.randomUUID();
-    const userMessage = { id: userMessageId, role: 'user', content: text, timestamp: Date.now() };
-
-    setChats(prev => {
-      return prev.map(chat => {
-        if (chat.id === currentChatId) {
-          const isFirstMessage = chat.messages.length === 0;
-          const updatedChat = {
-            ...chat,
-            title: isFirstMessage ? text.substring(0, 50) : chat.title,
-            messages: [...chat.messages, userMessage]
-          };
-          saveChat(updatedChat);
-          return updatedChat;
-        }
-        return chat;
-      });
-    });
-
-    setIsLoading(true);
-
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-    abortControllerRef.current = new AbortController();
-
-    const assistantMessageId = crypto.randomUUID();
-    const assistantMessage = { id: assistantMessageId, role: 'assistant', content: '', timestamp: Date.now() };
-
-    setChats(prev => {
-      return prev.map(chat => {
-        if (chat.id === currentChatId) {
-          return { ...chat, messages: [...chat.messages, assistantMessage] };
-        }
-        return chat;
-      });
-    });
+  const streamAgentResponse = useCallback(async (chatId, agentId, messagesForApi, assistantMessageId) => {
+    const controller = new AbortController();
+    abortControllersRef.current[agentId] = controller;
 
     try {
-      const chatToUse = chats.find(c => c.id === currentChatId) || { messages: [] };
-      const systemPrompt = "You are MoltenStar. You adopt a natural, highly conversational tone and adapt seamlessly to the user's communication style. Converse normally like a peer rather than an AI or assistant. Be concise, direct, and completely drop all corporate or formal phrasing.";
-      const messagesForApi = [
-        { role: 'system', content: systemPrompt },
-        ...chatToUse.messages,
-        userMessage
-      ].map(m => ({ role: m.role, content: m.content }));
-
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: messagesForApi }),
-        signal: abortControllerRef.current.signal
+        body: JSON.stringify({ messages: messagesForApi, agentId }),
+        signal: controller.signal
       });
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
+      if (!response.ok) throw new Error('Network response was not ok');
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
@@ -181,7 +137,7 @@ export default function Page() {
                 if (deltaContent) {
                   setChats(prev => {
                     return prev.map(chat => {
-                      if (chat.id === currentChatId) {
+                      if (chat.id === chatId) {
                         return {
                           ...chat,
                           messages: chat.messages.map(msg => {
@@ -196,45 +152,168 @@ export default function Page() {
                     });
                   });
                 }
-              } catch (e) {
-              }
+              } catch (e) {}
             }
           }
         }
       }
-
-      setChats(prev => {
-        const updatedChat = prev.find(c => c.id === currentChatId);
-        if (updatedChat) {
-          saveChat(updatedChat);
-        }
-        return prev;
-      });
     } catch (error) {
       if (error.name !== 'AbortError') {
         setChats(prev => {
           return prev.map(chat => {
-            if (chat.id === currentChatId) {
-              const updatedChat = {
+            if (chat.id === chatId) {
+              return {
                 ...chat,
                 messages: chat.messages.map(msg => {
                   if (msg.id === assistantMessageId) {
-                    return { ...msg, content: 'Sorry, an error occurred.' };
+                    return { ...msg, content: msg.content || 'Sorry, an error occurred.' };
                   }
                   return msg;
                 })
               };
-              saveChat(updatedChat);
-              return updatedChat;
             }
             return chat;
           });
         });
       }
     } finally {
-      setIsLoading(false);
-      abortControllerRef.current = null;
+      delete abortControllersRef.current[agentId];
+      setTypingAgents(prev => prev.filter(id => id !== agentId));
     }
+  }, []);
+
+  const sendToAgents = useCallback(async (agentIds, userMessage, currentChatId) => {
+    setIsLoading(true);
+    setRoundComplete(false);
+    setTypingAgents(agentIds);
+
+    const assistantMessages = {};
+    const currentChat = chats.find(c => c.id === currentChatId) || { messages: [] };
+
+    setChats(prev => {
+      return prev.map(chat => {
+        if (chat.id === currentChatId) {
+          const newMessages = agentIds.map(agentId => {
+            const id = crypto.randomUUID();
+            assistantMessages[agentId] = id;
+            return {
+              id,
+              role: 'assistant',
+              agentId,
+              content: '',
+              timestamp: Date.now(),
+              replyToMessageId: userMessage?.replyToMessageId || null,
+            };
+          });
+          return { ...chat, messages: [...chat.messages, ...newMessages] };
+        }
+        return chat;
+      });
+    });
+
+    // Small delay to let state update
+    await new Promise(r => setTimeout(r, 50));
+
+    const promises = agentIds.map(agentId => {
+      const messagesForApi = buildMessagesForAgent(agentId, currentChat.messages, userMessage);
+      return streamAgentResponse(currentChatId, agentId, messagesForApi, assistantMessages[agentId]);
+    });
+
+    await Promise.allSettled(promises);
+
+    setChats(prev => {
+      const updatedChat = prev.find(c => c.id === currentChatId);
+      if (updatedChat) saveChat(updatedChat);
+      return prev;
+    });
+
+    setIsLoading(false);
+    setRound(prev => prev + 1);
+    setRoundComplete(true);
+  }, [chats, streamAgentResponse]);
+
+  const handleSendMessage = async (text) => {
+    let currentChatId = activeChatId;
+    let currentChats = chats;
+
+    if (!currentChatId) {
+      currentChatId = crypto.randomUUID();
+      const newChat = { id: currentChatId, title: 'New Chat', createdAt: Date.now(), messages: [] };
+      setChats(prev => {
+        const updated = [newChat, ...prev];
+        saveChat(newChat);
+        return updated;
+      });
+      setActiveChatId(currentChatId);
+      currentChats = [newChat, ...currentChats];
+    }
+
+    const userMessageId = crypto.randomUUID();
+    const userMessage = {
+      id: userMessageId,
+      role: 'user',
+      content: text,
+      timestamp: Date.now(),
+      replyToAgentId: replyTarget?.agent?.id || null,
+      replyToMessageId: replyTarget?.messageId || null,
+    };
+
+    setChats(prev => {
+      return prev.map(chat => {
+        if (chat.id === currentChatId) {
+          const isFirstMessage = chat.messages.length === 0;
+          const updatedChat = {
+            ...chat,
+            title: isFirstMessage ? text.substring(0, 50) : chat.title,
+            messages: [...chat.messages, userMessage]
+          };
+          saveChat(updatedChat);
+          return updatedChat;
+        }
+        return chat;
+      });
+    });
+
+    setReplyTarget(null);
+
+    // Determine which agents to send to
+    const targetAgents = replyTarget?.agent
+      ? [replyTarget.agent.id]  // Reply to specific agent
+      : AGENT_IDS;              // Send to all agents
+
+    await sendToAgents(targetAgents, userMessage, currentChatId);
+  };
+
+  const handleContinueRound = async () => {
+    if (!activeChatId || isLoading) return;
+
+    const continueMessage = {
+      content: '[Continue the discussion. Build on what others said. If you have new insights, share them. If you agree with the consensus, briefly confirm and add any final thoughts.]',
+      role: 'user',
+      isSystemRound: true,
+    };
+
+    await sendToAgents(AGENT_IDS, continueMessage, activeChatId);
+  };
+
+  const handleStopRound = () => {
+    abortAllStreams();
+    setIsLoading(false);
+    setRoundComplete(false);
+    setTypingAgents([]);
+  };
+
+  const handleSwipeReply = (message) => {
+    const agent = message.agentId ? AGENTS[message.agentId] : null;
+    setReplyTarget({
+      messageId: message.id,
+      content: message.content,
+      agent,
+    });
+  };
+
+  const handleCancelReply = () => {
+    setReplyTarget(null);
   };
 
   const handleThemeChange = (t) => {
@@ -259,8 +338,23 @@ export default function Page() {
       />
       <div className="app__body">
         <div className="app__main">
-          <ChatArea messages={messages} isLoading={isLoading} messagesEndRef={messagesEndRef} />
-          <InputBar onSend={handleSendMessage} isLoading={isLoading} />
+          <ChatArea
+            messages={messages}
+            isLoading={isLoading}
+            messagesEndRef={messagesEndRef}
+            typingAgents={typingAgents}
+            round={round}
+            roundComplete={roundComplete}
+            onContinueRound={handleContinueRound}
+            onStopRound={handleStopRound}
+            onSwipeReply={handleSwipeReply}
+          />
+          <InputBar
+            onSend={handleSendMessage}
+            isLoading={isLoading}
+            replyTarget={replyTarget}
+            onCancelReply={handleCancelReply}
+          />
         </div>
       </div>
       <SettingsDialog

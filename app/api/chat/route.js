@@ -1,6 +1,6 @@
 export async function POST(req) {
   try {
-    const { messages, model = 'x-ai/grok-4.6' } = await req.json();
+    const { messages, agentId } = await req.json();
 
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
@@ -11,14 +11,14 @@ export async function POST(req) {
         'X-Title': 'MoltenStar'
       },
       body: JSON.stringify({
-        model,
+        model: 'x-ai/grok-4.6',
         messages,
         stream: true
       })
     });
 
     if (!response.ok) {
-      return new Response(JSON.stringify({ error: 'Failed to fetch from OpenRouter' }), {
+      return new Response(JSON.stringify({ error: 'Request failed' }), {
         status: response.status,
         headers: { 'Content-Type': 'application/json' }
       });

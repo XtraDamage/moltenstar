@@ -68,14 +68,6 @@ export default function SettingsDialog({ isOpen, onClose, theme, colorScheme, on
               ))}
             </div>
           </div>
-          <div className="settings-section">
-            <div className="settings-section__title">About</div>
-            <p style={{ fontSize: '14px', color: 'var(--md-sys-color-on-surface-variant)', lineHeight: 1.6 }}>
-              MoltenStar v1.0<br />
-              AI chat powered by Grok 4.6<br />
-              via OpenRouter API
-            </p>
-          </div>
         </div>
       </div>
     </div>

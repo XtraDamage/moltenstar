@@ -2,7 +2,7 @@ import './globals.css';
 
 export const metadata = {
   title: 'MoltenStar',
-  description: 'AI Chat powered by Grok'
+  description: 'AI Chat'
 };
 
 export const viewport = {
