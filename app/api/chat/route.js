@@ -1,17 +1,25 @@
 export async function POST(req) {
   try {
-    const { messages, agentId } = await req.json();
+    const { 
+      messages, 
+      agentId, 
+      apiUrl = 'https://openrouter.ai/api/v1/chat/completions',
+      modelId = 'x-ai/grok-4.6',
+      apiKey
+    } = await req.json();
 
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    const finalApiKey = apiKey || process.env.OPENROUTER_API_KEY;
+
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        'Authorization': `Bearer ${finalApiKey}`,
         'Content-Type': 'application/json',
         'HTTP-Referer': 'http://localhost:3000',
         'X-Title': 'MoltenStar'
       },
       body: JSON.stringify({
-        model: 'google/gemini-1.5-pro',
+        model: modelId,
         messages,
         stream: true
       })
