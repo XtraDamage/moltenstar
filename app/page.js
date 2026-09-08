@@ -19,10 +19,7 @@ export default function Page() {
     theme: 'auto', 
     colorScheme: 'molten', 
     multiAgentEnabled: true, 
-    agents: DEFAULT_AGENTS,
-    apiUrl: 'https://openrouter.ai/api/v1/chat/completions',
-    modelId: 'x-ai/grok-4.6',
-    apiKey: ''
+    agents: DEFAULT_AGENTS
   });
   const [typingAgents, setTypingAgents] = useState([]);
   const [round, setRound] = useState(0);
@@ -106,7 +103,7 @@ export default function Page() {
     abortControllersRef.current = {};
   }, []);
 
-  const streamAgentResponse = useCallback(async (chatId, agentId, messagesForApi, assistantMessageId, apiConfig) => {
+  const streamAgentResponse = useCallback(async (chatId, agentId, messagesForApi, assistantMessageId) => {
     const controller = new AbortController();
     abortControllersRef.current[agentId] = controller;
     let fullResponse = '';
@@ -117,10 +114,7 @@ export default function Page() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           messages: messagesForApi, 
-          agentId,
-          apiUrl: apiConfig?.apiUrl,
-          modelId: apiConfig?.modelId,
-          apiKey: apiConfig?.apiKey
+          agentId
         }),
         signal: controller.signal
       });
@@ -246,13 +240,7 @@ export default function Page() {
       const contextMessages = localMessages.filter(m => m.id !== messageId);
       const messagesForApi = buildMessagesForAgent(agent, availableAgents, contextMessages);
       
-      const apiConfig = {
-        apiUrl: settings.apiUrl,
-        modelId: settings.modelId,
-        apiKey: settings.apiKey
-      };
-
-      const fullResponse = await streamAgentResponse(currentChatId, agent.id, messagesForApi, messageId, apiConfig);
+      const fullResponse = await streamAgentResponse(currentChatId, agent.id, messagesForApi, messageId);
       
       // Update our local array with the generated response so the next agent sees it
       newMessage.content = fullResponse;
@@ -431,10 +419,6 @@ export default function Page() {
         onColorSchemeChange={(s) => setSettings(prev => ({ ...prev, colorScheme: s }))}
         onMultiAgentChange={(m) => setSettings(prev => ({ ...prev, multiAgentEnabled: m }))}
         onAgentsChange={(a) => setSettings(prev => ({ ...prev, agents: a }))}
-        onApiSettingsChange={(field, value) => setSettings(prev => ({ ...prev, [field]: value }))}
-        apiUrl={settings.apiUrl}
-        modelId={settings.modelId}
-        apiKey={settings.apiKey}
       />
     </div>
   );

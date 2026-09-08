@@ -29,6 +29,9 @@ export default function ChatArea({
         setLogoExiting(false);
       }, 600);
       return () => clearTimeout(timer);
+    } else if (!hasMessages && !logoVisible) {
+      setLogoVisible(true);
+      setLogoExiting(false);
     }
   }, [hasMessages, logoVisible]);
 

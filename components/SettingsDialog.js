@@ -13,11 +13,7 @@ export default function SettingsDialog({
   onThemeChange,
   onColorSchemeChange,
   onMultiAgentChange,
-  onAgentsChange,
-  onApiSettingsChange,
-  apiUrl,
-  modelId,
-  apiKey
+  onAgentsChange
 }) {
   const [activeTab, setActiveTab] = useState('appearance');
 
@@ -87,12 +83,6 @@ export default function SettingsDialog({
             onClick={() => setActiveTab('agents')}
           >
             Agents
-          </button>
-          <button
-            className={`settings-tab ${activeTab === 'api' ? 'settings-tab--active' : ''}`}
-            onClick={() => setActiveTab('api')}
-          >
-            API
           </button>
         </div>
         <div className="settings-body">
@@ -209,42 +199,6 @@ export default function SettingsDialog({
                       Add Agent
                     </button>
                   )}
-                </div>
-              </div>
-            </>
-          )}
-
-          {activeTab === 'api' && (
-            <>
-              <div className="settings-section">
-                <div className="settings-section__title">API Settings</div>
-                <div className="settings-agent-list">
-                  <div className="settings-agent-card">
-                    <label className="settings-agent-card__header" style={{ marginBottom: 4 }}>Endpoint URL</label>
-                    <input
-                      className="settings-agent-card__input"
-                      value={apiUrl || ''}
-                      onChange={(e) => onApiSettingsChange('apiUrl', e.target.value)}
-                      placeholder="https://openrouter.ai/api/v1/chat/completions"
-                    />
-                    
-                    <label className="settings-agent-card__header" style={{ marginBottom: 4, marginTop: 12 }}>Model ID</label>
-                    <input
-                      className="settings-agent-card__input"
-                      value={modelId || ''}
-                      onChange={(e) => onApiSettingsChange('modelId', e.target.value)}
-                      placeholder="e.g. x-ai/grok-4.6"
-                    />
-
-                    <label className="settings-agent-card__header" style={{ marginBottom: 4, marginTop: 12 }}>API Key (Optional)</label>
-                    <input
-                      className="settings-agent-card__input"
-                      type="password"
-                      value={apiKey || ''}
-                      onChange={(e) => onApiSettingsChange('apiKey', e.target.value)}
-                      placeholder="Overrides server API key if set"
-                    />
-                  </div>
                 </div>
               </div>
             </>
