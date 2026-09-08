@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import MessageBubble from './MessageBubble';
 import RoundControls from './RoundControls';
-import { AGENTS } from '../lib/agents';
+import { DEFAULT_AGENTS } from '../lib/agents';
 
 export default function ChatArea({
   messages,
@@ -13,7 +13,8 @@ export default function ChatArea({
   roundComplete,
   onContinueRound,
   onStopRound,
-  onSwipeReply
+  onSwipeReply,
+  agents
 }) {
   const [logoVisible, setLogoVisible] = useState(true);
   const [logoExiting, setLogoExiting] = useState(false);
@@ -45,7 +46,8 @@ export default function ChatArea({
         <div className="chat-area__messages">
           {messages.map((msg, idx) => {
             if (msg.role === 'assistant' && !msg.content) return null;
-            const agent = msg.agentId ? AGENTS[msg.agentId] : null;
+            const availableAgents = agents && agents.length > 0 ? agents : DEFAULT_AGENTS;
+            const agent = msg.agentId ? availableAgents.find(a => a.id === msg.agentId) : null;
             const isAgentTyping = msg.role === 'assistant' && msg.agentId && typingAgents?.includes(msg.agentId);
             const replyToMsg = msg.replyToMessageId
               ? messages.find(m => m.id === msg.replyToMessageId)
@@ -70,7 +72,9 @@ export default function ChatArea({
               {typingAgents.map(agentId => {
                 const hasContent = messages.some(m => m.agentId === agentId && m.content);
                 if (hasContent) return null;
-                const agent = AGENTS[agentId];
+                const availableAgents = agents && agents.length > 0 ? agents : DEFAULT_AGENTS;
+                const agent = availableAgents.find(a => a.id === agentId);
+                if (!agent) return null;
                 return (
                   <div key={`typing-${agentId}`} className="message message--assistant message--agent-typing">
                     <div className="message__agent-row">

@@ -15,9 +15,6 @@ export default function AgentAvatar({ agent, isTyping = false, size = 32 }) {
       title={`${agent.name} — ${agent.role}`}
     >
       <span className="agent-avatar__letter">{agent.avatarEmoji}</span>
-      {isTyping && (
-        <div className="agent-avatar__typing-ring" />
-      )}
     </div>
   );
 }

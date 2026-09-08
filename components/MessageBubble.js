@@ -223,7 +223,6 @@ export default function MessageBubble({ role, content, timestamp, agent, isTypin
             <span className="material-symbols-rounded">reply</span>
           </div>
         )}
-        {agent && <div className="message__agent-stripe" style={{ backgroundColor: agent.color }} />}
         <div className="message__content-wrapper">
           {emojiOnly ? emojiDisplay : contentDisplay}
         </div>

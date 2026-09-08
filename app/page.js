@@ -7,7 +7,7 @@ import InputBar from '../components/InputBar';
 import SettingsDialog from '../components/SettingsDialog';
 import { getAllChats, saveChat, deleteChat as deleteStoredChat, getSettings, saveSettings } from '../lib/storage';
 import { applyColorScheme, getSystemThemePreference } from '../lib/monet';
-import { AGENTS, AGENT_IDS, buildMessagesForAgent } from '../lib/agents';
+import { DEFAULT_AGENTS, buildMessagesForAgent } from '../lib/agents';
 
 export default function Page() {
   const [chats, setChats] = useState([]);
@@ -15,7 +15,12 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [settings, setSettings] = useState({ theme: 'auto', colorScheme: 'graphite' });
+  const [settings, setSettings] = useState({ 
+    theme: 'auto', 
+    colorScheme: 'molten', 
+    multiAgentEnabled: true, 
+    agents: DEFAULT_AGENTS 
+  });
   const [typingAgents, setTypingAgents] = useState([]);
   const [round, setRound] = useState(0);
   const [roundComplete, setRoundComplete] = useState(false);
@@ -23,6 +28,7 @@ export default function Page() {
 
   const messagesEndRef = useRef(null);
   const abortControllersRef = useRef({});
+  const isRoundStopped = useRef(false);
 
   useEffect(() => {
     const loadedChats = getAllChats();
@@ -117,6 +123,11 @@ export default function Page() {
       let done = false;
 
       while (!done) {
+        if (isRoundStopped.current) {
+          controller.abort();
+          break;
+        }
+
         const { value, done: readerDone } = await reader.read();
         done = readerDone;
         if (value) {
@@ -182,44 +193,55 @@ export default function Page() {
     }
   }, []);
 
-  const sendToAgents = useCallback(async (agentIds, userMessage, currentChatId) => {
+  const sendToAgents = useCallback(async (targetAgents, userMessage, currentChatId) => {
     setIsLoading(true);
     setRoundComplete(false);
-    setTypingAgents(agentIds);
+    isRoundStopped.current = false;
 
-    const assistantMessages = {};
-    const currentChat = chats.find(c => c.id === currentChatId) || { messages: [] };
+    const availableAgents = settings.agents.length > 0 ? settings.agents : DEFAULT_AGENTS;
 
-    setChats(prev => {
-      return prev.map(chat => {
-        if (chat.id === currentChatId) {
-          const newMessages = agentIds.map(agentId => {
-            const id = crypto.randomUUID();
-            assistantMessages[agentId] = id;
-            return {
-              id,
+    for (const agent of targetAgents) {
+      if (isRoundStopped.current) break;
+
+      setTypingAgents([agent.id]);
+
+      const messageId = crypto.randomUUID();
+      
+      // Update local state to inject empty message for the agent
+      setChats(prev => {
+        return prev.map(chat => {
+          if (chat.id === currentChatId) {
+            const newMessage = {
+              id: messageId,
               role: 'assistant',
-              agentId,
+              agentId: agent.id,
               content: '',
               timestamp: Date.now(),
               replyToMessageId: userMessage?.replyToMessageId || null,
             };
-          });
-          return { ...chat, messages: [...chat.messages, ...newMessages] };
-        }
-        return chat;
+            return { ...chat, messages: [...chat.messages, newMessage] };
+          }
+          return chat;
+        });
       });
-    });
 
-    // Small delay to let state update
-    await new Promise(r => setTimeout(r, 50));
+      // Small delay to ensure state update and UX pacing
+      await new Promise(r => setTimeout(r, 300));
 
-    const promises = agentIds.map(agentId => {
-      const messagesForApi = buildMessagesForAgent(agentId, currentChat.messages, userMessage);
-      return streamAgentResponse(currentChatId, agentId, messagesForApi, assistantMessages[agentId]);
-    });
+      // Get the freshest messages for this chat to pass as context (reflection)
+      let currentMessages = [];
+      setChats(prev => {
+        const chat = prev.find(c => c.id === currentChatId);
+        if (chat) currentMessages = chat.messages.filter(m => m.id !== messageId);
+        return prev;
+      });
 
-    await Promise.allSettled(promises);
+      const messagesForApi = buildMessagesForAgent(agent, availableAgents, currentMessages, userMessage);
+      
+      await streamAgentResponse(currentChatId, agent.id, messagesForApi, messageId);
+
+      if (isRoundStopped.current) break;
+    }
 
     setChats(prev => {
       const updatedChat = prev.find(c => c.id === currentChatId);
@@ -227,14 +249,17 @@ export default function Page() {
       return prev;
     });
 
+    if (!isRoundStopped.current) {
+      setRound(prev => prev + 1);
+      setRoundComplete(true);
+    }
+    
     setIsLoading(false);
-    setRound(prev => prev + 1);
-    setRoundComplete(true);
-  }, [chats, streamAgentResponse]);
+    setTypingAgents([]);
+  }, [settings.agents, streamAgentResponse]);
 
   const handleSendMessage = async (text) => {
     let currentChatId = activeChatId;
-    let currentChats = chats;
 
     if (!currentChatId) {
       currentChatId = crypto.randomUUID();
@@ -245,7 +270,6 @@ export default function Page() {
         return updated;
       });
       setActiveChatId(currentChatId);
-      currentChats = [newChat, ...currentChats];
     }
 
     const userMessageId = crypto.randomUUID();
@@ -276,10 +300,16 @@ export default function Page() {
 
     setReplyTarget(null);
 
-    // Determine which agents to send to
-    const targetAgents = replyTarget?.agent
-      ? [replyTarget.agent.id]  // Reply to specific agent
-      : AGENT_IDS;              // Send to all agents
+    const availableAgents = settings.agents.length > 0 ? settings.agents : DEFAULT_AGENTS;
+    
+    let targetAgents = [];
+    if (replyTarget?.agent) {
+      targetAgents = [replyTarget.agent];
+    } else if (settings.multiAgentEnabled) {
+      targetAgents = availableAgents;
+    } else {
+      targetAgents = [availableAgents[0]];
+    }
 
     await sendToAgents(targetAgents, userMessage, currentChatId);
   };
@@ -293,10 +323,14 @@ export default function Page() {
       isSystemRound: true,
     };
 
-    await sendToAgents(AGENT_IDS, continueMessage, activeChatId);
+    const availableAgents = settings.agents.length > 0 ? settings.agents : DEFAULT_AGENTS;
+    const targetAgents = settings.multiAgentEnabled ? availableAgents : [availableAgents[0]];
+
+    await sendToAgents(targetAgents, continueMessage, activeChatId);
   };
 
   const handleStopRound = () => {
+    isRoundStopped.current = true;
     abortAllStreams();
     setIsLoading(false);
     setRoundComplete(false);
@@ -304,7 +338,8 @@ export default function Page() {
   };
 
   const handleSwipeReply = (message) => {
-    const agent = message.agentId ? AGENTS[message.agentId] : null;
+    const availableAgents = settings.agents.length > 0 ? settings.agents : DEFAULT_AGENTS;
+    const agent = message.agentId ? availableAgents.find(a => a.id === message.agentId) : null;
     setReplyTarget({
       messageId: message.id,
       content: message.content,
@@ -314,14 +349,6 @@ export default function Page() {
 
   const handleCancelReply = () => {
     setReplyTarget(null);
-  };
-
-  const handleThemeChange = (t) => {
-    setSettings(prev => ({ ...prev, theme: t }));
-  };
-
-  const handleColorSchemeChange = (s) => {
-    setSettings(prev => ({ ...prev, colorScheme: s }));
   };
 
   return (
@@ -348,6 +375,7 @@ export default function Page() {
             onContinueRound={handleContinueRound}
             onStopRound={handleStopRound}
             onSwipeReply={handleSwipeReply}
+            agents={settings.agents}
           />
           <InputBar
             onSend={handleSendMessage}
@@ -362,8 +390,12 @@ export default function Page() {
         onClose={() => setSettingsOpen(false)}
         theme={settings.theme}
         colorScheme={settings.colorScheme}
-        onThemeChange={handleThemeChange}
-        onColorSchemeChange={handleColorSchemeChange}
+        multiAgentEnabled={settings.multiAgentEnabled}
+        agents={settings.agents}
+        onThemeChange={(t) => setSettings(prev => ({ ...prev, theme: t }))}
+        onColorSchemeChange={(s) => setSettings(prev => ({ ...prev, colorScheme: s }))}
+        onMultiAgentChange={(m) => setSettings(prev => ({ ...prev, multiAgentEnabled: m }))}
+        onAgentsChange={(a) => setSettings(prev => ({ ...prev, agents: a }))}
       />
     </div>
   );
