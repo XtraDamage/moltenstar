@@ -262,15 +262,12 @@ export default function Page() {
 
   const handleSendMessage = async (text) => {
     let currentChatId = activeChatId;
+    let chat = chats.find(c => c.id === currentChatId);
 
-    if (!currentChatId) {
+    if (!currentChatId || !chat) {
       currentChatId = crypto.randomUUID();
-      const newChat = { id: currentChatId, title: 'New Chat', createdAt: Date.now(), messages: [] };
-      setChats(prev => {
-        const updated = [newChat, ...prev];
-        saveChat(newChat);
-        return updated;
-      });
+      chat = { id: currentChatId, title: 'New Chat', createdAt: Date.now(), messages: [] };
+      setChats(prev => [chat, ...prev]);
       setActiveChatId(currentChatId);
     }
 
@@ -284,21 +281,21 @@ export default function Page() {
       replyToMessageId: replyTarget?.messageId || null,
     };
 
-    let updatedMessages = [];
+    const updatedMessages = [...chat.messages, userMessage];
+
     setChats(prev => {
-      return prev.map(chat => {
-        if (chat.id === currentChatId) {
-          const isFirstMessage = chat.messages.length === 0;
-          updatedMessages = [...chat.messages, userMessage];
+      return prev.map(c => {
+        if (c.id === currentChatId) {
+          const isFirstMessage = c.messages.length === 0;
           const updatedChat = {
-            ...chat,
-            title: isFirstMessage ? text.substring(0, 50) : chat.title,
+            ...c,
+            title: isFirstMessage ? text.substring(0, 50) : c.title,
             messages: updatedMessages
           };
           saveChat(updatedChat);
           return updatedChat;
         }
-        return chat;
+        return c;
       });
     });
 
@@ -320,6 +317,9 @@ export default function Page() {
 
   const handleContinueRound = async () => {
     if (!activeChatId || isLoading) return;
+    
+    const chat = chats.find(c => c.id === activeChatId);
+    if (!chat) return;
 
     const continueMessage = {
       id: crypto.randomUUID(),
@@ -330,16 +330,16 @@ export default function Page() {
       timestamp: Date.now(),
     };
 
-    let updatedMessages = [];
+    const updatedMessages = [...chat.messages, continueMessage];
+
     setChats(prev => {
-      return prev.map(chat => {
-        if (chat.id === activeChatId) {
-          updatedMessages = [...chat.messages, continueMessage];
-          const updatedChat = { ...chat, messages: updatedMessages };
+      return prev.map(c => {
+        if (c.id === activeChatId) {
+          const updatedChat = { ...c, messages: updatedMessages };
           saveChat(updatedChat);
           return updatedChat;
         }
-        return chat;
+        return c;
       });
     });
 

@@ -11,7 +11,7 @@ export async function POST(req) {
         'X-Title': 'MoltenStar'
       },
       body: JSON.stringify({
-        model: 'x-ai/grok-4.6',
+        model: 'google/gemini-1.5-pro',
         messages,
         stream: true
       })
