@@ -183,7 +183,7 @@ export default function MessageBubble({ role, content, timestamp, agent, isTypin
 
   return (
     <div
-      className={`message message--${role} ${agent ? `message--agent-${agent.id}` : ''}`}
+      className={`message message--${role} ${agent && !agent.isGeneric ? `message--agent-${agent.id}` : ''}`}
       style={{ animationDelay: `${animationDelay}ms` }}
     >
       {replyTo && (
@@ -195,7 +195,7 @@ export default function MessageBubble({ role, content, timestamp, agent, isTypin
           </div>
         </div>
       )}
-      {role === 'assistant' && agent && (
+      {role === 'assistant' && agent && !agent.isGeneric && (
         <div className="message__agent-row">
           <AgentAvatar agent={agent} isTyping={isTyping} size={28} />
           <span className="message__agent-name" style={{ color: agent.color }}>{agent.name}</span>

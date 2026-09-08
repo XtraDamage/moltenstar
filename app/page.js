@@ -7,7 +7,7 @@ import InputBar from '../components/InputBar';
 import SettingsDialog from '../components/SettingsDialog';
 import { getAllChats, saveChat, deleteChat as deleteStoredChat, getSettings, saveSettings } from '../lib/storage';
 import { applyColorScheme, getSystemThemePreference } from '../lib/monet';
-import { DEFAULT_AGENTS, buildMessagesForAgent } from '../lib/agents';
+import { DEFAULT_AGENTS, GENERIC_AGENT, buildMessagesForAgent } from '../lib/agents';
 
 export default function Page() {
   const [chats, setChats] = useState([]);
@@ -189,11 +189,10 @@ export default function Page() {
       }
     } finally {
       delete abortControllersRef.current[agentId];
-      setTypingAgents(prev => prev.filter(id => id !== agentId));
     }
   }, []);
 
-  const sendToAgents = useCallback(async (targetAgents, userMessage, currentChatId) => {
+  const sendToAgents = useCallback(async (targetAgents, currentChatId) => {
     setIsLoading(true);
     setRoundComplete(false);
     isRoundStopped.current = false;
@@ -203,10 +202,9 @@ export default function Page() {
     for (const agent of targetAgents) {
       if (isRoundStopped.current) break;
 
-      setTypingAgents([agent.id]);
-
       const messageId = crypto.randomUUID();
-      
+      setTypingAgents([messageId]);
+
       // Update local state to inject empty message for the agent
       setChats(prev => {
         return prev.map(chat => {
@@ -236,7 +234,7 @@ export default function Page() {
         return prev;
       });
 
-      const messagesForApi = buildMessagesForAgent(agent, availableAgents, currentMessages, userMessage);
+      const messagesForApi = buildMessagesForAgent(agent, availableAgents, currentMessages);
       
       await streamAgentResponse(currentChatId, agent.id, messagesForApi, messageId);
 
@@ -249,7 +247,7 @@ export default function Page() {
       return prev;
     });
 
-    if (!isRoundStopped.current) {
+    if (!isRoundStopped.current && targetAgents.length > 1) {
       setRound(prev => prev + 1);
       setRoundComplete(true);
     }
@@ -303,30 +301,44 @@ export default function Page() {
     const availableAgents = settings.agents.length > 0 ? settings.agents : DEFAULT_AGENTS;
     
     let targetAgents = [];
-    if (replyTarget?.agent) {
+    if (!settings.multiAgentEnabled) {
+      targetAgents = [GENERIC_AGENT];
+    } else if (replyTarget?.agent) {
       targetAgents = [replyTarget.agent];
-    } else if (settings.multiAgentEnabled) {
-      targetAgents = availableAgents;
     } else {
-      targetAgents = [availableAgents[0]];
+      targetAgents = availableAgents;
     }
 
-    await sendToAgents(targetAgents, userMessage, currentChatId);
+    await sendToAgents(targetAgents, currentChatId);
   };
 
   const handleContinueRound = async () => {
     if (!activeChatId || isLoading) return;
 
     const continueMessage = {
+      id: crypto.randomUUID(),
       content: '[Continue the discussion. Build on what others said. If you have new insights, share them. If you agree with the consensus, briefly confirm and add any final thoughts.]',
       role: 'user',
       isSystemRound: true,
+      isHidden: true,
+      timestamp: Date.now(),
     };
 
-    const availableAgents = settings.agents.length > 0 ? settings.agents : DEFAULT_AGENTS;
-    const targetAgents = settings.multiAgentEnabled ? availableAgents : [availableAgents[0]];
+    setChats(prev => {
+      return prev.map(chat => {
+        if (chat.id === activeChatId) {
+          const updatedChat = { ...chat, messages: [...chat.messages, continueMessage] };
+          saveChat(updatedChat);
+          return updatedChat;
+        }
+        return chat;
+      });
+    });
 
-    await sendToAgents(targetAgents, continueMessage, activeChatId);
+    const availableAgents = settings.agents.length > 0 ? settings.agents : DEFAULT_AGENTS;
+    const targetAgents = settings.multiAgentEnabled ? availableAgents : [GENERIC_AGENT];
+
+    await sendToAgents(targetAgents, activeChatId);
   };
 
   const handleStopRound = () => {
