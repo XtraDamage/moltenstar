@@ -106,6 +106,7 @@ export default function Page() {
   const streamAgentResponse = useCallback(async (chatId, agentId, messagesForApi, assistantMessageId) => {
     const controller = new AbortController();
     abortControllersRef.current[agentId] = controller;
+    let fullResponse = '';
 
     try {
       const response = await fetch('/api/chat', {
@@ -146,6 +147,7 @@ export default function Page() {
                 const parsed = JSON.parse(data);
                 const deltaContent = parsed.choices[0]?.delta?.content || '';
                 if (deltaContent) {
+                  fullResponse += deltaContent;
                   setChats(prev => {
                     return prev.map(chat => {
                       if (chat.id === chatId) {
@@ -190,14 +192,17 @@ export default function Page() {
     } finally {
       delete abortControllersRef.current[agentId];
     }
+    
+    return fullResponse;
   }, []);
 
-  const sendToAgents = useCallback(async (targetAgents, currentChatId, replyToMessageId = null) => {
+  const sendToAgents = useCallback(async (targetAgents, currentChatId, initialMessages, replyToMessageId = null) => {
     setIsLoading(true);
     setRoundComplete(false);
     isRoundStopped.current = false;
 
     const availableAgents = settings.agents.length > 0 ? settings.agents : DEFAULT_AGENTS;
+    let localMessages = [...initialMessages];
 
     for (const agent of targetAgents) {
       if (isRoundStopped.current) break;
@@ -205,18 +210,21 @@ export default function Page() {
       const messageId = crypto.randomUUID();
       setTypingAgents([messageId]);
 
+      const newMessage = {
+        id: messageId,
+        role: 'assistant',
+        agentId: agent.id,
+        content: '',
+        timestamp: Date.now(),
+        replyToMessageId: replyToMessageId,
+      };
+      
+      localMessages.push(newMessage);
+
       // Update local state to inject empty message for the agent
       setChats(prev => {
         return prev.map(chat => {
           if (chat.id === currentChatId) {
-            const newMessage = {
-              id: messageId,
-              role: 'assistant',
-              agentId: agent.id,
-              content: '',
-              timestamp: Date.now(),
-              replyToMessageId: replyToMessageId,
-            };
             return { ...chat, messages: [...chat.messages, newMessage] };
           }
           return chat;
@@ -226,17 +234,13 @@ export default function Page() {
       // Small delay to ensure state update and UX pacing
       await new Promise(r => setTimeout(r, 300));
 
-      // Get the freshest messages for this chat to pass as context (reflection)
-      let currentMessages = [];
-      setChats(prev => {
-        const chat = prev.find(c => c.id === currentChatId);
-        if (chat) currentMessages = chat.messages.filter(m => m.id !== messageId);
-        return prev;
-      });
-
-      const messagesForApi = buildMessagesForAgent(agent, availableAgents, currentMessages);
+      const contextMessages = localMessages.filter(m => m.id !== messageId);
+      const messagesForApi = buildMessagesForAgent(agent, availableAgents, contextMessages);
       
-      await streamAgentResponse(currentChatId, agent.id, messagesForApi, messageId);
+      const fullResponse = await streamAgentResponse(currentChatId, agent.id, messagesForApi, messageId);
+      
+      // Update our local array with the generated response so the next agent sees it
+      newMessage.content = fullResponse;
 
       if (isRoundStopped.current) break;
     }
@@ -280,14 +284,16 @@ export default function Page() {
       replyToMessageId: replyTarget?.messageId || null,
     };
 
+    let updatedMessages = [];
     setChats(prev => {
       return prev.map(chat => {
         if (chat.id === currentChatId) {
           const isFirstMessage = chat.messages.length === 0;
+          updatedMessages = [...chat.messages, userMessage];
           const updatedChat = {
             ...chat,
             title: isFirstMessage ? text.substring(0, 50) : chat.title,
-            messages: [...chat.messages, userMessage]
+            messages: updatedMessages
           };
           saveChat(updatedChat);
           return updatedChat;
@@ -309,7 +315,7 @@ export default function Page() {
       targetAgents = availableAgents;
     }
 
-    await sendToAgents(targetAgents, currentChatId, replyTarget?.messageId || null);
+    await sendToAgents(targetAgents, currentChatId, updatedMessages, replyTarget?.messageId || null);
   };
 
   const handleContinueRound = async () => {
@@ -324,10 +330,12 @@ export default function Page() {
       timestamp: Date.now(),
     };
 
+    let updatedMessages = [];
     setChats(prev => {
       return prev.map(chat => {
         if (chat.id === activeChatId) {
-          const updatedChat = { ...chat, messages: [...chat.messages, continueMessage] };
+          updatedMessages = [...chat.messages, continueMessage];
+          const updatedChat = { ...chat, messages: updatedMessages };
           saveChat(updatedChat);
           return updatedChat;
         }
@@ -338,7 +346,7 @@ export default function Page() {
     const availableAgents = settings.agents.length > 0 ? settings.agents : DEFAULT_AGENTS;
     const targetAgents = settings.multiAgentEnabled ? availableAgents : [GENERIC_AGENT];
 
-    await sendToAgents(targetAgents, activeChatId);
+    await sendToAgents(targetAgents, activeChatId, updatedMessages);
   };
 
   const handleStopRound = () => {
