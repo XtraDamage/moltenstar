@@ -192,7 +192,7 @@ export default function Page() {
     }
   }, []);
 
-  const sendToAgents = useCallback(async (targetAgents, currentChatId) => {
+  const sendToAgents = useCallback(async (targetAgents, currentChatId, replyToMessageId = null) => {
     setIsLoading(true);
     setRoundComplete(false);
     isRoundStopped.current = false;
@@ -215,7 +215,7 @@ export default function Page() {
               agentId: agent.id,
               content: '',
               timestamp: Date.now(),
-              replyToMessageId: userMessage?.replyToMessageId || null,
+              replyToMessageId: replyToMessageId,
             };
             return { ...chat, messages: [...chat.messages, newMessage] };
           }
@@ -309,7 +309,7 @@ export default function Page() {
       targetAgents = availableAgents;
     }
 
-    await sendToAgents(targetAgents, currentChatId);
+    await sendToAgents(targetAgents, currentChatId, replyTarget?.messageId || null);
   };
 
   const handleContinueRound = async () => {
