@@ -3,7 +3,7 @@
   "outputDirectory": ".",
   "framework": null,
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/((?!update\\.json).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
