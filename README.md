@@ -1,8 +1,8 @@
-# MoltenStar — ExteraMS Project Hub
+# MoltenStar — MoltenGram Project Hub
 
 Minimalist Material Design 3 website built with Flutter Web.
 
-Showcases **ExteraMS** — a Material You Telegram client for Android.
+Showcases **MoltenGram** — an experimental Telegram client for Android.
 
 ## Live
 
