@@ -1,6 +1,6 @@
 {
-    "name": "moltenstar",
-    "short_name": "moltenstar",
+    "name": "MoltenGram",
+    "short_name": "MoltenGram",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
