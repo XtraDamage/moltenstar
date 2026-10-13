@@ -847,8 +847,8 @@
     .icon-img {
       width: 64px;
       height: 64px;
-      border-radius: 16px;
       object-fit: contain;
+      display: block;
     }
 
     .icon-name {
@@ -981,7 +981,22 @@
        ------------------------------------------------------------- */
     @media (max-width: 768px) {
       .top-app-bar {
-        padding: 0 16px;
+        padding: 0 12px;
+        gap: 8px;
+        overflow: hidden;
+      }
+      .brand {
+        flex-shrink: 0;
+        min-width: 0;
+        gap: 8px;
+        font-size: 18px;
+      }
+      .brand-icon {
+        flex-shrink: 0;
+      }
+      .app-bar-actions {
+        gap: 6px;
+        flex-shrink: 0;
       }
       .nav-links {
         display: none;
@@ -1013,6 +1028,22 @@
       }
       .copy-btn {
         justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .top-app-bar {
+        padding: 0 10px;
+      }
+      .brand span {
+        font-size: 17px;
+      }
+      .app-bar-dl-btn {
+        padding: 0 10px !important;
+        font-size: 12px !important;
+      }
+      .app-bar-dl-btn .btn-text {
+        display: none;
       }
     }
   </style>
@@ -1060,9 +1091,9 @@
         <span class="material-symbols-rounded" id="themeIcon">light_mode</span>
       </button>
 
-      <a href="#download" class="m3-btn m3-btn-filled" style="height: 40px; padding: 0 16px; font-size: 13px;">
+      <a href="https://github.com/MoltenSt4r/MoltenGram/releases/download/v12.10.6/MoltenGram-v12.10.6-f2c4358.1261.apk" download class="m3-btn m3-btn-filled app-bar-dl-btn" style="height: 40px; padding: 0 16px; font-size: 13px;">
         <span class="material-symbols-rounded" style="font-size: 18px;">download</span>
-        Скачать
+        <span class="btn-text">Скачать</span>
       </a>
     </div>
   </header>
@@ -1078,9 +1109,9 @@
         </p>
 
         <div class="hero-actions">
-          <a href="#download" class="m3-btn m3-btn-filled">
+          <a href="https://github.com/MoltenSt4r/MoltenGram/releases/download/v12.10.6/MoltenGram-v12.10.6-f2c4358.1261.apk" download class="m3-btn m3-btn-filled">
             <span class="material-symbols-rounded">download</span>
-            Скачать APK
+            Скачать APK (v12.10.6)
           </a>
           <a href="#fdroid" class="m3-btn m3-btn-tonal">
             <span class="material-symbols-rounded">add_circle</span>
@@ -1183,7 +1214,7 @@
                 <span class="material-symbols-rounded" style="font-size: 14px;">touch_app</span>
                 В клиенте
               </span>
-              <a href="https://t.me/nasettings/appearance?r=mediaGroupCarousel" class="m3-btn-card-action">
+              <a href="https://t.me/moltengram/appearance?r=mediaGroupCarousel" class="m3-btn-card-action">
                 <span class="material-symbols-rounded">tune</span>
                 Настроить
               </a>
@@ -1206,7 +1237,7 @@
                 <span class="material-symbols-rounded" style="font-size: 14px;">touch_app</span>
                 В клиенте
               </span>
-              <a href="https://t.me/nasettings/appearance?r=playerSettings" class="m3-btn-card-action">
+              <a href="https://t.me/moltengram/appearance?r=playerSettings" class="m3-btn-card-action">
                 <span class="material-symbols-rounded">lyrics</span>
                 Настройки плеера
               </a>
@@ -1229,7 +1260,7 @@
                 <span class="material-symbols-rounded" style="font-size: 14px;">touch_app</span>
                 В клиенте
               </span>
-              <a href="https://t.me/nasettings/appearance?r=md3AvatarShapes" class="m3-btn-card-action">
+              <a href="https://t.me/moltengram/appearance?r=md3AvatarShapes" class="m3-btn-card-action">
                 <span class="material-symbols-rounded">interests</span>
                 Выбрать форму
               </a>
@@ -1276,7 +1307,7 @@
                 <span class="material-symbols-rounded" style="font-size: 14px;">touch_app</span>
                 В клиенте
               </span>
-              <a href="https://t.me/nasettings/shizuku" class="m3-btn-card-action">
+              <a href="https://t.me/moltengram/shizuku" class="m3-btn-card-action">
                 <span class="material-symbols-rounded">settings_suggest</span>
                 Настроить Shizuku
               </a>
@@ -1299,7 +1330,7 @@
                 <span class="material-symbols-rounded" style="font-size: 14px;">touch_app</span>
                 В клиенте
               </span>
-              <a href="https://t.me/nasettings/chip_folders" class="m3-btn-card-action">
+              <a href="https://t.me/moltengram/chip_folders" class="m3-btn-card-action">
                 <span class="material-symbols-rounded">tab</span>
                 Настроить папки
               </a>
@@ -1322,7 +1353,7 @@
                 <span class="material-symbols-rounded" style="font-size: 14px;">touch_app</span>
                 В клиенте
               </span>
-              <a href="https://t.me/nasettings/text_animation" class="m3-btn-card-action">
+              <a href="https://t.me/moltengram/text_animation" class="m3-btn-card-action">
                 <span class="material-symbols-rounded">animation</span>
                 Настроить эффекты
               </a>
@@ -1452,7 +1483,7 @@
         </div>
 
         <div style="text-align: center;">
-          <a href="https://t.me/nasettings/appearance?r=appIcon" class="m3-btn m3-btn-tonal">
+          <a href="https://t.me/moltengram/appearance?r=appIcon" class="m3-btn m3-btn-tonal">
             <span class="material-symbols-rounded">app_shortcut</span>
             Сменить иконку в MoltenGram
           </a>
@@ -1494,15 +1525,20 @@
               <div class="card-icon-container" style="background: var(--secondary-container); color: var(--on-secondary-container);">
                 <span class="material-symbols-rounded">download</span>
               </div>
-              <h3 class="dl-title">Прямой APK (GitHub)</h3>
+              <h3 class="dl-title">Прямой APK (1 клик)</h3>
               <p class="dl-desc">
-                Загрузите актуальный установочный APK-файл со страницы релизов GitHub. Поддерживаются архитектуры arm64-v8a и armeabi-v7a.
+                Загрузите установочный файл APK v12.10.6 в один клик. Поддерживаются архитектуры arm64-v8a и armeabi-v7a.
               </p>
             </div>
-            <a href="https://github.com/MoltenSt4r/MoltenGram/releases/latest" target="_blank" class="m3-btn-card-action" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; border-radius: 9999px; height: 42px; background: var(--secondary-container); color: var(--on-secondary-container); font-weight: 600; text-decoration: none;">
-              <span class="material-symbols-rounded">open_in_new</span>
-              Релизы на GitHub
+            <a href="https://github.com/MoltenSt4r/MoltenGram/releases/download/v12.10.6/MoltenGram-v12.10.6-f2c4358.1261.apk" download class="m3-btn-card-action" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; border-radius: 9999px; height: 42px; background: var(--secondary-container); color: var(--on-secondary-container); font-weight: 600; text-decoration: none;">
+              <span class="material-symbols-rounded">download</span>
+              Скачать APK (v12.10.6)
             </a>
+            <div style="text-align: center; margin-top: 8px;">
+              <a href="https://github.com/MoltenSt4r/MoltenGram/releases/latest" target="_blank" style="font-size: 12px; color: var(--text-secondary); text-decoration: underline;">
+                Все релизы на GitHub
+              </a>
+            </div>
           </div>
 
           <!-- Option 3: Telegram Channel -->
@@ -1545,7 +1581,7 @@
           <a href="https://github.com/MoltenSt4r/MoltenGram" target="_blank" class="footer-link">GitHub</a>
           <a href="https://t.me/MoltenGram" target="_blank" class="footer-link">Telegram</a>
           <a href="https://moltenst4r.github.io/MoltenGram/fdroid/repo" target="_blank" class="footer-link">F-Droid</a>
-          <a href="https://t.me/nasettings/updates" class="footer-link">OTA Проверка</a>
+          <a href="https://t.me/moltengram/settings?r=updates" class="footer-link">OTA Проверка</a>
         </div>
       </div>
     </div>
