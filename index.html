@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="dark" data-palette="emerald">
+<html lang="ru" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
@@ -78,9 +78,9 @@
     }
 
     /* -------------------------------------------------------------
-       2. M3 Tonal Palettes (Emerald Default, Lavender, Ocean, Sunset)
+       2. MoltenGram Emerald Theme
        ------------------------------------------------------------- */
-    :root, [data-palette="emerald"][data-theme="dark"] {
+    :root, [data-theme="dark"] {
       --bg: #111411;
       --surface: #141714;
       --surface-container-lowest: #0c0f0c;
@@ -113,7 +113,7 @@
       --text-tertiary: #8a9389;
     }
 
-    [data-palette="emerald"][data-theme="light"] {
+    [data-theme="light"] {
       --bg: #f7faf4;
       --surface: #f7faf4;
       --surface-container-lowest: #ffffff;
@@ -144,140 +144,6 @@
       --text: #181d18;
       --text-secondary: #404940;
       --text-tertiary: #717970;
-    }
-
-    /* Lavender Theme (Classic M3) */
-    [data-palette="lavender"][data-theme="dark"] {
-      --bg: #141218;
-      --surface: #141218;
-      --surface-container-lowest: #0f0d13;
-      --surface-container-low: #1d1b20;
-      --surface-container: #211f24;
-      --surface-container-high: #2b292f;
-      --surface-container-highest: #36343a;
-      --surface-tint: #d0bcff;
-
-      --primary: #d0bcff;
-      --on-primary: #381e72;
-      --primary-container: #4f378b;
-      --on-primary-container: #eaddff;
-
-      --secondary: #cbc2db;
-      --on-secondary: #332d41;
-      --secondary-container: #4a4458;
-      --on-secondary-container: #e8def8;
-
-      --tertiary: #efb8c8;
-      --on-tertiary: #492532;
-      --tertiary-container: #633b48;
-      --on-tertiary-container: #ffd8e4;
-
-      --outline: #938f99;
-      --outline-variant: #49454f;
-
-      --text: #e6e0e9;
-      --text-secondary: #cac4d0;
-      --text-tertiary: #938f99;
-    }
-
-    [data-palette="lavender"][data-theme="light"] {
-      --bg: #fef7ff;
-      --surface: #fef7ff;
-      --surface-container-lowest: #ffffff;
-      --surface-container-low: #f8f1fa;
-      --surface-container: #f2ecf4;
-      --surface-container-high: #ede6ee;
-      --surface-container-highest: #e7e0e8;
-      --surface-tint: #6750a4;
-
-      --primary: #6750a4;
-      --on-primary: #ffffff;
-      --primary-container: #eaddff;
-      --on-primary-container: #21005d;
-
-      --secondary: #625b71;
-      --on-secondary: #ffffff;
-      --secondary-container: #e8def8;
-      --on-secondary-container: #1d192b;
-
-      --tertiary: #7d5260;
-      --on-tertiary: #ffffff;
-      --tertiary-container: #ffd8e4;
-      --on-tertiary-container: #31111d;
-
-      --outline: #79747e;
-      --outline-variant: #cac4d0;
-
-      --text: #1d1b20;
-      --text-secondary: #49454f;
-      --text-tertiary: #79747e;
-    }
-
-    /* Ocean Blue Theme */
-    [data-palette="ocean"][data-theme="dark"] {
-      --bg: #101418;
-      --surface: #101418;
-      --surface-container-lowest: #0b0f13;
-      --surface-container-low: #191c20;
-      --surface-container: #1d2024;
-      --surface-container-high: #272a2f;
-      --surface-container-highest: #32353a;
-      --surface-tint: #9ecaff;
-
-      --primary: #9ecaff;
-      --on-primary: #003258;
-      --primary-container: #00497d;
-      --on-primary-container: #d1e4ff;
-
-      --secondary: #bcc7db;
-      --on-secondary: #273141;
-      --secondary-container: #3d4758;
-      --on-secondary-container: #d8e3f8;
-
-      --tertiary: #d7bee4;
-      --on-tertiary: #3b2948;
-      --tertiary-container: #523f5f;
-      --on-tertiary-container: #f3daff;
-
-      --outline: #8c9199;
-      --outline-variant: #43474e;
-
-      --text: #e1e2e8;
-      --text-secondary: #c3c7cf;
-      --text-tertiary: #8c9199;
-    }
-
-    [data-palette="ocean"][data-theme="light"] {
-      --bg: #f8f9ff;
-      --surface: #f8f9ff;
-      --surface-container-lowest: #ffffff;
-      --surface-container-low: #f2f3fa;
-      --surface-container: #eceef4;
-      --surface-container-high: #e6e8ee;
-      --surface-container-highest: #e0e2e8;
-      --surface-tint: #0061a4;
-
-      --primary: #0061a4;
-      --on-primary: #ffffff;
-      --primary-container: #d1e4ff;
-      --on-primary-container: #001d36;
-
-      --secondary: #535f70;
-      --on-secondary: #ffffff;
-      --secondary-container: #d8e3f8;
-      --on-secondary-container: #101c2b;
-
-      --tertiary: #6b5778;
-      --on-tertiary: #ffffff;
-      --tertiary-container: #f3daff;
-      --on-tertiary-container: #251432;
-
-      --outline: #73777f;
-      --outline-variant: #c3c7cf;
-
-      --text: #191c20;
-      --text-secondary: #43474e;
-      --text-tertiary: #73777f;
     }
 
     /* -------------------------------------------------------------
@@ -394,56 +260,7 @@
       color: var(--text);
     }
 
-    /* Palette popup menu */
-    .palette-menu-wrapper {
-      position: relative;
-    }
 
-    .palette-menu {
-      position: absolute;
-      top: 48px;
-      right: 0;
-      background: var(--surface-container-high);
-      border: 1px solid var(--outline-variant);
-      border-radius: 16px;
-      padding: 8px;
-      display: none;
-      flex-direction: column;
-      gap: 4px;
-      min-width: 160px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      z-index: 200;
-    }
-
-    .palette-menu.show {
-      display: flex;
-    }
-
-    .palette-option {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 12px;
-      border-radius: 12px;
-      border: none;
-      background: transparent;
-      color: var(--text);
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      text-align: left;
-      width: 100%;
-    }
-
-    .palette-option:hover {
-      background: var(--surface-container-highest);
-    }
-
-    .palette-color-dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 7px;
-    }
 
     /* -------------------------------------------------------------
        5. Authentic M3 Buttons (No Neon, No Box Glow)
@@ -1065,26 +882,7 @@
     </nav>
 
     <div class="app-bar-actions">
-      <!-- Palette Selector -->
-      <div class="palette-menu-wrapper">
-        <button class="icon-btn" id="paletteBtn" title="Сменить палитру Material You" aria-label="Сменить палитру Material You">
-          <span class="material-symbols-rounded">palette</span>
-        </button>
-        <div class="palette-menu" id="paletteMenu">
-          <button class="palette-option" data-theme-palette="emerald">
-            <span class="palette-color-dot" style="background: #7ad895;"></span>
-            Emerald (Бренд)
-          </button>
-          <button class="palette-option" data-theme-palette="lavender">
-            <span class="palette-color-dot" style="background: #d0bcff;"></span>
-            Lavender (M3)
-          </button>
-          <button class="palette-option" data-theme-palette="ocean">
-            <span class="palette-color-dot" style="background: #9ecaff;"></span>
-            Ocean (Синий)
-          </button>
-        </div>
-      </div>
+
 
       <!-- Dark / Light Theme Toggle -->
       <button class="icon-btn" id="themeToggleBtn" title="Сменить тему (светлая/темная)" aria-label="Сменить тему">
@@ -1360,7 +1158,30 @@
             </div>
           </div>
 
-          <!-- 8. Complete Privacy -->
+          <!-- 8. Unified Channel Feed -->
+          <div class="m3-card">
+            <div class="card-top">
+              <div class="card-icon-container">
+                <span class="material-symbols-rounded">dynamic_feed</span>
+              </div>
+              <h3 class="card-title">Единая лента каналов</h3>
+              <p class="card-desc">
+                Все публикации из ваших каналов в одном непрерывном хронологическом потоке без необходимости открывать каждый диалог отдельно. Легко настраивается и включается в меню чатов рядом с Избранным.
+              </p>
+            </div>
+            <div class="card-footer">
+              <span class="deeplink-hint">
+                <span class="material-symbols-rounded" style="font-size: 14px;">touch_app</span>
+                В клиенте
+              </span>
+              <a href="https://t.me/moltengram/chats?r=feedInChatMenu" class="m3-btn-card-action">
+                <span class="material-symbols-rounded">tune</span>
+                Настроить ленту
+              </a>
+            </div>
+          </div>
+
+          <!-- 9. Complete Privacy -->
           <div class="m3-card">
             <div class="card-top">
               <div class="card-icon-container">
@@ -1400,7 +1221,7 @@
           <div class="icon-card">
             <img src="assets/icons/ic_launcher_moltengram.png" alt="MoltenGram" class="icon-img" loading="lazy">
             <div class="icon-name">MoltenGram</div>
-            <div class="icon-sub">Изумруд (Бренд)</div>
+            <div class="icon-sub">Фирменный изумруд</div>
           </div>
 
           <div class="icon-card">
@@ -1422,9 +1243,9 @@
           </div>
 
           <div class="icon-card">
-            <img src="assets/icons/ic_launcher_moltengram_classic.png" alt="Classic" class="icon-img" loading="lazy">
-            <div class="icon-name">Classic</div>
-            <div class="icon-sub">Строгий стиль</div>
+            <img src="assets/icons/ic_launcher_moltengram_burning.png" alt="Burning" class="icon-img" loading="lazy">
+            <div class="icon-name">Burning</div>
+            <div class="icon-sub">Яркое пламя</div>
           </div>
 
           <div class="icon-card">
@@ -1477,8 +1298,8 @@
 
           <div class="icon-card">
             <img src="assets/icons/ic_launcher_moltengram_google.png" alt="Google" class="icon-img" loading="lazy">
-            <div class="icon-name">Monet</div>
-            <div class="icon-sub">Динамический цвет</div>
+            <div class="icon-name">Google</div>
+            <div class="icon-sub">Google стиль</div>
           </div>
         </div>
 
@@ -1589,22 +1410,18 @@
 
   <script>
     // -------------------------------------------------------------
-    // Theme & Palette Manager
+    // Theme Manager
     // -------------------------------------------------------------
     const htmlEl = document.documentElement;
     const themeToggleBtn = document.getElementById('themeToggleBtn');
     const themeIcon = document.getElementById('themeIcon');
-    const paletteBtn = document.getElementById('paletteBtn');
-    const paletteMenu = document.getElementById('paletteMenu');
     const metaThemeColor = document.getElementById('theme-color-meta');
 
     // Load saved settings or use defaults
     const savedTheme = localStorage.getItem('mg_theme') || 
       (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-    const savedPalette = localStorage.getItem('mg_palette') || 'emerald';
 
     applyTheme(savedTheme);
-    applyPalette(savedPalette);
 
     function applyTheme(theme) {
       htmlEl.setAttribute('data-theme', theme);
@@ -1618,34 +1435,9 @@
       }
     }
 
-    function applyPalette(palette) {
-      htmlEl.setAttribute('data-palette', palette);
-      localStorage.setItem('mg_palette', palette);
-    }
-
     themeToggleBtn.addEventListener('click', () => {
       const current = htmlEl.getAttribute('data-theme');
       applyTheme(current === 'dark' ? 'light' : 'dark');
-    });
-
-    paletteBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      paletteMenu.classList.toggle('show');
-    });
-
-    document.addEventListener('click', (e) => {
-      if (!paletteMenu.contains(e.target) && e.target !== paletteBtn) {
-        paletteMenu.classList.remove('show');
-      }
-    });
-
-    document.querySelectorAll('.palette-option').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const palette = btn.getAttribute('data-theme-palette');
-        applyPalette(palette);
-        paletteMenu.classList.remove('show');
-        showToast('Палитра изменена');
-      });
     });
 
     // -------------------------------------------------------------
