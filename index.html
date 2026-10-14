@@ -889,7 +889,7 @@
         <span class="material-symbols-rounded" id="themeIcon">light_mode</span>
       </button>
 
-      <a href="https://github.com/MoltenSt4r/MoltenGram/releases/download/v12.10.6/MoltenGram-v12.10.6-f2c4358.1261.apk" download class="m3-btn m3-btn-filled app-bar-dl-btn" style="height: 40px; padding: 0 16px; font-size: 13px;">
+      <a href="https://github.com/MoltenSt4r/MoltenGram/releases/download/v12.10.6/MoltenGram-v12.10.6-de882d6.1261.apk" download class="m3-btn m3-btn-filled app-bar-dl-btn" style="height: 40px; padding: 0 16px; font-size: 13px;">
         <span class="material-symbols-rounded" style="font-size: 18px;">download</span>
         <span class="btn-text">Скачать</span>
       </a>
@@ -907,7 +907,7 @@
         </p>
 
         <div class="hero-actions">
-          <a href="https://github.com/MoltenSt4r/MoltenGram/releases/download/v12.10.6/MoltenGram-v12.10.6-f2c4358.1261.apk" download class="m3-btn m3-btn-filled">
+          <a href="https://github.com/MoltenSt4r/MoltenGram/releases/download/v12.10.6/MoltenGram-v12.10.6-de882d6.1261.apk" download class="m3-btn m3-btn-filled">
             <span class="material-symbols-rounded">download</span>
             Скачать APK (v12.10.6)
           </a>
@@ -1065,7 +1065,6 @@
             </div>
           </div>
 
-          <!-- 4. Plugin Store -->
           <!-- 4. Plugins & Extensions -->
           <div class="m3-card">
             <div class="card-top">
@@ -1079,12 +1078,12 @@
             </div>
             <div class="card-footer">
               <span class="deeplink-hint">
-                <span class="material-symbols-rounded" style="font-size: 14px;">folder_special</span>
-                Каталог
+                <span class="material-symbols-rounded" style="font-size: 14px;">touch_app</span>
+                В клиенте
               </span>
-              <a href="https://t.me/addlist/pPhOtEq00KhjYTc6" target="_blank" class="m3-btn-card-action">
-                <span class="material-symbols-rounded">open_in_new</span>
-                Папка с плагинами
+              <a href="https://t.me/moltengram/plugins" class="m3-btn-card-action">
+                <span class="material-symbols-rounded">extension</span>
+                Открыть плагины
               </a>
             </div>
           </div>
@@ -1351,7 +1350,7 @@
                 Загрузите установочный файл APK v12.10.6 в один клик. Поддерживаются архитектуры arm64-v8a и armeabi-v7a.
               </p>
             </div>
-            <a href="https://github.com/MoltenSt4r/MoltenGram/releases/download/v12.10.6/MoltenGram-v12.10.6-f2c4358.1261.apk" download class="m3-btn-card-action" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; border-radius: 9999px; height: 42px; background: var(--secondary-container); color: var(--on-secondary-container); font-weight: 600; text-decoration: none;">
+            <a href="https://github.com/MoltenSt4r/MoltenGram/releases/download/v12.10.6/MoltenGram-v12.10.6-de882d6.1261.apk" download class="m3-btn-card-action" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; border-radius: 9999px; height: 42px; background: var(--secondary-container); color: var(--on-secondary-container); font-weight: 600; text-decoration: none;">
               <span class="material-symbols-rounded">download</span>
               Скачать APK (v12.10.6)
             </a>
@@ -1483,6 +1482,28 @@
         toast.classList.remove('show');
       }, 3000);
     }
+
+    // -------------------------------------------------------------
+    // Dynamic APK URL Resolution (GitHub Releases API)
+    // -------------------------------------------------------------
+    (async function resolveLatestApk() {
+      try {
+        const res = await fetch('https://api.github.com/repos/MoltenSt4r/MoltenGram/releases');
+        if (!res.ok) return;
+        const releases = await res.json();
+        for (const rel of releases) {
+          const apk = (rel.assets || []).find(a => a.name && a.name.endsWith('.apk'));
+          if (apk && apk.browser_download_url) {
+            document.querySelectorAll('a[href*="/releases/download/"][href$=".apk"]').forEach(el => {
+              el.href = apk.browser_download_url;
+            });
+            break;
+          }
+        }
+      } catch (e) {
+        // Fallback silently to static link
+      }
+    })();
   </script>
 </body>
 </html>
