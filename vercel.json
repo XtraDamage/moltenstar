@@ -2,6 +2,9 @@
   "buildCommand": "",
   "outputDirectory": ".",
   "framework": null,
+  "redirects": [
+    { "source": "/boost", "destination": "https://t.me/boost/MoltenGram", "permanent": false }
+  ],
   "rewrites": [
     { "source": "/((?!update\\.json).*)", "destination": "/index.html" }
   ],
