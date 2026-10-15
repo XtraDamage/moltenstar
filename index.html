@@ -3,24 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <meta name="theme-color" content="#0d110f" id="theme-color-meta">
+  <meta name="theme-color" content="#111411" id="theme-color-meta">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   
-  <title>MoltenGram • Telegram в стиле Material Design 3</title>
-  <meta name="description" content="MoltenGram — современный и свободный Android-клиент Telegram с нативным Material You 3, каруселью медиа, плеером MetroList, встроенным каталогом плагинов и Shizuku. Без трекеров.">
+  <title>MoltenGram • Telegram с Material Design 3</title>
+  <meta name="description" content="MoltenGram — свободный Android-клиент Telegram на базе Exteraless с нативным Material Design 3, каруселью медиа, плеером MetroList, поддержкой плагинов и Shizuku. Без трекеров и аналитики.">
   
-  <!-- Client-side redirect for /boost fallback -->
-  <script>
-    if (window.location.pathname.startsWith('/boost') || window.location.hash === '#boost') {
-      window.location.replace('https://t.me/boost/MoltenGram');
-    }
-  </script>
-
   <!-- Open Graph / Meta -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://moltenstar.space/">
   <meta property="og:title" content="MoltenGram • Telegram с Material Design 3">
-  <meta property="og:description" content="Свободный Android-клиент Telegram с каруселью медиа, плеером MetroList, каталогом плагинов и Shizuku. Без трекеров.">
+  <meta property="og:description" content="Свободный Android-клиент Telegram с каруселью медиа, плеером MetroList, плагинами и Shizuku. Без трекеров.">
   <meta property="og:image" content="https://moltenstar.space/assets/icons/ic_launcher_moltengram.png">
   
   <link rel="icon" type="image/png" href="assets/icons/ic_launcher_moltengram.png">
@@ -29,7 +22,7 @@
 
   <style>
     /* -------------------------------------------------------------
-       1. Typography & Fonts
+       1. Material Design 3 Design Tokens & Typography
        ------------------------------------------------------------- */
     @font-face {
       font-family: 'Google Sans';
@@ -57,6 +50,7 @@
       font-display: block;
     }
 
+    /* Fallback to Google Fonts if local font is unavailable */
     @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400..600,0..1,0&display=swap');
 
     .material-symbols-rounded {
@@ -84,92 +78,76 @@
     }
 
     /* -------------------------------------------------------------
-       2. Theme Variables (Modern Dark & Light)
+       2. MoltenGram Emerald Theme
        ------------------------------------------------------------- */
     :root, [data-theme="dark"] {
-      --bg: #0d110f;
-      --bg-rgb: 13, 17, 15;
-      --surface: #131815;
-      --surface-rgb: 19, 24, 21;
-      --surface-card: rgba(22, 28, 24, 0.75);
-      --surface-card-hover: rgba(28, 36, 31, 0.9);
-      --surface-card-border: rgba(255, 255, 255, 0.08);
-      --surface-card-border-hover: rgba(0, 210, 180, 0.35);
+      --bg: #111411;
+      --surface: #141714;
+      --surface-container-lowest: #0c0f0c;
+      --surface-container-low: #181b18;
+      --surface-container: #1c201c;
+      --surface-container-high: #262a26;
+      --surface-container-highest: #313531;
+      --surface-tint: #7ad895;
+      
+      --primary: #7ad895;
+      --on-primary: #003919;
+      --primary-container: #005227;
+      --on-primary-container: #95f6af;
 
-      --primary: #00d2b4;
-      --primary-rgb: 0, 210, 180;
-      --on-primary: #00382f;
-      --primary-container: rgba(0, 210, 180, 0.14);
-      --on-primary-container: #5ff9dd;
+      --secondary: #b6ccb8;
+      --on-secondary: #223526;
+      --secondary-container: #384b3c;
+      --on-secondary-container: #d2e8d4;
 
-      --secondary: #7ad895;
-      --secondary-rgb: 122, 216, 149;
-      --on-secondary: #003919;
-      --secondary-container: rgba(122, 216, 149, 0.15);
-      --on-secondary-container: #95f6af;
-
-      --tertiary: #68c7e8;
-      --on-tertiary: #003643;
-      --tertiary-container: rgba(104, 199, 232, 0.15);
+      --tertiary: #a2ceda;
+      --on-tertiary: #023640;
+      --tertiary-container: #1e4d57;
       --on-tertiary-container: #bdeaf7;
 
-      --boost-color: #ff6097;
-      --boost-glow: rgba(255, 96, 151, 0.25);
-
-      --text: #f0fdf4;
-      --text-secondary: #9cb2a3;
-      --text-tertiary: #6a7f72;
+      --outline: #8a9389;
+      --outline-variant: #404940;
       
-      --outline: rgba(255, 255, 255, 0.12);
-      --nav-bg: rgba(13, 17, 15, 0.8);
-      --badge-bg: rgba(0, 210, 180, 0.12);
-      --badge-text: #00d2b4;
-      --badge-border: rgba(0, 210, 180, 0.3);
+      --text: #e1e4de;
+      --text-secondary: #c0c8bf;
+      --text-tertiary: #8a9389;
     }
 
     [data-theme="light"] {
-      --bg: #f5f9f6;
-      --bg-rgb: 245, 249, 246;
-      --surface: #ffffff;
-      --surface-rgb: 255, 255, 255;
-      --surface-card: rgba(255, 255, 255, 0.85);
-      --surface-card-hover: rgba(255, 255, 255, 0.98);
-      --surface-card-border: rgba(0, 0, 0, 0.08);
-      --surface-card-border-hover: rgba(0, 180, 154, 0.4);
+      --bg: #f7faf4;
+      --surface: #f7faf4;
+      --surface-container-lowest: #ffffff;
+      --surface-container-low: #f1f4ee;
+      --surface-container: #ebefe8;
+      --surface-container-high: #e5e9e2;
+      --surface-container-highest: #dfe3dc;
+      --surface-tint: #076d33;
 
-      --primary: #009680;
-      --primary-rgb: 0, 150, 128;
+      --primary: #076d33;
       --on-primary: #ffffff;
-      --primary-container: #c4f7eb;
-      --on-primary-container: #00201a;
+      --primary-container: #95f6af;
+      --on-primary-container: #00210b;
 
-      --secondary: #267a48;
-      --secondary-rgb: 38, 122, 72;
+      --secondary: #4f6353;
       --on-secondary: #ffffff;
-      --secondary-container: #cbf4d8;
-      --on-secondary-container: #00210b;
+      --secondary-container: #d2e8d4;
+      --on-secondary-container: #0d1f13;
 
-      --tertiary: #0e6c88;
+      --tertiary: #3a656f;
       --on-tertiary: #ffffff;
-      --tertiary-container: #cceeff;
-      --on-tertiary-container: #001f28;
+      --tertiary-container: #bdeaf7;
+      --on-tertiary-container: #001f26;
 
-      --boost-color: #e0266e;
-      --boost-glow: rgba(224, 38, 110, 0.2);
+      --outline: #717970;
+      --outline-variant: #c0c8bf;
 
-      --text: #111a14;
-      --text-secondary: #485b50;
-      --text-tertiary: #758a7e;
-
-      --outline: rgba(0, 0, 0, 0.1);
-      --nav-bg: rgba(245, 249, 246, 0.85);
-      --badge-bg: rgba(0, 150, 128, 0.1);
-      --badge-text: #007a68;
-      --badge-border: rgba(0, 150, 128, 0.25);
+      --text: #181d18;
+      --text-secondary: #404940;
+      --text-tertiary: #717970;
     }
 
     /* -------------------------------------------------------------
-       3. Global Reset & Ambient Glow Animations
+       3. Global Styles & Reset
        ------------------------------------------------------------- */
     *, *::before, *::after {
       box-sizing: border-box;
@@ -187,11 +165,10 @@
       color: var(--text);
       font-family: 'Google Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       font-size: 16px;
-      line-height: 1.6;
-      transition: background-color 0.3s ease, color 0.3s ease;
+      line-height: 1.5;
+      transition: background-color 0.25s ease, color 0.25s ease;
       overflow-x: hidden;
       min-height: 100vh;
-      position: relative;
     }
 
     a {
@@ -199,192 +176,95 @@
       text-decoration: none;
     }
 
-    /* Ambient drifting glows */
-    .glow-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    .glow-blob {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(100px);
-      opacity: 0.38;
-      will-change: transform;
-    }
-
-    [data-theme="light"] .glow-blob {
-      opacity: 0.18;
-      filter: blur(120px);
-    }
-
-    .glow-blob-1 {
-      top: -15%;
-      left: 20%;
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, #00d2b4 0%, rgba(0, 210, 180, 0) 70%);
-      animation: drift1 24s ease-in-out infinite alternate;
-    }
-
-    .glow-blob-2 {
-      top: 35%;
-      right: -10%;
-      width: 650px;
-      height: 650px;
-      background: radial-gradient(circle, #7ad895 0%, rgba(122, 216, 149, 0) 70%);
-      animation: drift2 28s ease-in-out infinite alternate;
-    }
-
-    .glow-blob-3 {
-      bottom: -15%;
-      left: 5%;
-      width: 550px;
-      height: 550px;
-      background: radial-gradient(circle, #2b7a60 0%, rgba(43, 122, 96, 0) 70%);
-      animation: drift3 26s ease-in-out infinite alternate;
-    }
-
-    .glow-blob-boost {
-      top: 65%;
-      left: 45%;
-      width: 450px;
-      height: 450px;
-      background: radial-gradient(circle, rgba(255, 96, 151, 0.35) 0%, rgba(255, 96, 151, 0) 70%);
-      animation: drift1 32s ease-in-out infinite alternate;
-    }
-
-    @keyframes drift1 {
-      0% { transform: translate3d(0, 0, 0) scale(1); }
-      50% { transform: translate3d(60px, -45px, 0) scale(1.15); }
-      100% { transform: translate3d(-40px, 50px, 0) scale(0.95); }
-    }
-
-    @keyframes drift2 {
-      0% { transform: translate3d(0, 0, 0) scale(1); }
-      50% { transform: translate3d(-75px, 60px, 0) scale(1.2); }
-      100% { transform: translate3d(45px, -65px, 0) scale(0.9); }
-    }
-
-    @keyframes drift3 {
-      0% { transform: translate3d(0, 0, 0) scale(1); }
-      50% { transform: translate3d(55px, 65px, 0) scale(1.12); }
-      100% { transform: translate3d(-65px, -35px, 0) scale(1.04); }
-    }
-
     /* -------------------------------------------------------------
-       4. Navigation Bar
+       4. Navigation Bar (M3 App Bar)
        ------------------------------------------------------------- */
     .top-app-bar {
       position: sticky;
       top: 0;
       z-index: 100;
-      height: 68px;
-      padding: 0 28px;
+      height: 64px;
+      padding: 0 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: var(--nav-bg);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--outline);
+      background: var(--bg);
+      border-bottom: 1px solid transparent;
       transition: background 0.25s ease, border-color 0.25s ease;
+    }
+
+    .top-app-bar.scrolled {
+      background: var(--surface-container);
+      border-bottom-color: var(--outline-variant);
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 12px;
-      font-size: 21px;
+      font-size: 20px;
       font-weight: 700;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.2px;
       color: var(--text);
     }
 
     .brand-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
       object-fit: cover;
-      box-shadow: 0 4px 12px rgba(0, 210, 180, 0.2);
-    }
-
-    .brand-tag {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      padding: 2px 7px;
-      border-radius: 6px;
-      background: var(--primary-container);
-      color: var(--primary);
-      letter-spacing: 0.04em;
     }
 
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
 
     .nav-item {
-      padding: 8px 16px;
-      border-radius: 9999px;
+      padding: 8px 14px;
+      border-radius: 20px;
       font-size: 14px;
       font-weight: 500;
       color: var(--text-secondary);
-      transition: all 0.2s ease;
+      transition: background-color 0.2s ease, color 0.2s ease;
     }
 
     .nav-item:hover {
-      background-color: var(--surface-card);
+      background-color: var(--surface-container-high);
       color: var(--text);
-    }
-
-    .nav-item.nav-boost {
-      color: var(--boost-color);
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .nav-item.nav-boost:hover {
-      background-color: rgba(255, 96, 151, 0.12);
-      color: var(--boost-color);
     }
 
     .app-bar-actions {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
     .icon-btn {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      border: 1px solid var(--outline);
-      background: var(--surface-card);
+      width: 40px;
+      height: 40px;
+      border-radius: 20px;
+      border: none;
+      background: transparent;
       color: var(--text-secondary);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: background-color 0.2s ease, color 0.2s ease;
     }
 
     .icon-btn:hover {
-      background: var(--surface-card-hover);
+      background: var(--surface-container-high);
       color: var(--text);
-      border-color: var(--primary);
     }
 
+
+
+    /* -------------------------------------------------------------
+       5. Authentic M3 Buttons (No Neon, No Box Glow)
+       ------------------------------------------------------------- */
     .m3-btn {
       display: inline-flex;
       align-items: center;
@@ -392,698 +272,525 @@
       gap: 8px;
       height: 48px;
       padding: 0 24px;
-      border-radius: 9999px;
+      border-radius: 24px;
       font-size: 15px;
       font-weight: 600;
-      letter-spacing: -0.01em;
       cursor: pointer;
       border: none;
       text-decoration: none;
-      transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+      transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
       white-space: nowrap;
     }
 
     .m3-btn:active {
-      transform: scale(0.97);
+      transform: scale(0.98);
     }
 
+    /* Filled Button */
     .m3-btn-filled {
-      background: linear-gradient(135deg, var(--primary) 0%, #05a790 100%);
-      color: #002922;
-      box-shadow: 0 4px 18px rgba(0, 210, 180, 0.25);
+      background-color: var(--primary);
+      color: var(--on-primary);
     }
 
     .m3-btn-filled:hover {
-      filter: brightness(1.08);
-      box-shadow: 0 6px 24px rgba(0, 210, 180, 0.4);
-      transform: translateY(-1px);
+      filter: brightness(1.06);
     }
 
+    /* Filled Tonal Button */
     .m3-btn-tonal {
       background-color: var(--secondary-container);
-      color: var(--secondary);
-      border: 1px solid rgba(122, 216, 149, 0.2);
+      color: var(--on-secondary-container);
     }
 
     .m3-btn-tonal:hover {
-      background-color: rgba(122, 216, 149, 0.25);
-      transform: translateY(-1px);
+      filter: brightness(1.08);
     }
 
+    /* Outlined Button */
     .m3-btn-outlined {
       background-color: transparent;
       border: 1px solid var(--outline);
-      color: var(--text);
+      color: var(--primary);
     }
 
     .m3-btn-outlined:hover {
-      background-color: var(--surface-card);
-      border-color: var(--text-secondary);
-      transform: translateY(-1px);
+      background-color: var(--surface-container-low);
     }
 
-    .m3-btn-boost {
-      background: linear-gradient(135deg, #ff4181 0%, #ff6097 100%);
-      color: #ffffff;
-      box-shadow: 0 4px 18px var(--boost-glow);
+    /* Text Button */
+    .m3-btn-text {
+      background-color: transparent;
+      color: var(--primary);
+      padding: 0 16px;
     }
 
-    .m3-btn-boost:hover {
-      filter: brightness(1.08);
-      box-shadow: 0 6px 24px rgba(255, 65, 129, 0.45);
-      transform: translateY(-1px);
+    .m3-btn-text:hover {
+      background-color: var(--surface-container-low);
     }
 
-    /* -------------------------------------------------------------
-       5. Layout Containers & Section Titles
-       ------------------------------------------------------------- */
-    main {
-      position: relative;
-      z-index: 1;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    .section {
-      padding: 80px 0;
-    }
-
-    .section-header {
-      text-align: center;
-      max-width: 760px;
-      margin: 0 auto 52px;
-    }
-
-    .section-pill {
+    /* Compact Deeplink Button for Cards */
+    .m3-btn-card-action {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
-      border-radius: 9999px;
-      font-size: 13px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      background: var(--badge-bg);
-      color: var(--badge-text);
-      border: 1px solid var(--badge-border);
-      margin-bottom: 16px;
+      gap: 8px;
+      height: 40px;
+      padding: 0 18px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      background-color: var(--secondary-container);
+      color: var(--on-secondary-container);
+      border: none;
+      cursor: pointer;
+      transition: filter 0.2s ease, transform 0.1s ease;
     }
 
-    .section-title {
-      font-size: 38px;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      line-height: 1.2;
-      margin-bottom: 16px;
+    .m3-btn-card-action:hover {
+      filter: brightness(1.1);
     }
 
-    .section-subtitle {
-      font-size: 17px;
-      color: var(--text-secondary);
-      line-height: 1.6;
+    .m3-btn-card-action:active {
+      transform: scale(0.97);
     }
 
     /* -------------------------------------------------------------
        6. Hero Section
        ------------------------------------------------------------- */
-    .hero-section {
-      padding: 96px 0 64px;
-      text-align: center;
-      position: relative;
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
     }
 
-    .hero-badge-wrap {
+    .hero-section {
+      padding: 72px 0 56px;
+      text-align: center;
+    }
+
+    .hero-badge-row {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .m3-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
       padding: 6px 16px;
-      border-radius: 9999px;
-      background: var(--surface-card);
-      border: 1px solid var(--surface-card-border);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      margin-bottom: 24px;
+      background: var(--surface-container-high);
+      border: 1px solid var(--outline-variant);
+      border-radius: 20px;
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 500;
       color: var(--text-secondary);
-    }
-
-    .pulse-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--primary);
-      box-shadow: 0 0 10px var(--primary);
-      animation: pulseGlow 2s infinite;
-    }
-
-    @keyframes pulseGlow {
-      0% { transform: scale(0.95); opacity: 0.7; }
-      50% { transform: scale(1.25); opacity: 1; }
-      100% { transform: scale(0.95); opacity: 0.7; }
     }
 
     .hero-title {
-      font-size: 54px;
+      font-size: 48px;
       font-weight: 700;
-      letter-spacing: -0.035em;
       line-height: 1.15;
-      max-width: 900px;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      max-width: 820px;
       margin: 0 auto 20px;
     }
 
-    .text-gradient {
-      background: linear-gradient(135deg, #00d2b4 0%, #7ad895 50%, #68c7e8 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
     .hero-subtitle {
-      font-size: 19px;
-      color: var(--text-secondary);
-      max-width: 720px;
-      margin: 0 auto 36px;
+      font-size: 18px;
       line-height: 1.6;
+      color: var(--text-secondary);
+      max-width: 680px;
+      margin: 0 auto 36px;
+      font-weight: 400;
     }
 
     .hero-actions {
       display: flex;
-      align-items: center;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 14px;
-      margin-bottom: 44px;
+      gap: 12px;
+      margin-bottom: 40px;
     }
 
     .hero-chips {
       display: flex;
-      align-items: center;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 12px;
-      max-width: 850px;
-      margin: 0 auto;
-    }
-
-    .hero-chip {
-      display: inline-flex;
-      align-items: center;
       gap: 8px;
-      padding: 8px 16px;
-      border-radius: 9999px;
-      background: var(--surface-card);
-      border: 1px solid var(--surface-card-border);
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
     }
 
-    .hero-chip .material-symbols-rounded {
-      font-size: 17px;
-      color: var(--primary);
-    }
-
-    /* -------------------------------------------------------------
-       7. Zigzag & Feature Cards Section
-       ------------------------------------------------------------- */
-    .features-zigzag {
-      display: flex;
-      flex-direction: column;
-      gap: 40px;
-      margin-top: 20px;
-    }
-
-    .zigzag-card {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      align-items: center;
-      gap: 48px;
-      background: var(--surface-card);
-      border: 1px solid var(--surface-card-border);
-      border-radius: 28px;
-      padding: 44px;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .zigzag-card:hover {
-      border-color: var(--surface-card-border-hover);
-      box-shadow: 0 16px 40px rgba(0, 210, 180, 0.08);
-      transform: translateY(-2px);
-    }
-
-    .zigzag-card.reverse {
-      grid-template-columns: 1fr 1fr;
-    }
-
-    .zigzag-card.reverse .zigzag-visual {
-      order: 1;
-    }
-
-    .zigzag-card.reverse .zigzag-text {
-      order: 2;
-    }
-
-    .feature-tag {
+    .m3-chip {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--primary);
-      margin-bottom: 12px;
-    }
-
-    .feature-heading {
-      font-size: 28px;
-      font-weight: 700;
-      letter-spacing: -0.025em;
-      line-height: 1.3;
-      margin-bottom: 16px;
-      color: var(--text);
-    }
-
-    .feature-desc {
-      font-size: 16px;
-      color: var(--text-secondary);
-      line-height: 1.7;
-      margin-bottom: 24px;
-    }
-
-    .feature-bullets {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 28px;
-    }
-
-    .feature-bullets li {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      font-size: 14px;
-      color: var(--text-secondary);
-      line-height: 1.5;
-    }
-
-    .feature-bullets li .material-symbols-rounded {
-      font-size: 18px;
-      color: var(--primary);
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    .feature-action-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 20px;
-      border-radius: 9999px;
-      background: var(--surface-card-hover);
-      border: 1px solid var(--surface-card-border);
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text);
-      transition: all 0.2s ease;
-    }
-
-    .feature-action-btn:hover {
-      background: var(--primary-container);
-      color: var(--primary);
-      border-color: var(--primary);
-    }
-
-    .feature-action-btn .material-symbols-rounded {
-      font-size: 18px;
-    }
-
-    /* Visual preview side */
-    .zigzag-visual {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-
-    .visual-box {
-      width: 100%;
-      height: 320px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
-      border: 1px solid var(--surface-card-border);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .visual-icon-glow {
-      width: 90px;
-      height: 90px;
-      border-radius: 24px;
-      background: var(--primary-container);
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-      box-shadow: 0 10px 28px rgba(0, 210, 180, 0.2);
-    }
-
-    .visual-icon-glow .material-symbols-rounded {
-      font-size: 46px;
-    }
-
-    .visual-pill-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 14px;
-    }
-
-    .visual-pill {
-      font-size: 12px;
-      font-weight: 600;
-      padding: 6px 12px;
+      height: 32px;
+      padding: 0 12px;
+      background: var(--surface-container-low);
       border-radius: 8px;
-      background: var(--surface-card);
-      border: 1px solid var(--surface-card-border);
+      font-size: 13px;
+      font-weight: 500;
       color: var(--text-secondary);
     }
 
     /* -------------------------------------------------------------
-       8. Bento Grid (Secondary Features)
+       7. Section Headers
        ------------------------------------------------------------- */
-    .bento-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 24px;
-      margin-top: 24px;
+    .section {
+      padding: 48px 0;
     }
 
-    .bento-card {
-      background: var(--surface-card);
-      border: 1px solid var(--surface-card-border);
+    .section-header {
+      margin-bottom: 32px;
+    }
+
+    .section-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+    }
+
+    .section-subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 600px;
+    }
+
+    /* -------------------------------------------------------------
+       8. Features Grid (Cards with Deeplinks)
+       ------------------------------------------------------------- */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .m3-card {
+      background: var(--surface-container);
       border-radius: 24px;
-      padding: 32px;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      padding: 28px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: all 0.25s ease;
+      transition: background-color 0.2s ease;
+      border: 1px solid var(--outline-variant);
     }
 
-    .bento-card:hover {
-      border-color: var(--surface-card-border-hover);
-      transform: translateY(-2px);
+    .m3-card:hover {
+      background: var(--surface-container-high);
     }
 
-    .bento-icon {
+    .card-top {
+      margin-bottom: 24px;
+    }
+
+    .card-icon-container {
       width: 48px;
       height: 48px;
       border-radius: 14px;
       background: var(--primary-container);
-      color: var(--primary);
+      color: var(--on-primary-container);
       display: flex;
       align-items: center;
       justify-content: center;
       margin-bottom: 20px;
     }
 
-    .bento-title {
+    .card-title {
       font-size: 20px;
       font-weight: 700;
-      letter-spacing: -0.02em;
+      color: var(--text);
       margin-bottom: 10px;
+      line-height: 1.3;
     }
 
-    .bento-desc {
-      font-size: 14px;
+    .card-desc {
+      font-size: 15px;
       color: var(--text-secondary);
-      line-height: 1.6;
-      margin-bottom: 20px;
+      line-height: 1.55;
     }
 
-    .bento-footer {
+    .card-footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 12px;
       padding-top: 16px;
-      border-top: 1px solid var(--outline);
+      border-top: 1px solid var(--outline-variant);
     }
 
-    .bento-link {
-      display: inline-flex;
+    .deeplink-hint {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--primary);
-    }
-
-    .bento-link:hover {
-      text-decoration: underline;
+      gap: 4px;
     }
 
     /* -------------------------------------------------------------
-       9. Stacked Download Mirrors Section
+       9. F-Droid Official Showcase Card
        ------------------------------------------------------------- */
-    .download-section {
-      padding: 80px 0 100px;
+    .fdroid-card {
+      background: var(--surface-container-high);
+      border-radius: 28px;
+      padding: 36px;
+      border: 1px solid var(--outline-variant);
+      margin: 24px 0;
     }
 
-    .mirrors-grid {
+    .fdroid-content {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 24px;
-      margin-top: 28px;
+      grid-template-columns: 1fr auto;
+      gap: 32px;
+      align-items: center;
     }
 
-    .mirror-card {
-      background: var(--surface-card);
-      border: 1px solid var(--surface-card-border);
-      border-radius: 24px;
-      padding: 32px;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+    @media (max-width: 768px) {
+      .fdroid-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .fdroid-badge-row {
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .fdroid-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+      letter-spacing: -0.2px;
+    }
+
+    .fdroid-desc {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 600px;
+      margin-bottom: 24px;
+    }
+
+    .fingerprint-box {
+      background: var(--surface-container-lowest);
+      border: 1px solid var(--outline-variant);
+      border-radius: 16px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
       justify-content: space-between;
-      transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
-      position: relative;
+      gap: 16px;
+      max-width: 650px;
+    }
+
+    .fingerprint-text-wrapper {
       overflow: hidden;
     }
 
-    .mirror-card:hover {
-      border-color: var(--surface-card-border-hover);
-      box-shadow: 0 14px 36px rgba(0, 210, 180, 0.1);
-      transform: translateY(-2px);
-    }
-
-    .mirror-card.featured {
-      border-color: rgba(0, 210, 180, 0.45);
-      background: linear-gradient(180deg, rgba(0, 210, 180, 0.08) 0%, var(--surface-card) 45%);
-    }
-
-    .mirror-card.boost-card {
-      border-color: rgba(255, 96, 151, 0.4);
-      background: linear-gradient(180deg, rgba(255, 96, 151, 0.09) 0%, var(--surface-card) 45%);
-    }
-
-    .mirror-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
-
-    .mirror-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 16px;
-      background: var(--primary-container);
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .mirror-icon.fdroid {
-      background: rgba(122, 216, 149, 0.15);
-      color: var(--secondary);
-    }
-
-    .mirror-icon.boost {
-      background: rgba(255, 96, 151, 0.18);
-      color: var(--boost-color);
-    }
-
-    .mirror-icon.telegram {
-      background: rgba(104, 199, 232, 0.18);
-      color: var(--tertiary);
-    }
-
-    .mirror-badge {
+    .fingerprint-label {
       font-size: 11px;
-      font-weight: 700;
       text-transform: uppercase;
-      padding: 4px 10px;
-      border-radius: 9999px;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.5px;
+      color: var(--text-tertiary);
+      margin-bottom: 2px;
     }
 
-    .badge-direct {
-      background: var(--primary-container);
-      color: var(--primary);
+    .fingerprint-code {
+      font-family: monospace;
+      font-size: 12px;
+      color: var(--text);
+      word-break: break-all;
     }
 
-    .badge-fdroid {
-      background: var(--secondary-container);
-      color: var(--secondary);
+    .copy-btn {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 12px;
+      background: var(--surface-container-high);
+      color: var(--text);
+      border: 1px solid var(--outline-variant);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: background 0.2s ease;
     }
 
-    .badge-boost {
-      background: rgba(255, 96, 151, 0.18);
-      color: var(--boost-color);
+    .copy-btn:hover {
+      background: var(--surface-container-highest);
     }
 
-    .badge-tg {
-      background: var(--tertiary-container);
-      color: var(--tertiary);
-    }
-
-    .mirror-title {
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 8px;
-    }
-
-    .mirror-desc {
-      font-size: 14px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      margin-bottom: 20px;
-    }
-
-    .mirror-meta {
+    .fdroid-buttons {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      font-size: 13px;
-      color: var(--text-tertiary);
-      margin-bottom: 24px;
-      padding: 12px 14px;
-      border-radius: 12px;
-      background: rgba(0, 0, 0, 0.18);
-      border: 1px solid var(--outline);
-    }
-
-    .mirror-meta-row {
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .fingerprint-compact {
-      word-break: break-all;
-      font-family: monospace;
-      font-size: 11px;
-      color: var(--text-secondary);
-      background: rgba(0, 0, 0, 0.25);
-      padding: 8px 10px;
-      border-radius: 8px;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      border: 1px solid var(--outline);
-    }
-
-    .copy-icon-btn {
-      background: transparent;
-      border: none;
-      color: var(--primary);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      padding: 4px;
-      border-radius: 6px;
-      transition: background 0.15s ease;
-    }
-
-    .copy-icon-btn:hover {
-      background: var(--primary-container);
+      gap: 12px;
     }
 
     /* -------------------------------------------------------------
-       10. Toast Notification
+       10. Ticker Marquee Strip
+       ------------------------------------------------------------- */
+    .marquee-container {
+      width: 100%;
+      overflow: hidden;
+      padding: 16px 0;
+      background: var(--surface-container-low);
+      border-top: 1px solid var(--outline-variant);
+      border-bottom: 1px solid var(--outline-variant);
+      user-select: none;
+      margin: 32px 0;
+    }
+
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee 25s linear infinite;
+    }
+
+    .marquee-content {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      padding-right: 32px;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-tertiary);
+      white-space: nowrap;
+    }
+
+    .marquee-dot {
+      color: var(--primary);
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* -------------------------------------------------------------
+       11. Download Hub (Clean M3 Cards)
+       ------------------------------------------------------------- */
+    .download-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .download-card {
+      background: var(--surface-container);
+      border: 1px solid var(--outline-variant);
+      border-radius: 24px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      transition: background-color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .download-card:hover {
+      background: var(--surface-container-high);
+      border-color: var(--outline);
+      transform: translateY(-2px);
+    }
+
+    .dl-card-top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .dl-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: var(--secondary-container);
+      color: var(--on-secondary-container);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .dl-icon.primary {
+      background: var(--primary);
+      color: var(--on-primary);
+    }
+
+    .dl-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.25;
+    }
+
+    .dl-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .dl-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* -------------------------------------------------------------
+       12. Toast Feedback Notification
        ------------------------------------------------------------- */
     .m3-toast {
       position: fixed;
-      bottom: 28px;
+      bottom: 24px;
       left: 50%;
       transform: translateX(-50%) translateY(100px);
-      background: var(--surface);
+      background: var(--surface-container-highest);
       color: var(--text);
-      border: 1px solid var(--outline);
+      border: 1px solid var(--outline-variant);
       padding: 12px 24px;
-      border-radius: 9999px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-      z-index: 1000;
-      opacity: 0;
-      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+      border-radius: 16px;
       font-size: 14px;
       font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1), opacity 0.3s ease;
+      z-index: 1000;
       pointer-events: none;
     }
 
     .m3-toast.show {
       transform: translateX(-50%) translateY(0);
       opacity: 1;
-      pointer-events: auto;
     }
 
     /* -------------------------------------------------------------
-       11. Footer
+       13. Footer
        ------------------------------------------------------------- */
     .footer {
-      padding: 48px 0;
-      border-top: 1px solid var(--outline);
-      background: var(--bg);
-      position: relative;
-      z-index: 1;
+      padding: 56px 0 40px;
+      border-top: 1px solid var(--outline-variant);
+      margin-top: 64px;
     }
 
     .footer-content {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
       flex-wrap: wrap;
-      gap: 24px;
+      gap: 20px;
     }
 
     .footer-brand {
@@ -1106,8 +813,7 @@
     .footer-links {
       display: flex;
       align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
+      gap: 16px;
     }
 
     .footer-link {
@@ -1117,98 +823,107 @@
     }
 
     .footer-link:hover {
-      color: var(--primary);
+      color: var(--text);
     }
 
     /* -------------------------------------------------------------
-       12. Responsive Breakpoints
+       14. Mobile Responsiveness
        ------------------------------------------------------------- */
-    @media (max-width: 900px) {
-      .hero-title {
-        font-size: 38px;
-      }
-      .section-title {
-        font-size: 30px;
-      }
-      .zigzag-card {
-        grid-template-columns: 1fr;
-        padding: 32px 24px;
-        gap: 28px;
-      }
-      .zigzag-card.reverse .zigzag-visual {
-        order: 2;
-      }
-      .zigzag-card.reverse .zigzag-text {
-        order: 1;
-      }
-      .visual-box {
-        height: 240px;
-      }
-    }
-
     @media (max-width: 768px) {
       .top-app-bar {
-        padding: 0 16px;
+        padding: 0 12px;
+        gap: 8px;
+        overflow: hidden;
+      }
+      .brand {
+        flex-shrink: 0;
+        min-width: 0;
+        gap: 8px;
+        font-size: 18px;
+      }
+      .brand-icon {
+        flex-shrink: 0;
+      }
+      .app-bar-actions {
+        gap: 6px;
+        flex-shrink: 0;
       }
       .nav-links {
         display: none;
       }
-      .hero-section {
-        padding: 60px 0 40px;
-      }
       .hero-title {
-        font-size: 32px;
+        font-size: 34px;
       }
       .hero-subtitle {
         font-size: 16px;
       }
-      .section {
-        padding: 56px 0;
-      }
-      .footer-content {
+      .hero-actions {
         flex-direction: column;
-        align-items: flex-start;
+      }
+      .hero-actions .m3-btn {
+        width: 100%;
+      }
+      .container {
+        padding: 0 16px;
+      }
+      .m3-card {
+        padding: 22px;
+      }
+      .fdroid-card {
+        padding: 24px;
+      }
+      .fingerprint-box {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .copy-btn {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .top-app-bar {
+        padding: 0 10px;
+      }
+      .brand span {
+        font-size: 17px;
+      }
+      .app-bar-dl-btn {
+        padding: 0 10px !important;
+        font-size: 12px !important;
+      }
+      .app-bar-dl-btn .btn-text {
+        display: none;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- Ambient Drifting Glows -->
-  <div class="glow-canvas">
-    <div class="glow-blob glow-blob-1"></div>
-    <div class="glow-blob glow-blob-2"></div>
-    <div class="glow-blob glow-blob-3"></div>
-    <div class="glow-blob glow-blob-boost"></div>
-  </div>
-
   <!-- Top App Bar -->
   <header class="top-app-bar" id="appBar">
     <div class="brand">
       <img src="assets/icons/ic_launcher_moltengram.png" alt="MoltenGram Logo" class="brand-icon">
       <span>MoltenGram</span>
-      <span class="brand-tag">v12.10.6</span>
     </div>
 
     <nav class="nav-links">
       <a href="#features" class="nav-item">Возможности</a>
       <a href="#fdroid" class="nav-item">F-Droid</a>
-      <a href="#download" class="nav-item">Зеркала</a>
-      <a href="https://t.me/boost/MoltenGram" target="_blank" class="nav-item nav-boost">
-        <span class="material-symbols-rounded" style="font-size: 17px;">bolt</span>
-        Буст
-      </a>
+      <a href="#download" class="nav-item">Скачать</a>
     </nav>
 
     <div class="app-bar-actions">
+
+
       <!-- Dark / Light Theme Toggle -->
-      <button class="icon-btn" id="themeToggleBtn" title="Сменить тему оформления" aria-label="Сменить тему">
+      <button class="icon-btn" id="themeToggleBtn" title="Сменить тему (светлая/темная)" aria-label="Сменить тему">
         <span class="material-symbols-rounded" id="themeIcon">light_mode</span>
       </button>
 
-      <a href="https://github.com/MoltenSt4r/MoltenGram/releases/download/v12.10.6/MoltenGram-v12.10.6-ae8723f.1261.apk" download class="m3-btn m3-btn-filled" style="height: 42px; padding: 0 18px; font-size: 14px;">
-        <span class="material-symbols-rounded" style="font-size: 19px;">download</span>
-        <span>Скачать</span>
+      <a href="https://github.com/MoltenSt4r/MoltenGram/releases/download/v12.10.6/MoltenGram-v12.10.6-ae8723f.1261.apk" download class="m3-btn m3-btn-filled app-bar-dl-btn" style="height: 40px; padding: 0 16px; font-size: 13px;">
+        <span class="material-symbols-rounded" style="font-size: 18px;">download</span>
+        <span class="btn-text">Скачать</span>
       </a>
     </div>
   </header>
@@ -1217,17 +932,10 @@
     <!-- Hero Section -->
     <section class="hero-section">
       <div class="container">
-        <div class="hero-badge-wrap">
-          <span class="pulse-dot"></span>
-          <span>MoltenGram v12.10.6 • Настоящий Material You 3</span>
-        </div>
-
-        <h1 class="hero-title">
-          Telegram в эстетике <span class="text-gradient">Material Design 3</span> и полной свободой
-        </h1>
-
+        <h1 class="hero-title">MoltenGram: Telegram в стиле Material Design 3</h1>
+        
         <p class="hero-subtitle">
-          Плавный, продуманный и открытый Android-клиент Telegram на базе Exteraless с каруселью медиа, плеером MetroList, встроенным магазином плагинов и полной независимостью от трекеров.
+          Плавный, продуманный и открытый Android-клиент с эстетикой Material Design 3, лентой каналов, каруселью альбомов, плеером MetroList и полной независимостью от трекеров.
         </p>
 
         <div class="hero-actions">
@@ -1236,504 +944,451 @@
             Скачать APK (v12.10.6)
           </a>
           <a href="#fdroid" class="m3-btn m3-btn-tonal">
-            <span class="material-symbols-rounded">inventory_2</span>
-            F-Droid Репозиторий
-          </a>
-          <a href="https://t.me/boost/MoltenGram" target="_blank" class="m3-btn m3-btn-boost">
-            <span class="material-symbols-rounded">bolt</span>
-            Забустить канал
+            <span class="material-symbols-rounded">add_circle</span>
+            Репозиторий F-Droid
           </a>
           <a href="https://t.me/MoltenGram" target="_blank" class="m3-btn m3-btn-outlined">
             <span class="material-symbols-rounded">send</span>
-            @MoltenGram
+            Канал в Telegram
           </a>
         </div>
 
         <div class="hero-chips">
-          <div class="hero-chip">
-            <span class="material-symbols-rounded">shield</span>
+          <div class="m3-chip">
+            <span class="material-symbols-rounded" style="font-size: 16px;">shield</span>
             0% трекеров и аналитики
           </div>
-          <div class="hero-chip">
-            <span class="material-symbols-rounded">code</span>
+          <div class="m3-chip">
+            <span class="material-symbols-rounded" style="font-size: 16px;">code</span>
             100% Open Source
           </div>
-          <div class="hero-chip">
-            <span class="material-symbols-rounded">palette</span>
-            Monet & Material You 3
+          <div class="m3-chip">
+            <span class="material-symbols-rounded" style="font-size: 16px;">palette</span>
+            Нативный Material You
           </div>
-          <div class="hero-chip">
-            <span class="material-symbols-rounded">android</span>
-            Android 8.0+ (ARM64 / ARM32)
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Zigzag High-Impact Feature Highlights -->
-    <section class="section" id="features">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-pill">
-            <span class="material-symbols-rounded" style="font-size: 16px;">stars</span>
-            Ключевые возможности
-          </div>
-          <h2 class="section-title">Создан для тех, кто ценит интерфейс и контроль</h2>
-          <p class="section-subtitle">
-            Каждое улучшение MoltenGram решает реальные проблемы официального клиента. Нажимайте на кнопки действий для прямого перехода в нужные разделы настроек.
-          </p>
-        </div>
-
-        <div class="features-zigzag">
-          <!-- Feature 1: Media Carousel -->
-          <div class="zigzag-card">
-            <div class="zigzag-text">
-              <div class="feature-tag">
-                <span class="material-symbols-rounded" style="font-size: 16px;">view_carousel</span>
-                МЕДИА И ЧАТЫ
-              </div>
-              <h3 class="feature-heading">Горизонтальная карусель альбомов</h3>
-              <p class="feature-desc">
-                Массивные сетки из 10 фото больше не загромождают историю сообщений. Альбомы превращаются в компактную, плавную горизонтальную карусель с естественной физикой прокрутки и идеальной геометрией пузырей сообщений.
-              </p>
-              <ul class="feature-bullets">
-                <li>
-                  <span class="material-symbols-rounded">check_circle</span>
-                  Точный расчет ширины бабла — текст подписи никогда не выходит за границы.
-                </li>
-                <li>
-                  <span class="material-symbols-rounded">check_circle</span>
-                  Поддержка широких постов для каналов и полноэкранного просмотра.
-                </li>
-              </ul>
-              <a href="https://t.me/moltengram/appearance?r=mediaGroupCarousel" class="feature-action-btn">
-                <span class="material-symbols-rounded">tune</span>
-                Настроить карусель в приложении
-              </a>
-            </div>
-            <div class="zigzag-visual">
-              <div class="visual-box">
-                <div class="visual-icon-glow">
-                  <span class="material-symbols-rounded">view_carousel</span>
-                </div>
-                <div style="font-weight: 700; font-size: 18px; margin-bottom: 4px;">Media Carousel Engine</div>
-                <div style="font-size: 13px; color: var(--text-secondary);">Плавный свайп и динамический расчет баблов</div>
-                <div class="visual-pill-row">
-                  <span class="visual-pill">No Grid Overflow</span>
-                  <span class="visual-pill">Native Physics</span>
-                  <span class="visual-pill">Channel Wide Posts</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Feature 2: MetroList Music Player (Reverse) -->
-          <div class="zigzag-card reverse">
-            <div class="zigzag-visual">
-              <div class="visual-box">
-                <div class="visual-icon-glow" style="background: rgba(122, 216, 149, 0.18); color: var(--secondary); box-shadow: 0 10px 28px rgba(122, 216, 149, 0.2);">
-                  <span class="material-symbols-rounded">queue_music</span>
-                </div>
-                <div style="font-weight: 700; font-size: 18px; margin-bottom: 4px;">MetroList Audio 2.0</div>
-                <div style="font-size: 13px; color: var(--text-secondary);">Синхронизированные тексты в реальном времени</div>
-                <div class="visual-pill-row">
-                  <span class="visual-pill">Karaoke Lyrics</span>
-                  <span class="visual-pill">Multi-Provider</span>
-                  <span class="visual-pill">Mini Player</span>
-                </div>
-              </div>
-            </div>
-            <div class="zigzag-text">
-              <div class="feature-tag" style="color: var(--secondary);">
-                <span class="material-symbols-rounded" style="font-size: 16px;">music_note</span>
-                АУДИОПЛЕЕР
-              </div>
-              <h3 class="feature-heading">Плеер MetroList и караоке-тексты</h3>
-              <p class="feature-desc">
-                Превратите Telegram в лучший персональный музыкальный стример. MetroList интегрирует полноценный плеер Material 3 с живыми синхронизированными текстами песен прямо из облака.
-              </p>
-              <ul class="feature-bullets">
-                <li>
-                  <span class="material-symbols-rounded" style="color: var(--secondary);">check_circle</span>
-                  Синхронизация текстов слово в слово с плавной анимацией текущей строки.
-                </li>
-                <li>
-                  <span class="material-symbols-rounded" style="color: var(--secondary);">check_circle</span>
-                  Drag-and-drop выбор приоритета провайдеров текстов и кэширование без сети.
-                </li>
-              </ul>
-              <a href="https://t.me/moltengram/appearance?r=playerSettings" class="feature-action-btn">
-                <span class="material-symbols-rounded">lyrics</span>
-                Настроить аудиоплеер
-              </a>
-            </div>
-          </div>
-
-          <!-- Feature 3: Built-in Plugin Store -->
-          <div class="zigzag-card">
-            <div class="zigzag-text">
-              <div class="feature-tag">
-                <span class="material-symbols-rounded" style="font-size: 16px;">extension</span>
-                МОДУЛЬНОСТЬ И РАСШИРЕНИЯ
-              </div>
-              <h3 class="feature-heading">Встроенный магазин плагинов</h3>
-              <p class="feature-desc">
-                Больше не нужно вручную скачивать файлы плагинов и гадать об их совместимости. Каталог Plugin Store встроен прямо в клиент: открывайте витрину, читайте описания и ставьте расширения в 1 клик.
-              </p>
-              <ul class="feature-bullets">
-                <li>
-                  <span class="material-symbols-rounded">check_circle</span>
-                  Установка доверенных плагинов без зависаний UI и фоновая валидация манифестов.
-                </li>
-                <li>
-                  <span class="material-symbols-rounded">check_circle</span>
-                  Автоматический аудит разрешений: сканирование DEX-байткода и хуков.
-                </li>
-              </ul>
-              <a href="https://t.me/moltengram/plugins" class="feature-action-btn">
-                <span class="material-symbols-rounded">storefront</span>
-                Открыть каталог плагинов
-              </a>
-            </div>
-            <div class="zigzag-visual">
-              <div class="visual-box">
-                <div class="visual-icon-glow">
-                  <span class="material-symbols-rounded">extension</span>
-                </div>
-                <div style="font-weight: 700; font-size: 18px; margin-bottom: 4px;">Plugin Store & Runtime</div>
-                <div style="font-size: 13px; color: var(--text-secondary);">Безопасная экосистема PackIt & Elyx</div>
-                <div class="visual-pill-row">
-                  <span class="visual-pill">1-Click Install</span>
-                  <span class="visual-pill">Sandbox Hooks</span>
-                  <span class="visual-pill">Trusted Grants</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Feature 4: Tor & Anti-Censorship (Reverse) -->
-          <div class="zigzag-card reverse">
-            <div class="zigzag-visual">
-              <div class="visual-box">
-                <div class="visual-icon-glow" style="background: rgba(104, 199, 232, 0.18); color: var(--tertiary); box-shadow: 0 10px 28px rgba(104, 199, 232, 0.2);">
-                  <span class="material-symbols-rounded">vpn_lock</span>
-                </div>
-                <div style="font-weight: 700; font-size: 18px; margin-bottom: 4px;">Anti-Censorship Core</div>
-                <div style="font-size: 13px; color: var(--text-secondary);">Tor маршрутизация и MTProto прокси</div>
-                <div class="visual-pill-row">
-                  <span class="visual-pill">Tor Bridges</span>
-                  <span class="visual-pill">Auto-Failover</span>
-                  <span class="visual-pill">Zero DNS Leaks</span>
-                </div>
-              </div>
-            </div>
-            <div class="zigzag-text">
-              <div class="feature-tag" style="color: var(--tertiary);">
-                <span class="material-symbols-rounded" style="font-size: 16px;">security</span>
-                СВЯЗЬ И ПРИВАТНОСТЬ
-              </div>
-              <h3 class="feature-heading">Встроенный Tor и обход блокировок</h3>
-              <p class="feature-desc">
-                Оставайтесь на связи даже при жестких блокировках и сбоях инфраструктуры. MoltenGram оснащен встроенным модулем Tor и интеллектуальным менеджером прокси с автоматической ротацией.
-              </p>
-              <ul class="feature-bullets">
-                <li>
-                  <span class="material-symbols-rounded" style="color: var(--tertiary);">check_circle</span>
-                  Прямое подключение через встроенный Tor без необходимости сторонних VPN-клиентов.
-                </li>
-                <li>
-                  <span class="material-symbols-rounded" style="color: var(--tertiary);">check_circle</span>
-                  Быстрый пинг и автоматический выбор наименее загруженного узла.
-                </li>
-              </ul>
-              <a href="https://t.me/moltengram/proxy" class="feature-action-btn">
-                <span class="material-symbols-rounded">lock</span>
-                Настроить прокси и Tor
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Bento Grid for Other Features -->
-        <div class="bento-grid">
-          <!-- Bento 1: Avatar Shapes -->
-          <div class="bento-card">
-            <div>
-              <div class="bento-icon">
-                <span class="material-symbols-rounded">interests</span>
-              </div>
-              <h4 class="bento-title">Формы аватаров Material 3</h4>
-              <p class="bento-desc">
-                Squircle, Rounded, Hexagon и другие силуэты с независимой настройкой отдельно для пользователей, каналов и групповых чатов.
-              </p>
-            </div>
-            <div class="bento-footer">
-              <span style="font-size: 12px; color: var(--text-tertiary);">Внешний вид</span>
-              <a href="https://t.me/moltengram/appearance?r=md3AvatarShapes" class="bento-link">
-                Настроить
-                <span class="material-symbols-rounded" style="font-size: 16px;">arrow_forward</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- Bento 2: Shizuku Updates -->
-          <div class="bento-card">
-            <div>
-              <div class="bento-icon">
-                <span class="material-symbols-rounded">system_update</span>
-              </div>
-              <h4 class="bento-title">Фоновые обновления Shizuku</h4>
-              <p class="bento-desc">
-                Бесшовные тихие обновления без назойливых системных диалогов установщика пакетов прямо в фоне.
-              </p>
-            </div>
-            <div class="bento-footer">
-              <span style="font-size: 12px; color: var(--text-tertiary);">Система</span>
-              <a href="https://t.me/moltengram/shizuku" class="bento-link">
-                Shizuku сервис
-                <span class="material-symbols-rounded" style="font-size: 16px;">arrow_forward</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- Bento 3: Channel Feed -->
-          <div class="bento-card">
-            <div>
-              <div class="bento-icon">
-                <span class="material-symbols-rounded">dynamic_feed</span>
-              </div>
-              <h4 class="bento-title">Единая лента каналов</h4>
-              <p class="bento-desc">
-                Все публикации ваших подписок в одном непрерывном хронологическом потоке без необходимости заходить в каждый канал по отдельности.
-              </p>
-            </div>
-            <div class="bento-footer">
-              <span style="font-size: 12px; color: var(--text-tertiary);">Чаты</span>
-              <a href="https://t.me/moltengram/chats?r=feedInChatMenu" class="bento-link">
-                Включить ленту
-                <span class="material-symbols-rounded" style="font-size: 16px;">arrow_forward</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- Bento 4: Privacy & Anti-Delete -->
-          <div class="bento-card">
-            <div>
-              <div class="bento-icon">
-                <span class="material-symbols-rounded">visibility_off</span>
-              </div>
-              <h4 class="bento-title">Приватность и анти-удаление</h4>
-              <p class="bento-desc">
-                Анти-удаление сообщений и историй, режим невидимки (Ghost Mode), скрытие статуса ввода и прочтения, 0% Google Analytics.
-              </p>
-            </div>
-            <div class="bento-footer">
-              <span style="font-size: 12px; color: var(--text-tertiary);">Приватность</span>
-              <a href="https://t.me/moltengram/privacy" class="bento-link">
-                Безопасность
-                <span class="material-symbols-rounded" style="font-size: 16px;">arrow_forward</span>
-              </a>
-            </div>
+          <div class="m3-chip">
+            <span class="material-symbols-rounded" style="font-size: 16px;">android</span>
+            Android 8.0+
           </div>
         </div>
       </div>
     </section>
 
-    <!-- F-Droid Official Repository Section -->
+    <!-- Marquee Ticker Strip -->
+    <div class="marquee-container" aria-hidden="true">
+      <div class="marquee-track">
+        <div class="marquee-content">
+          <span>Material Design 3</span> <span class="marquee-dot">•</span>
+          <span>Карусель медиа</span> <span class="marquee-dot">•</span>
+          <span>Плеер MetroList</span> <span class="marquee-dot">•</span>
+          <span>Каталог плагинов</span> <span class="marquee-dot">•</span>
+          <span>Интеграция Shizuku</span> <span class="marquee-dot">•</span>
+          <span>Fastest Proxy</span> <span class="marquee-dot">•</span>
+          <span>Passkey Auth</span> <span class="marquee-dot">•</span>
+          <span>0% Трекеров</span> <span class="marquee-dot">•</span>
+          <span>Open Source GPLv2</span> <span class="marquee-dot">•</span>
+        </div>
+        <div class="marquee-content">
+          <span>Material Design 3</span> <span class="marquee-dot">•</span>
+          <span>Карусель медиа</span> <span class="marquee-dot">•</span>
+          <span>Плеер MetroList</span> <span class="marquee-dot">•</span>
+          <span>Каталог плагинов</span> <span class="marquee-dot">•</span>
+          <span>Интеграция Shizuku</span> <span class="marquee-dot">•</span>
+          <span>Fastest Proxy</span> <span class="marquee-dot">•</span>
+          <span>Passkey Auth</span> <span class="marquee-dot">•</span>
+          <span>0% Трекеров</span> <span class="marquee-dot">•</span>
+          <span>Open Source GPLv2</span> <span class="marquee-dot">•</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- F-Droid Official Repository Showcase -->
     <section class="section" id="fdroid">
       <div class="container">
-        <div class="zigzag-card" style="background: linear-gradient(135deg, rgba(0, 210, 180, 0.08) 0%, rgba(122, 216, 149, 0.05) 100%, var(--surface-card) 60%);">
-          <div class="zigzag-text">
-            <div class="feature-tag">
-              <span class="material-symbols-rounded" style="font-size: 16px;">inventory_2</span>
-              ОФИЦИАЛЬНЫЙ РЕПОЗИТОРИЙ F-DROID
-            </div>
-            <h3 class="feature-heading">Подключите автоматические обновления</h3>
-            <p class="feature-desc">
-              Добавьте репозиторий MoltenGram в ваш любимый открытый менеджер пакетов (F-Droid, Neo Store, Obtainium или Droid-ify) для мгновенного и безопасного получения обновлений сразу после публикации.
-            </p>
-            
-            <div class="fingerprint-compact">
-              <div>
-                <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-tertiary); margin-bottom: 2px;">Отпечаток ключа (Fingerprint):</div>
-                <span id="fingerprintText">4B4EFFEE9D4CCBCB75DC3BF2E2A21655F2F35747B2D95FCF836E186FCE9D5030</span>
+        <div class="fdroid-card">
+          <div class="fdroid-content">
+            <div>
+              <div class="fdroid-badge-row">
+                <span class="material-symbols-rounded" style="color: var(--primary);">inventory_2</span>
+                <span style="font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--primary);">Репозиторий MoltenGram</span>
               </div>
-              <button class="copy-icon-btn" onclick="copyFingerprint()" title="Скопировать отпечаток">
-                <span class="material-symbols-rounded" style="font-size: 18px;">content_copy</span>
-              </button>
+              <h2 class="fdroid-title">Подключите репозиторий F-Droid</h2>
+              <p class="fdroid-desc">
+                Получайте автоматические обновления MoltenGram через F-Droid, Neo Store, Droid-ify или Obtainium сразу после их выхода.
+              </p>
+
+              <div class="fingerprint-box">
+                <div class="fingerprint-text-wrapper">
+                  <div class="fingerprint-label">Отпечаток репозитория (Fingerprint)</div>
+                  <div class="fingerprint-code" id="fingerprintText">4B4EFFEE9D4CCBCB75DC3BF2E2A21655F2F35747B2D95FCF836E186FCE9D5030</div>
+                </div>
+                <button class="copy-btn" id="copyFingerprintBtn" onclick="copyFingerprint()">
+                  <span class="material-symbols-rounded" style="font-size: 18px;">content_copy</span>
+                  <span>Копировать</span>
+                </button>
+              </div>
             </div>
 
-            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <div class="fdroid-buttons">
+              <!-- Direct Deeplink into F-Droid Client -->
               <a href="fdroidrepos://moltenst4r.github.io/MoltenGram/fdroid/repo?fingerprint=4B4EFFEE9D4CCBCB75DC3BF2E2A21655F2F35747B2D95FCF836E186FCE9D5030" class="m3-btn m3-btn-filled">
                 <span class="material-symbols-rounded">add_circle</span>
                 Добавить в F-Droid
               </a>
               <a href="https://moltenst4r.github.io/MoltenGram/fdroid/repo" target="_blank" class="m3-btn m3-btn-outlined">
                 <span class="material-symbols-rounded">open_in_new</span>
-                Веб-интерфейс репозитория
+                Веб-страница репо
               </a>
-            </div>
-          </div>
-          <div class="zigzag-visual">
-            <div class="visual-box" style="border-color: rgba(0, 210, 180, 0.25);">
-              <div class="visual-icon-glow">
-                <span class="material-symbols-rounded">verified</span>
-              </div>
-              <div style="font-weight: 700; font-size: 18px; margin-bottom: 4px;">F-Droid Repo Verified</div>
-              <div style="font-size: 13px; color: var(--text-secondary); max-width: 260px;">Подписано официальным релизным ключом MoltenGram</div>
-              <div class="visual-pill-row">
-                <span class="visual-pill">Neo Store</span>
-                <span class="visual-pill">Obtainium</span>
-                <span class="visual-pill">Droid-ify</span>
-              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Polished Stacked Download Mirrors Section -->
-    <section class="section download-section" id="download">
+    <!-- Features Section with Actionable Deeplinks -->
+    <section class="section" id="features">
       <div class="container">
         <div class="section-header">
-          <div class="section-pill">
-            <span class="material-symbols-rounded" style="font-size: 16px;">cloud_download</span>
-            Зеркала и установка
-          </div>
-          <h2 class="section-title">Загрузите MoltenGram удобным способом</h2>
+          <h2 class="section-title">Возможности клиента</h2>
           <p class="section-subtitle">
-            Все сборки компилируются из открытого исходного кода и подписываются единым криптографическим ключом проекта.
+            Каждая функция создана для удобства. Если MoltenGram уже установлен, используйте кнопки перехода сразу в настройки.
           </p>
         </div>
 
-        <div class="mirrors-grid">
-          <!-- Mirror 1: Direct APK -->
-          <div class="mirror-card featured">
+        <div class="features-grid">
+          <!-- 1. Media Carousel -->
+          <div class="m3-card">
+            <div class="card-top">
+              <div class="card-icon-container">
+                <span class="material-symbols-rounded">view_carousel</span>
+              </div>
+              <h3 class="card-title">Карусель альбомов медиа</h3>
+              <p class="card-desc">
+                Группы фото и видео больше не ломают чтение чата громоздкой сеткой. Элегантная горизонтальная карусель карточек с плавной физикой свайпа и точной подгонкой границ сообщений.
+              </p>
+            </div>
+            <div class="card-footer">
+              <span class="deeplink-hint">
+                <span class="material-symbols-rounded" style="font-size: 14px;">touch_app</span>
+                В клиенте
+              </span>
+              <a href="https://t.me/moltengram/appearance?r=mediaGroupCarousel" class="m3-btn-card-action">
+                <span class="material-symbols-rounded">tune</span>
+                Настроить
+              </a>
+            </div>
+          </div>
+
+          <!-- 2. MetroList Player & Synced Lyrics -->
+          <div class="m3-card">
+            <div class="card-top">
+              <div class="card-icon-container">
+                <span class="material-symbols-rounded">queue_music</span>
+              </div>
+              <h3 class="card-title">Плеер MetroList и караоке-тексты</h3>
+              <p class="card-desc">
+                Полноценный плеер в стиле Material 3 прямо внутри Telegram. Синхронизированные тексты песен в реальном времени с поддержкой нескольких провайдеров и drag-and-drop приоритетов.
+              </p>
+            </div>
+            <div class="card-footer">
+              <span class="deeplink-hint">
+                <span class="material-symbols-rounded" style="font-size: 14px;">touch_app</span>
+                В клиенте
+              </span>
+              <a href="https://t.me/moltengram/appearance?r=playerSettings" class="m3-btn-card-action">
+                <span class="material-symbols-rounded">lyrics</span>
+                Настройки плеера
+              </a>
+            </div>
+          </div>
+
+          <!-- 3. Avatar Shapes -->
+          <div class="m3-card">
+            <div class="card-top">
+              <div class="card-icon-container">
+                <span class="material-symbols-rounded">account_circle</span>
+              </div>
+              <h3 class="card-title">Формы аватарок Material 3</h3>
+              <p class="card-desc">
+                Индивидуальная геометрия аватаров: Squircle, Rounded, Hexagon и другие силуэты с независимой настройкой отдельно для пользователей, каналов и групповых чатов.
+              </p>
+            </div>
+            <div class="card-footer">
+              <span class="deeplink-hint">
+                <span class="material-symbols-rounded" style="font-size: 14px;">touch_app</span>
+                В клиенте
+              </span>
+              <a href="https://t.me/moltengram/appearance?r=md3AvatarShapes" class="m3-btn-card-action">
+                <span class="material-symbols-rounded">interests</span>
+                Выбрать форму
+              </a>
+            </div>
+          </div>
+
+          <!-- 4. Plugins & Extensions -->
+          <div class="m3-card">
+            <div class="card-top">
+              <div class="card-icon-container">
+                <span class="material-symbols-rounded">extension</span>
+              </div>
+              <h3 class="card-title">Поддержка плагинов</h3>
+              <p class="card-desc">
+                Расширяйте возможности клиента пользовательскими плагинами. В приложение встроен удобный каталог (Plugin Store), позволяющий находить и ставить плагины прямо в клиенте без ручной возни.
+              </p>
+            </div>
+            <div class="card-footer">
+              <span class="deeplink-hint">
+                <span class="material-symbols-rounded" style="font-size: 14px;">touch_app</span>
+                В клиенте
+              </span>
+              <a href="https://t.me/moltengram/plugins" class="m3-btn-card-action">
+                <span class="material-symbols-rounded">extension</span>
+                Открыть плагины
+              </a>
+            </div>
+          </div>
+
+          <!-- 5. Seamless Shizuku Updates -->
+          <div class="m3-card">
+            <div class="card-top">
+              <div class="card-icon-container">
+                <span class="material-symbols-rounded">system_update</span>
+              </div>
+              <h3 class="card-title">Фоновые обновления Shizuku</h3>
+              <p class="card-desc">
+                Бесшовные OTA-обновления без назойливых диалоговых окон системного инсталлера пакетов. Приложение само подтянет свежую версию и применит её в фоне.
+              </p>
+            </div>
+            <div class="card-footer">
+              <span class="deeplink-hint">
+                <span class="material-symbols-rounded" style="font-size: 14px;">touch_app</span>
+                В клиенте
+              </span>
+              <a href="https://t.me/moltengram/shizuku" class="m3-btn-card-action">
+                <span class="material-symbols-rounded">settings_suggest</span>
+                Настроить Shizuku
+              </a>
+            </div>
+          </div>
+
+          <!-- 6. Chip Folders -->
+          <div class="m3-card">
+            <div class="card-top">
+              <div class="card-icon-container">
+                <span class="material-symbols-rounded">folder</span>
+              </div>
+              <h3 class="card-title">Папки-чипсы и навигация</h3>
+              <p class="card-desc">
+                Компактные переключатели папок в стилях Filled, Outlined и Ghost, плавный морфинг скруглений и гибкое отключение ненужных вкладок и историй сверху.
+              </p>
+            </div>
+            <div class="card-footer">
+              <span class="deeplink-hint">
+                <span class="material-symbols-rounded" style="font-size: 14px;">touch_app</span>
+                В клиенте
+              </span>
+              <a href="https://t.me/moltengram/chip_folders" class="m3-btn-card-action">
+                <span class="material-symbols-rounded">tab</span>
+                Настроить папки
+              </a>
+            </div>
+          </div>
+
+          <!-- 7. Text Animations -->
+          <div class="m3-card">
+            <div class="card-top">
+              <div class="card-icon-container">
+                <span class="material-symbols-rounded">edit_note</span>
+              </div>
+              <h3 class="card-title">Анимации ввода и живой курсор</h3>
+              <p class="card-desc">
+                Плавное размытие символов, разлетающиеся искры, динамические частицы и жидкий курсор превращают обычный набор сообщений в тактильное удовольствие.
+              </p>
+            </div>
+            <div class="card-footer">
+              <span class="deeplink-hint">
+                <span class="material-symbols-rounded" style="font-size: 14px;">touch_app</span>
+                В клиенте
+              </span>
+              <a href="https://t.me/moltengram/text_animation" class="m3-btn-card-action">
+                <span class="material-symbols-rounded">animation</span>
+                Настроить эффекты
+              </a>
+            </div>
+          </div>
+
+          <!-- 8. Unified Channel Feed -->
+          <div class="m3-card">
+            <div class="card-top">
+              <div class="card-icon-container">
+                <span class="material-symbols-rounded">dynamic_feed</span>
+              </div>
+              <h3 class="card-title">Единая лента каналов</h3>
+              <p class="card-desc">
+                Все публикации из ваших каналов в одном непрерывном хронологическом потоке без необходимости открывать каждый диалог отдельно. Легко настраивается и включается в меню чатов рядом с Избранным.
+              </p>
+            </div>
+            <div class="card-footer">
+              <span class="deeplink-hint">
+                <span class="material-symbols-rounded" style="font-size: 14px;">touch_app</span>
+                В клиенте
+              </span>
+              <a href="https://t.me/moltengram/chats?r=feedInChatMenu" class="m3-btn-card-action">
+                <span class="material-symbols-rounded">tune</span>
+                Настроить ленту
+              </a>
+            </div>
+          </div>
+
+          <!-- 9. Complete Privacy -->
+          <div class="m3-card">
+            <div class="card-top">
+              <div class="card-icon-container">
+                <span class="material-symbols-rounded">security</span>
+              </div>
+              <h3 class="card-title">Чистый код без трекинга</h3>
+              <p class="card-desc">
+                В клиенте полностью вырезаны сторонние трекеры, Google Firebase Analytics, телеметрия и сбор данных. Исходный код открыт и доступен для аудита на GitHub.
+              </p>
+            </div>
+            <div class="card-footer">
+              <span class="deeplink-hint">
+                <span class="material-symbols-rounded" style="font-size: 14px;">public</span>
+                GitHub
+              </span>
+              <a href="https://github.com/MoltenSt4r/MoltenGram" target="_blank" class="m3-btn-card-action">
+                <span class="material-symbols-rounded">code</span>
+                Исходный код
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Download Section (Material Design 3 Expressive) -->
+    <section class="section" id="download">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Загрузка и установка</h2>
+          <p class="section-subtitle">
+            Выберите удобный способ установки для вашего устройства. Клиент полностью открыт, не содержит трекеров и подписан релизным ключом.
+          </p>
+        </div>
+
+        <div class="download-grid">
+          <!-- 1. Direct APK -->
+          <div class="download-card">
             <div>
-              <div class="mirror-header">
-                <div class="mirror-icon">
+              <div class="dl-card-top">
+                <div class="dl-icon primary">
                   <span class="material-symbols-rounded">download</span>
                 </div>
-                <span class="mirror-badge badge-direct">Рекомендуемый APK</span>
+                <div>
+                  <div class="dl-title">Прямой APK</div>
+                  <div class="dl-sub">v12.10.6 • arm64-v8a</div>
+                </div>
               </div>
-              <h3 class="mirror-title">Прямой APK (1 клик)</h3>
-              <p class="mirror-desc">
-                Прямая быстрая загрузка универсального установочного пакета для всех современных устройств Android.
+              <p class="dl-desc" style="margin-top: 14px;">
+                Быстрая установка файла APK в один клик. Официальный релизный билд с чистой цифровой подписью.
               </p>
-              <div class="mirror-meta">
-                <div class="mirror-meta-row">
-                  <span>Версия:</span>
-                  <strong style="color: var(--text);">12.10.6 (1261)</strong>
-                </div>
-                <div class="mirror-meta-row">
-                  <span>Архитектура:</span>
-                  <strong style="color: var(--text);">arm64-v8a, armeabi-v7a</strong>
-                </div>
-                <div class="mirror-meta-row">
-                  <span>Файл:</span>
-                  <strong style="color: var(--primary);">MoltenGram-v12.10.6-ae8723f.1261.apk</strong>
-                </div>
+            </div>
+            <div>
+              <a href="https://github.com/MoltenSt4r/MoltenGram/releases/download/v12.10.6/MoltenGram-v12.10.6-ae8723f.1261.apk" download class="m3-btn m3-btn-filled" style="width: 100%;">
+                <span class="material-symbols-rounded">download</span>
+                Скачать APK
+              </a>
+              <div style="text-align: center; margin-top: 10px;">
+                <a href="https://github.com/MoltenSt4r/MoltenGram/releases/latest" target="_blank" style="font-size: 12px; color: var(--text-tertiary); text-decoration: underline;">
+                  Все релизы на GitHub
+                </a>
               </div>
             </div>
-            <a href="https://github.com/MoltenSt4r/MoltenGram/releases/download/v12.10.6/MoltenGram-v12.10.6-ae8723f.1261.apk" download class="m3-btn m3-btn-filled" style="width: 100%;">
-              <span class="material-symbols-rounded">download</span>
-              Скачать APK (v12.10.6)
-            </a>
           </div>
 
-          <!-- Mirror 2: Official F-Droid Repo -->
-          <div class="mirror-card">
+          <!-- 2. F-Droid Repository -->
+          <div class="download-card">
             <div>
-              <div class="mirror-header">
-                <div class="mirror-icon fdroid">
+              <div class="dl-card-top">
+                <div class="dl-icon">
                   <span class="material-symbols-rounded">inventory_2</span>
                 </div>
-                <span class="mirror-badge badge-fdroid">Автообновления</span>
+                <div>
+                  <div class="dl-title">Каталог F-Droid</div>
+                  <div class="dl-sub">Репозиторий автообновлений</div>
+                </div>
               </div>
-              <h3 class="mirror-title">F-Droid Репозиторий</h3>
-              <p class="mirror-desc">
-                Подключите репозиторий один раз — и получайте фоновые уведомления и автообновления клиента без задержек.
+              <p class="dl-desc" style="margin-top: 14px;">
+                Рекомендуемый способ. Удобные автообновления через F-Droid, Neo Store, Obtainium или Droid-ify.
               </p>
-              <div class="mirror-meta">
-                <div class="mirror-meta-row">
-                  <span>Каталоги:</span>
-                  <strong style="color: var(--text);">F-Droid, Neo Store, Obtainium</strong>
-                </div>
-                <div class="mirror-meta-row">
-                  <span>Канал:</span>
-                  <strong style="color: var(--secondary);">Официальный стабильный</strong>
-                </div>
+            </div>
+            <div>
+              <a href="fdroidrepos://moltenst4r.github.io/MoltenGram/fdroid/repo?fingerprint=4B4EFFEE9D4CCBCB75DC3BF2E2A21655F2F35747B2D95FCF836E186FCE9D5030" class="m3-btn m3-btn-tonal" style="width: 100%;">
+                <span class="material-symbols-rounded">add_circle</span>
+                Подключить репо
+              </a>
+              <div style="text-align: center; margin-top: 10px;">
+                <a href="https://moltenst4r.github.io/MoltenGram/fdroid/repo" target="_blank" style="font-size: 12px; color: var(--text-tertiary); text-decoration: underline;">
+                  Веб-страница репозитория
+                </a>
               </div>
             </div>
-            <a href="fdroidrepos://moltenst4r.github.io/MoltenGram/fdroid/repo?fingerprint=4B4EFFEE9D4CCBCB75DC3BF2E2A21655F2F35747B2D95FCF836E186FCE9D5030" class="m3-btn m3-btn-tonal" style="width: 100%;">
-              <span class="material-symbols-rounded">add_circle</span>
-              Подключить репозиторий
-            </a>
           </div>
 
-          <!-- Mirror 3: Telegram Boost -->
-          <div class="mirror-card boost-card">
+          <!-- 3. Telegram Channel -->
+          <div class="download-card">
             <div>
-              <div class="mirror-header">
-                <div class="mirror-icon boost">
-                  <span class="material-symbols-rounded">bolt</span>
-                </div>
-                <span class="mirror-badge badge-boost">Поддержка</span>
-              </div>
-              <h3 class="mirror-title">Буст в Telegram</h3>
-              <p class="mirror-desc">
-                Поддержите канал @MoltenGram бустом. Это открывает истории канала, расширенные эмодзи-паки и ускоряет выпуск обновлений!
-              </p>
-              <div class="mirror-meta">
-                <div class="mirror-meta-row">
-                  <span>Ссылка:</span>
-                  <strong style="color: var(--boost-color);">t.me/boost/MoltenGram</strong>
-                </div>
-                <div class="mirror-meta-row">
-                  <span>Команда бота:</span>
-                  <strong style="color: var(--text);">/boost</strong>
-                </div>
-              </div>
-            </div>
-            <a href="https://t.me/boost/MoltenGram" target="_blank" class="m3-btn m3-btn-boost" style="width: 100%;">
-              <span class="material-symbols-rounded">bolt</span>
-              Забустить канал
-            </a>
-          </div>
-
-          <!-- Mirror 4: Telegram Channel & GitHub Releases -->
-          <div class="mirror-card">
-            <div>
-              <div class="mirror-header">
-                <div class="mirror-icon telegram">
+              <div class="dl-card-top">
+                <div class="dl-icon">
                   <span class="material-symbols-rounded">send</span>
                 </div>
-                <span class="mirror-badge badge-tg">Канал и Git</span>
+                <div>
+                  <div class="dl-title">Канал в Telegram</div>
+                  <div class="dl-sub">@MoltenGram • Сообщество</div>
+                </div>
               </div>
-              <h3 class="mirror-title">Сообщество и Релизы</h3>
-              <p class="mirror-desc">
-                Подписывайтесь на официальный канал для обсуждения, участия в бета-тестах и чтения детальных ченджлогов.
+              <p class="dl-desc" style="margin-top: 14px;">
+                Новости обновлений, свежие тестовые сборки, списки изменений и обратная связь от разработчиков.
               </p>
-              <div class="mirror-meta">
-                <div class="mirror-meta-row">
-                  <span>Telegram:</span>
-                  <strong style="color: var(--text);">@MoltenGram</strong>
-                </div>
-                <div class="mirror-meta-row">
-                  <span>GitHub:</span>
-                  <strong style="color: var(--text);">MoltenSt4r/MoltenGram</strong>
-                </div>
+            </div>
+            <div>
+              <a href="https://t.me/MoltenGram" target="_blank" class="m3-btn m3-btn-outlined" style="width: 100%;">
+                <span class="material-symbols-rounded">chat</span>
+                Открыть канал
+              </a>
+              <div style="text-align: center; margin-top: 10px;">
+                <a href="https://t.me/moltengram/settings?r=updates" style="font-size: 12px; color: var(--text-tertiary); text-decoration: underline;">
+                  OTA проверка обновлений
+                </a>
               </div>
             </div>
-            <div style="display: flex; gap: 8px;">
-              <a href="https://t.me/MoltenGram" target="_blank" class="m3-btn m3-btn-outlined" style="flex: 1; padding: 0 12px; font-size: 13px;">
-                <span class="material-symbols-rounded" style="font-size: 17px;">chat</span>
-                Канал
+          </div>
+
+          <!-- 4. GitHub Source -->
+          <div class="download-card">
+            <div>
+              <div class="dl-card-top">
+                <div class="dl-icon">
+                  <span class="material-symbols-rounded">code</span>
+                </div>
+                <div>
+                  <div class="dl-title">Исходный код</div>
+                  <div class="dl-sub">GPL-2.0 • GitHub</div>
+                </div>
+              </div>
+              <p class="dl-desc" style="margin-top: 14px;">
+                Полностью открытый репозиторий проекта на базе Exteraless. Сборка через Gradle и Chaquopy.
+              </p>
+            </div>
+            <div>
+              <a href="https://github.com/MoltenSt4r/MoltenGram" target="_blank" class="m3-btn m3-btn-outlined" style="width: 100%;">
+                <span class="material-symbols-rounded">open_in_new</span>
+                GitHub проект
               </a>
-              <a href="https://github.com/MoltenSt4r/MoltenGram/releases" target="_blank" class="m3-btn m3-btn-outlined" style="flex: 1; padding: 0 12px; font-size: 13px;">
-                <span class="material-symbols-rounded" style="font-size: 17px;">code</span>
-                GitHub
-              </a>
+              <div style="text-align: center; margin-top: 10px;">
+                <a href="https://github.com/MoltenSt4r/MoltenGram/issues" target="_blank" style="font-size: 12px; color: var(--text-tertiary); text-decoration: underline;">
+                  Баг-трекер и предложения
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -1752,12 +1407,11 @@
     <div class="container">
       <div class="footer-content">
         <div class="footer-brand">
-          <div class="footer-title">MoltenGram • MoltenStar Space</div>
-          <div class="footer-desc">Свободный Telegram-клиент с нативным Material Design 3. Без трекеров и аналитики.</div>
+          <div class="footer-title">MoltenGram • MoltenStar</div>
+          <div class="footer-desc">Свободный Telegram-клиент с нативным Material Design 3. Без трекеров и телеметрии.</div>
         </div>
 
         <div class="footer-links">
-          <a href="https://t.me/boost/MoltenGram" target="_blank" class="footer-link" style="color: var(--boost-color); font-weight: 600;">Буст канала ⚡</a>
           <a href="https://github.com/MoltenSt4r/MoltenGram" target="_blank" class="footer-link">GitHub</a>
           <a href="https://t.me/MoltenGram" target="_blank" class="footer-link">Telegram</a>
           <a href="https://moltenst4r.github.io/MoltenGram/fdroid/repo" target="_blank" class="footer-link">F-Droid</a>
@@ -1776,6 +1430,7 @@
     const themeIcon = document.getElementById('themeIcon');
     const metaThemeColor = document.getElementById('theme-color-meta');
 
+    // Load saved settings or use defaults
     const savedTheme = localStorage.getItem('mg_theme') || 
       (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
 
@@ -1786,10 +1441,10 @@
       localStorage.setItem('mg_theme', theme);
       if (theme === 'dark') {
         themeIcon.textContent = 'light_mode';
-        metaThemeColor.setAttribute('content', '#0d110f');
+        metaThemeColor.setAttribute('content', '#111411');
       } else {
         themeIcon.textContent = 'dark_mode';
-        metaThemeColor.setAttribute('content', '#f5f9f6');
+        metaThemeColor.setAttribute('content', '#f7faf4');
       }
     }
 
@@ -1799,41 +1454,34 @@
     });
 
     // -------------------------------------------------------------
-    // App Bar Scroll Elevation
+    // App Bar Elevation on Scroll
     // -------------------------------------------------------------
     const appBar = document.getElementById('appBar');
     window.addEventListener('scroll', () => {
       if (window.scrollY > 20) {
-        appBar.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.25)';
+        appBar.classList.add('scrolled');
       } else {
-        appBar.style.boxShadow = 'none';
+        appBar.classList.remove('scrolled');
       }
     }, { passive: true });
 
     // -------------------------------------------------------------
-    // Copy Fingerprint Helper
+    // Fingerprint Copy & Toast Feedback
     // -------------------------------------------------------------
     function copyFingerprint() {
       const code = document.getElementById('fingerprintText').innerText.trim();
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(code).then(() => {
-          showToast('Отпечаток F-Droid скопирован в буфер обмена');
-        }).catch(() => fallbackCopy(code));
-      } else {
-        fallbackCopy(code);
-      }
-    }
-
-    function fallbackCopy(text) {
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      ta.style.position = 'fixed';
-      ta.style.opacity = '0';
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      showToast('Отпечаток F-Droid скопирован в буфер обмена');
+      navigator.clipboard.writeText(code).then(() => {
+        showToast('Отпечаток скопирован в буфер обмена');
+      }).catch(() => {
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = code;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showToast('Отпечаток скопирован в буфер обмена');
+      });
     }
 
     let toastTimer = null;
