@@ -363,8 +363,27 @@
     }
 
     .hero-section {
-      padding: 72px 0 56px;
+      padding: 64px 0 52px;
       text-align: center;
+    }
+
+    .hero-logo-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .hero-app-logo {
+      width: 88px;
+      height: 88px;
+      border-radius: 24px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+      object-fit: cover;
+      transition: transform 0.25s ease;
+    }
+
+    .hero-app-logo:hover {
+      transform: scale(1.05);
     }
 
     .hero-badge-row {
@@ -387,13 +406,21 @@
     }
 
     .hero-title {
-      font-size: 48px;
+      font-size: 52px;
       font-weight: 700;
-      line-height: 1.15;
-      letter-spacing: -0.5px;
+      line-height: 1.1;
+      letter-spacing: -0.8px;
       color: var(--text);
       max-width: 820px;
-      margin: 0 auto 20px;
+      margin: 0 auto 8px;
+    }
+
+    .hero-tagline {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 18px;
+      letter-spacing: -0.2px;
     }
 
     .hero-subtitle {
@@ -634,45 +661,25 @@
     }
 
     /* -------------------------------------------------------------
-       10. Ticker Marquee Strip
+       10. Back to Top Button
        ------------------------------------------------------------- */
-    .marquee-container {
-      width: 100%;
-      overflow: hidden;
-      padding: 16px 0;
-      background: var(--surface-container-low);
-      border-top: 1px solid var(--outline-variant);
-      border-bottom: 1px solid var(--outline-variant);
-      user-select: none;
-      margin: 32px 0;
-    }
-
-    .marquee-track {
-      display: flex;
-      width: max-content;
-      animation: marquee 25s linear infinite;
-    }
-
-    .marquee-content {
-      display: flex;
+    .back-to-top-btn {
+      display: inline-flex;
       align-items: center;
-      gap: 32px;
-      padding-right: 32px;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      background: var(--surface-container-high);
+      color: var(--text);
       font-size: 13px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: var(--text-tertiary);
-      white-space: nowrap;
+      font-weight: 500;
+      transition: background 0.2s ease, transform 0.15s ease;
+      border: 1px solid var(--outline-variant);
     }
 
-    .marquee-dot {
-      color: var(--primary);
-    }
-
-    @keyframes marquee {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
+    .back-to-top-btn:hover {
+      background: var(--surface-container-highest);
+      transform: translateY(-2px);
     }
 
     /* -------------------------------------------------------------
@@ -930,9 +937,14 @@
 
   <main>
     <!-- Hero Section -->
-    <section class="hero-section">
+    <section class="hero-section" id="top">
       <div class="container">
-        <h1 class="hero-title">MoltenGram: Telegram в стиле Material Design 3</h1>
+        <div class="hero-logo-wrapper">
+          <img src="assets/exterams_md3.png" alt="MoltenGram Logo" class="hero-app-logo">
+        </div>
+
+        <h1 class="hero-title">MoltenGram</h1>
+        <div class="hero-tagline">Telegram в стиле Material Design 3</div>
         
         <p class="hero-subtitle">
           Плавный, продуманный и открытый Android-клиент с эстетикой Material Design 3, лентой каналов, каруселью альбомов, плеером MetroList и полной независимостью от трекеров.
@@ -969,77 +981,6 @@
           <div class="m3-chip">
             <span class="material-symbols-rounded" style="font-size: 16px;">android</span>
             Android 8.0+
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Marquee Ticker Strip -->
-    <div class="marquee-container" aria-hidden="true">
-      <div class="marquee-track">
-        <div class="marquee-content">
-          <span>Material Design 3</span> <span class="marquee-dot">•</span>
-          <span>Карусель медиа</span> <span class="marquee-dot">•</span>
-          <span>Плеер MetroList</span> <span class="marquee-dot">•</span>
-          <span>Каталог плагинов</span> <span class="marquee-dot">•</span>
-          <span>Интеграция Shizuku</span> <span class="marquee-dot">•</span>
-          <span>Fastest Proxy</span> <span class="marquee-dot">•</span>
-          <span>Passkey Auth</span> <span class="marquee-dot">•</span>
-          <span>0% Трекеров</span> <span class="marquee-dot">•</span>
-          <span>Open Source GPLv2</span> <span class="marquee-dot">•</span>
-        </div>
-        <div class="marquee-content">
-          <span>Material Design 3</span> <span class="marquee-dot">•</span>
-          <span>Карусель медиа</span> <span class="marquee-dot">•</span>
-          <span>Плеер MetroList</span> <span class="marquee-dot">•</span>
-          <span>Каталог плагинов</span> <span class="marquee-dot">•</span>
-          <span>Интеграция Shizuku</span> <span class="marquee-dot">•</span>
-          <span>Fastest Proxy</span> <span class="marquee-dot">•</span>
-          <span>Passkey Auth</span> <span class="marquee-dot">•</span>
-          <span>0% Трекеров</span> <span class="marquee-dot">•</span>
-          <span>Open Source GPLv2</span> <span class="marquee-dot">•</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- F-Droid Official Repository Showcase -->
-    <section class="section" id="fdroid">
-      <div class="container">
-        <div class="fdroid-card">
-          <div class="fdroid-content">
-            <div>
-              <div class="fdroid-badge-row">
-                <span class="material-symbols-rounded" style="color: var(--primary);">inventory_2</span>
-                <span style="font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--primary);">Репозиторий MoltenGram</span>
-              </div>
-              <h2 class="fdroid-title">Подключите репозиторий F-Droid</h2>
-              <p class="fdroid-desc">
-                Получайте автоматические обновления MoltenGram через F-Droid, Neo Store, Droid-ify или Obtainium сразу после их выхода.
-              </p>
-
-              <div class="fingerprint-box">
-                <div class="fingerprint-text-wrapper">
-                  <div class="fingerprint-label">Отпечаток репозитория (Fingerprint)</div>
-                  <div class="fingerprint-code" id="fingerprintText">4B4EFFEE9D4CCBCB75DC3BF2E2A21655F2F35747B2D95FCF836E186FCE9D5030</div>
-                </div>
-                <button class="copy-btn" id="copyFingerprintBtn" onclick="copyFingerprint()">
-                  <span class="material-symbols-rounded" style="font-size: 18px;">content_copy</span>
-                  <span>Копировать</span>
-                </button>
-              </div>
-            </div>
-
-            <div class="fdroid-buttons">
-              <!-- Direct Deeplink into F-Droid Client -->
-              <a href="fdroidrepos://moltenst4r.github.io/MoltenGram/fdroid/repo?fingerprint=4B4EFFEE9D4CCBCB75DC3BF2E2A21655F2F35747B2D95FCF836E186FCE9D5030" class="m3-btn m3-btn-filled">
-                <span class="material-symbols-rounded">add_circle</span>
-                Добавить в F-Droid
-              </a>
-              <a href="https://moltenst4r.github.io/MoltenGram/fdroid/repo" target="_blank" class="m3-btn m3-btn-outlined">
-                <span class="material-symbols-rounded">open_in_new</span>
-                Веб-страница репо
-              </a>
-            </div>
           </div>
         </div>
       </div>
@@ -1265,6 +1206,50 @@
         </div>
       </div>
     </section>
+
+    <!-- F-Droid Official Repository Showcase -->
+    <section class="section" id="fdroid">
+      <div class="container">
+        <div class="fdroid-card">
+          <div class="fdroid-content">
+            <div>
+              <div class="fdroid-badge-row">
+                <span class="material-symbols-rounded" style="color: var(--primary);">inventory_2</span>
+                <span style="font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--primary);">Репозиторий MoltenGram</span>
+              </div>
+              <h2 class="fdroid-title">Подключите репозиторий F-Droid</h2>
+              <p class="fdroid-desc">
+                Получайте автоматические обновления MoltenGram через F-Droid, Neo Store, Droid-ify или Obtainium сразу после их выхода.
+              </p>
+
+              <div class="fingerprint-box">
+                <div class="fingerprint-text-wrapper">
+                  <div class="fingerprint-label">Отпечаток репозитория (Fingerprint)</div>
+                  <div class="fingerprint-code" id="fingerprintText">4B4EFFEE9D4CCBCB75DC3BF2E2A21655F2F35747B2D95FCF836E186FCE9D5030</div>
+                </div>
+                <button class="copy-btn" id="copyFingerprintBtn" onclick="copyFingerprint()">
+                  <span class="material-symbols-rounded" style="font-size: 18px;">content_copy</span>
+                  <span>Копировать</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="fdroid-buttons">
+              <!-- Direct Deeplink into F-Droid Client -->
+              <a href="fdroidrepos://moltenst4r.github.io/MoltenGram/fdroid/repo?fingerprint=4B4EFFEE9D4CCBCB75DC3BF2E2A21655F2F35747B2D95FCF836E186FCE9D5030" class="m3-btn m3-btn-filled">
+                <span class="material-symbols-rounded">add_circle</span>
+                Добавить в F-Droid
+              </a>
+              <a href="https://moltenst4r.github.io/MoltenGram/fdroid/repo" target="_blank" class="m3-btn m3-btn-outlined">
+                <span class="material-symbols-rounded">open_in_new</span>
+                Веб-страница репо
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Download Section (Material Design 3 Expressive) -->
     <section class="section" id="download">
       <div class="container">
@@ -1416,6 +1401,10 @@
           <a href="https://t.me/MoltenGram" target="_blank" class="footer-link">Telegram</a>
           <a href="https://moltenst4r.github.io/MoltenGram/fdroid/repo" target="_blank" class="footer-link">F-Droid</a>
           <a href="https://t.me/moltengram/settings?r=updates" class="footer-link">OTA Проверка</a>
+          <a href="#top" class="back-to-top-btn" title="Вернуться наверх">
+            <span class="material-symbols-rounded" style="font-size: 16px;">arrow_upward</span>
+            <span>Наверх</span>
+          </a>
         </div>
       </div>
     </div>
