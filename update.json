@@ -1,15 +1,15 @@
 {
   "versionCode": 1261,
-  "versionName": "12.10.3-canary",
+  "versionName": "12.10.6",
   "appName": "MoltenGram",
   "packageName": "com.moltengram.app",
-  "apkUrl": "https://cloud.doolcoin.space:1443/MoltenGram-canary.apk",
-  "githubApkUrl": "https://github.com/MoltenSt4r/MoltenGram/releases/download/canary/MoltenGram-v12.10.3-b60ef35.1261.apk",
+  "apkUrl": "https://github.com/MoltenSt4r/MoltenGram/releases/download/v12.10.6/MoltenGram-v12.10.6-ae8723f.1261.apk",
+  "githubApkUrl": "https://github.com/MoltenSt4r/MoltenGram/releases/download/v12.10.6/MoltenGram-v12.10.6-ae8723f.1261.apk",
   "releaseNotes": [
-    "🔥 Полный ребрендинг в MoltenGram (com.moltengram.app)",
-    "🌿 Новая кнопка отправки с чистым изумрудным пламенем MoltenGram",
-    "🎨 9 уникальных дизайнерских иконок с живым атмосферным свечением",
-    "⚡ Настройки MoltenGram с изумрудно-зелёным тайлом и темой",
-    "🚀 Поддержка прямых OTA-обновлений клиента"
+    "🔥 Полноценная поддержка карусели медиа (Media Carousel) в чатах и каналах",
+    "📐 Исправление выхода текста подписи за границы и точный расчет ширины бабла",
+    "📰 Поддержка широких постов в каналах для каруселей и альбомов",
+    "🎨 Обновление и калибровка всех дизайнерских иконок лаунчера (Классическая, Star, Ледник, Google, Точки и др.)",
+    "⚡ Встроенный каталог плагинов (Plugin Store), аудиоплеер MetroList и Shizuku"
   ]
 }
