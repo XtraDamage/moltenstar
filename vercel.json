@@ -3,7 +3,7 @@
   "outputDirectory": ".",
   "framework": null,
   "rewrites": [
-    { "source": "/((?!update\\.json|robots\\.txt|sitemap\\.xml).*)", "destination": "/index.html" }
+    { "source": "/((?!.*\\..*|favicon|icons/|assets/|fonts/|api/).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
