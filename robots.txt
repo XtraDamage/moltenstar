@@ -1,0 +1,5 @@
+# robots.txt for https://moltenstar.space
+User-agent: *
+Allow: /
+
+Sitemap: https://moltenstar.space/sitemap.xml
