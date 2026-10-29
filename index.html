@@ -7,8 +7,8 @@
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   
   <title>MoltenGram • Telegram с Material Design 3</title>
-  <meta name="description" content="Скачать MoltenGram (moltenstar) — минималистичный и быстрый Android-клиент Telegram с нативным Material 3 Expressive, каруселью медиа, плеером MetroList, плагинами и без трекеров.">
-  <meta name="keywords" content="MoltenGram, moltenstar, moltenstar.space, Скачать MoltenGram, Telegram Android, Material Design 3, Exteraless, exteraGram, MetroList, плагины, F-Droid">
+  <meta name="description" content="Скачать MoltenGram (moltenstar) — минималистичный и быстрый Android-клиент Telegram с нативным Material 3 Expressive и без трекеров.">
+  <meta name="keywords" content="MoltenGram, moltenstar, moltenstar.space, Скачать MoltenGram, Telegram Android, Material Design 3, Exteraless, exteraGram, F-Droid">
   <meta name="author" content="MoltenGram Team (moltenstar)">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://www.moltenstar.space/">
@@ -18,7 +18,7 @@
   <meta property="og:site_name" content="MoltenGram">
   <meta property="og:url" content="https://www.moltenstar.space/">
   <meta property="og:title" content="MoltenGram • Telegram в стиле Material 3 Expressive">
-  <meta property="og:description" content="Свободный Android-клиент Telegram с каруселью медиа, плеером MetroList, плагинами и Shizuku. 0% трекеров.">
+  <meta property="og:description" content="Свободный Android-клиент Telegram в стиле Material Design 3. 0% трекеров.">
   <meta property="og:image" content="https://www.moltenstar.space/icons/Icon-512.png">
   <meta property="og:locale" content="ru_RU">
   <meta name="twitter:card" content="summary_large_image">
@@ -93,7 +93,6 @@
       --surface-container: #1d211d;
       --surface-container-high: #262b26;
       --surface-container-highest: #313631;
-      --glass-surface: rgba(38, 43, 38, 0.72);
 
       --primary: #7ad895;
       --on-primary: #003919;
@@ -102,9 +101,6 @@
 
       --secondary-container: #384b3c;
       --on-secondary-container: #d2e8d4;
-
-      --tertiary-container: #1e4d57;
-      --on-tertiary-container: #bdeaf7;
 
       --text: #e1e4de;
       --text-sub: #c0c8bf;
@@ -118,7 +114,6 @@
       --surface-container: #e8eee6;
       --surface-container-high: #e2e8e0;
       --surface-container-highest: #dce2da;
-      --glass-surface: rgba(232, 238, 230, 0.75);
 
       --primary: #076d33;
       --on-primary: #ffffff;
@@ -127,9 +122,6 @@
 
       --secondary-container: #d2e8d4;
       --on-secondary-container: #0d1f13;
-
-      --tertiary-container: #bdeaf7;
-      --on-tertiary-container: #001f26;
 
       --text: #181d18;
       --text-sub: #404940;
@@ -157,7 +149,7 @@
       font-family: 'Google Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       transition: background-color 0.3s var(--spring-standard), color 0.25s ease;
       overflow-x: hidden;
-      min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -218,8 +210,8 @@
        ------------------------------------------------------------- */
     .hero-shape-stage {
       position: relative;
-      width: 136px;
-      height: 136px;
+      width: 148px;
+      height: 148px;
       margin: 0 auto;
       display: flex;
       align-items: center;
@@ -229,9 +221,9 @@
     /* True Android 15/16 Material 3 Expressive 12-Sided Scallop Cookie SVG */
     .m3-cookie-svg {
       position: absolute;
-      inset: -12px;
-      width: calc(100% + 24px);
-      height: calc(100% + 24px);
+      inset: -14px;
+      width: calc(100% + 28px);
+      height: calc(100% + 28px);
       color: var(--primary-container);
       animation: rotateCookie 26s linear infinite;
       transition: transform 0.6s var(--spring-expressive), color 0.3s ease;
@@ -241,9 +233,8 @@
 
     .hero-logo-surface {
       position: relative;
-      width: 96px;
-      height: 96px;
-      /* Smooth squircle percentage radius so it NEVER snaps to a sharp square */
+      width: 104px;
+      height: 104px;
       border-radius: 30%;
       overflow: hidden;
       z-index: 2;
@@ -264,7 +255,7 @@
       to { transform: rotate(360deg); }
     }
 
-    /* Circular Icon Button with Smooth Circle -> Squircle Morph (No 999px snap bug) */
+    /* Circular Icon Button with Smooth Circle -> Squircle Morph */
     .m3-icon-btn {
       width: 42px;
       height: 42px;
@@ -300,12 +291,11 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      height: 58px;
-      padding: 0 28px;
-      /* Explicit pixel radius matching half-height so interpolation never glitches */
-      border-radius: 29px;
+      height: 60px;
+      padding: 0 30px;
+      border-radius: 30px;
       font-weight: 700;
-      font-size: 15px;
+      font-size: 16px;
       letter-spacing: -0.01em;
       cursor: pointer;
       transition: transform 0.45s var(--spring-expressive),
@@ -367,57 +357,7 @@
     }
 
     /* -------------------------------------------------------------
-       6. Flat Tonal Bento Cards (Surface Hierarchy Only, Zero Borders)
-       ------------------------------------------------------------- */
-    .m3-bento-card {
-      position: relative;
-      background-color: var(--surface-container);
-      border-radius: 28px;
-      padding: 22px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 16px;
-      overflow: hidden;
-      transition: transform 0.45s var(--spring-expressive),
-                  border-radius 0.35s var(--spring-smooth),
-                  background-color 0.25s ease;
-    }
-
-    .m3-bento-card:hover {
-      background-color: var(--surface-container-high);
-      transform: translateY(-3px) scale(1.01);
-      border-radius: 34px;
-    }
-
-    .m3-bento-card:active {
-      transform: scale(0.97);
-      border-radius: 22px;
-    }
-
-    .m3-card-icon {
-      width: 46px;
-      height: 46px;
-      border-radius: 32%;
-      background-color: var(--primary-container);
-      color: var(--on-primary-container);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.45s var(--spring-expressive),
-                  border-radius 0.35s var(--spring-smooth),
-                  background-color 0.25s ease,
-                  color 0.25s ease;
-    }
-
-    .m3-bento-card:hover .m3-card-icon {
-      transform: scale(1.08);
-      border-radius: 50%;
-      background-color: var(--primary);
-      color: var(--on-primary);
-    }
-    /* -------------------------------------------------------------
-       7. Authentic M3 Bottom Sheet / Dialog for F-Droid
+       6. Authentic M3 Bottom Sheet / Dialog for F-Droid
        ------------------------------------------------------------- */
     .modal-backdrop {
       position: fixed;
@@ -476,7 +416,6 @@
       margin: 0 auto 20px;
     }
 
-    /* Copyable Field Card Inside Sheet */
     .m3-copy-card {
       background-color: var(--surface-container-lowest);
       border-radius: 20px;
@@ -496,21 +435,6 @@
     .m3-copy-card:active {
       transform: scale(0.98);
     }
-    .eq-bar {
-      width: 3px;
-      background-color: var(--primary);
-      border-radius: 99px;
-      animation: eqBounce 0.85s ease-in-out infinite alternate;
-    }
-    .eq-bar:nth-child(1) { height: 6px; animation-delay: 0.1s; }
-    .eq-bar:nth-child(2) { height: 15px; animation-delay: 0.3s; }
-    .eq-bar:nth-child(3) { height: 9px; animation-delay: 0.2s; }
-    .eq-bar:nth-child(4) { height: 13px; animation-delay: 0.4s; }
-
-    @keyframes eqBounce {
-      0% { height: 4px; }
-      100% { height: 16px; }
-    }
 
     /* Spring Stagger Reveal */
     .reveal {
@@ -520,40 +444,9 @@
     }
     .delay-1 { animation-delay: 0.07s; }
     .delay-2 { animation-delay: 0.14s; }
-    .delay-3 { animation-delay: 0.21s; }
 
     @keyframes springReveal {
       to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    /* Modal Sheet */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background-color: rgba(12, 15, 12, 0.68);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      z-index: 200;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
-    }
-    .modal-backdrop.open {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .modal-sheet {
-      border-radius: 32px;
-      max-width: 460px;
-      width: 100%;
-      padding: 28px;
-      transform: scale(0.88) translateY(20px);
-      transition: transform 0.45s var(--spring-expressive);
-    }
-    .modal-backdrop.open .modal-sheet {
-      transform: scale(1) translateY(0);
     }
 
     /* Toast */
@@ -565,7 +458,7 @@
       background-color: var(--surface-container-highest);
       color: var(--text);
       padding: 12px 22px;
-      border-radius: 999px;
+      border-radius: 24px;
       font-size: 14px;
       font-weight: 600;
       display: flex;
@@ -608,13 +501,12 @@
     </div>
   </header>
 
-  <!-- Main Minimalist Centerpiece -->
-  <main class="flex-1 flex flex-col justify-center max-w-3xl w-full mx-auto px-5 py-8">
+  <!-- Main Minimalist Centerpiece (Strictly Hero & Download Only) -->
+  <main class="flex-1 flex flex-col items-center justify-center max-w-2xl w-full mx-auto px-5 py-10">
 
-    <!-- Hero Block -->
-    <section class="text-center mb-10">
+    <section class="text-center w-full">
       <!-- Expressive Material 3 12-Sided Scallop Cookie + Original Logo Asset -->
-      <div class="reveal mb-6">
+      <div class="reveal mb-7">
         <div class="hero-shape-stage">
           <svg id="m3CookieSvg" class="m3-cookie-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
             <path id="m3CookiePath" fill="currentColor"></path>
@@ -628,7 +520,7 @@
       </div>
 
       <!-- Flat Tonal Status Chip -->
-      <div class="reveal delay-1 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--secondary-container)] text-[var(--on-secondary-container)] text-xs font-semibold mb-4">
+      <div class="reveal delay-1 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--secondary-container)] text-[var(--on-secondary-container)] text-xs font-semibold mb-5">
         <span class="w-2 h-2 rounded-full bg-[var(--primary)]"></span>
         <span id="versionBadge">v12.10.6</span>
         <span class="opacity-40">•</span>
@@ -638,13 +530,13 @@
       </div>
 
       <!-- Concise Headline -->
-      <h1 class="reveal delay-1 text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.08] mb-3">
+      <h1 class="reveal delay-1 text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.08] mb-4">
         Telegram в стиле <br class="hidden sm:inline">
         <span class="text-[var(--primary)]">Material 3 Expressive</span>
       </h1>
 
-      <p class="reveal delay-2 text-base sm:text-lg text-[var(--text-sub)] max-w-md mx-auto mb-8 font-normal">
-        Быстрый, чистый и открытый клиент без аналитики. Сразу к делу — скачайте APK или подключите репозиторий.
+      <p class="reveal delay-2 text-base sm:text-lg text-[var(--text-sub)] max-w-md mx-auto mb-9 font-normal">
+        Быстрый, чистый и открытый клиент без аналитики и лишнего шума.
       </p>
 
       <!-- Expressive Action Bar -->
@@ -670,114 +562,13 @@
       </div>
     </section>
 
-    <!-- Flat Tonal Bento Grid (6 Key Features, No Borders, No Gradients) -->
-    <section class="reveal delay-3 grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-      
-      <!-- 1. Media Carousel -->
-      <a href="https://t.me/moltengram/appearance?r=mediaGroupCarousel" class="m3-bento-card group">
-        <div class="flex items-center justify-between">
-          <div class="m3-card-icon">
-            <span class="material-symbols-rounded">view_carousel</span>
-          </div>
-          <span class="text-[11px] font-semibold px-3 py-1 rounded-full bg-[var(--surface-container-highest)] text-[var(--text-sub)]">
-            Альбомы
-          </span>
-        </div>
-        <div>
-          <h2 class="font-bold text-base mb-0.5">Карусель медиа</h2>
-          <p class="text-xs text-[var(--text-sub)] leading-relaxed">Горизонтальный свайп карточек вместо громоздкой сетки.</p>
-        </div>
-      </a>
-
-      <!-- 2. MetroList Player -->
-      <a href="https://t.me/moltengram/appearance?r=playerSettings" class="m3-bento-card group">
-        <div class="flex items-center justify-between">
-          <div class="m3-card-icon">
-            <span class="material-symbols-rounded">queue_music</span>
-          </div>
-          <div class="eq-bars" title="Синхронные караоке-тексты">
-            <span class="eq-bar"></span>
-            <span class="eq-bar"></span>
-            <span class="eq-bar"></span>
-            <span class="eq-bar"></span>
-          </div>
-        </div>
-        <div>
-          <h2 class="font-bold text-base mb-0.5">Плеер MetroList</h2>
-          <p class="text-xs text-[var(--text-sub)] leading-relaxed">Живые караоке-тексты LRCLIB и нативный дизайн MD3.</p>
-        </div>
-      </a>
-
-      <!-- 3. Plugin Store -->
-      <a href="https://t.me/moltengram/plugins" class="m3-bento-card group">
-        <div class="flex items-center justify-between">
-          <div class="m3-card-icon">
-            <span class="material-symbols-rounded">extension</span>
-          </div>
-          <span class="text-[11px] font-semibold px-3 py-1 rounded-full bg-[var(--surface-container-highest)] text-[var(--text-sub)]">
-            Python 3.11
-          </span>
-        </div>
-        <div>
-          <h2 class="font-bold text-base mb-0.5">Каталог плагинов</h2>
-          <p class="text-xs text-[var(--text-sub)] leading-relaxed">Установка плагинов Chaquopy в один тап внутри клиента.</p>
-        </div>
-      </a>
-
-      <!-- 4. Unified Channel Feed -->
-      <a href="https://t.me/moltengram/chats?r=feedInChatMenu" class="m3-bento-card group">
-        <div class="flex items-center justify-between">
-          <div class="m3-card-icon">
-            <span class="material-symbols-rounded">dynamic_feed</span>
-          </div>
-          <span class="material-symbols-rounded text-base text-[var(--text-muted)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[var(--primary)] transition-transform">arrow_outward</span>
-        </div>
-        <div>
-          <h2 class="font-bold text-base mb-0.5">Лента каналов</h2>
-          <p class="text-xs text-[var(--text-sub)] leading-relaxed">Все посты ваших подписок в едином хронологическом потоке.</p>
-        </div>
-      </a>
-
-      <!-- 5. Shizuku & Text FX -->
-      <a href="https://t.me/moltengram/shizuku" class="m3-bento-card group">
-        <div class="flex items-center justify-between">
-          <div class="m3-card-icon">
-            <span class="material-symbols-rounded">bolt</span>
-          </div>
-          <span class="text-[11px] font-semibold px-3 py-1 rounded-full bg-[var(--surface-container-highest)] text-[var(--text-sub)]">
-            OTA
-          </span>
-        </div>
-        <div>
-          <h2 class="font-bold text-base mb-0.5">Shizuku и эффекты</h2>
-          <p class="text-xs text-[var(--text-sub)] leading-relaxed">Фоновые обновления без окон, живой курсор и папки-чипсы.</p>
-        </div>
-      </a>
-
-      <!-- 6. Pure Open Source -->
-      <a href="https://github.com/MoltenSt4r/MoltenGram" target="_blank" rel="noopener" class="m3-bento-card group">
-        <div class="flex items-center justify-between">
-          <div class="m3-card-icon">
-            <span class="material-symbols-rounded">verified_user</span>
-          </div>
-          <span class="text-[11px] font-semibold px-3 py-1 rounded-full bg-[var(--surface-container-highest)] text-[var(--text-sub)]">
-            GPL-3.0
-          </span>
-        </div>
-        <div>
-          <h2 class="font-bold text-base mb-0.5">Чистый код</h2>
-          <p class="text-xs text-[var(--text-sub)] leading-relaxed">Без трекеров, рекламы и Firebase. Встроенные мосты Tor.</p>
-        </div>
-      </a>
-
-    </section>
   </main>
 
   <!-- Minimal Tonal Footer -->
   <footer class="py-5 px-5 text-xs text-[var(--text-muted)]">
-    <div class="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 px-6 py-4 rounded-3xl bg-[var(--surface-container-low)]">
+    <div class="max-w-2xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 px-6 py-4 rounded-3xl bg-[var(--surface-container-low)]">
       <div class="flex items-center gap-2">
-        <span class="font-bold text-[var(--text)]">MoltenGram (moltenstar)</span>
+        <span class="font-bold text-[var(--text)]">MoltenGram</span>
         <span>•</span>
         <span>moltenstar.space</span>
       </div>
@@ -812,7 +603,7 @@
         </button>
       </div>
 
-      <!-- Interactive Tonal Copy Cards (Tap anywhere on row to copy) -->
+      <!-- Interactive Tonal Copy Cards -->
       <div class="space-y-2.5 mb-6">
         <!-- Repo URL Card -->
         <div onclick="copyText('https://moltenst4r.github.io/MoltenGram/fdroid/repo', 'Ссылка на репозиторий скопирована')" class="m3-copy-card">
@@ -837,7 +628,7 @@
         </div>
       </div>
 
-      <!-- Full-Height Expressive Action Buttons (Never Squished) -->
+      <!-- Full-Height Expressive Action Buttons -->
       <div class="flex flex-col gap-2.5">
         <a href="fdroidrepos://moltenst4r.github.io/MoltenGram/fdroid/repo?fingerprint=4B4EFFEE9D4CCBCB75DC3BF2E2A21655F2F35747B2D95FCF836E186FCE9D5030" 
            class="m3-btn m3-btn-filled w-full !h-14 ripple-btn">
@@ -853,8 +644,8 @@
     </div>
   </div>
 
-  <!-- Toast Notification (Frosted Matte Rough Glass) -->
-  <div class="m3-toast md3-frosted-glass" id="toastNotification">
+  <!-- Toast Notification -->
+  <div class="m3-toast" id="toastNotification">
     <span class="relative z-10 material-symbols-rounded text-[20px] text-[var(--primary)]">check_circle</span>
     <span class="relative z-10" id="toastMessage">Скопировано в буфер обмена</span>
   </div>
