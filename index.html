@@ -84,7 +84,7 @@
     }
 
     /* -------------------------------------------------------------
-       1. Authentic MoltenGram MD3 Tonal Palette (Zero Gradients, Zero Borders, Zero Neon)
+       1. Authentic MoltenGram MD3 Tonal Palette
        ------------------------------------------------------------- */
     :root, [data-theme="dark"] {
       --bg: #111411;
@@ -105,6 +105,11 @@
       --text: #e1e4de;
       --text-sub: #c0c8bf;
       --text-muted: #8a9389;
+
+      --glass-top: rgba(30, 35, 30, 0.72);
+      --glass-bottom: rgba(24, 28, 24, 0.50);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.28);
     }
 
     [data-theme="light"] {
@@ -126,6 +131,11 @@
       --text: #181d18;
       --text-sub: #404940;
       --text-muted: #717970;
+
+      --glass-top: rgba(247, 250, 244, 0.78);
+      --glass-bottom: rgba(232, 238, 230, 0.56);
+      --glass-border: rgba(24, 29, 24, 0.07);
+      --glass-shadow: 0 8px 28px 0 rgba(13, 31, 19, 0.06);
     }
 
     /* -------------------------------------------------------------
@@ -140,7 +150,7 @@
     * {
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
-      border: none !important;
+      border: none;
     }
 
     body {
@@ -168,41 +178,32 @@
     }
 
     /* -------------------------------------------------------------
-       3. Monotone Flush Top App Bar (Clinging to Top & Side Edges)
+       3. Authentic Frosted Glass Top App Bar (Backdrop Blur + Saturate + Noise)
        ------------------------------------------------------------- */
     .m3-top-dock {
       position: sticky;
       top: 0;
       z-index: 50;
       width: 100%;
-      background-color: var(--surface-container-high);
-      border-radius: 0 0 32px 32px;
+      background: linear-gradient(to bottom, var(--glass-top), var(--glass-bottom));
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+      border-radius: 0 0 28px 28px;
       padding: 14px 20px;
-      transition: background-color 0.25s ease, border-radius 0.35s var(--spring-smooth);
+      overflow: hidden;
+      transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
     }
 
-    /* Fluid concave side-clinging ears along the screen edges */
-    .m3-top-dock::before,
-    .m3-top-dock::after {
+    /* Subtle real frosted glass micro-grain overlay (SVG fractalNoise) */
+    .m3-top-dock::before {
       content: "";
       position: absolute;
-      bottom: -24px;
-      width: 24px;
-      height: 24px;
-      background-color: transparent;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
       pointer-events: none;
-    }
-
-    .m3-top-dock::before {
-      left: 0;
-      border-top-left-radius: 24px;
-      box-shadow: -12px -12px 0 12px var(--surface-container-high);
-    }
-
-    .m3-top-dock::after {
-      right: 0;
-      border-top-right-radius: 24px;
-      box-shadow: 12px -12px 0 12px var(--surface-container-high);
+      z-index: 0;
     }
 
     /* -------------------------------------------------------------
@@ -218,7 +219,6 @@
       justify-content: center;
     }
 
-    /* True Android 15/16 Material 3 Expressive 12-Sided Scallop Cookie SVG */
     .m3-cookie-svg {
       position: absolute;
       inset: -14px;
@@ -357,7 +357,163 @@
     }
 
     /* -------------------------------------------------------------
-       6. Authentic M3 Bottom Sheet / Dialog for F-Droid
+       6. Minimalist Material Design 3 Settings Search & Deep Links
+       ------------------------------------------------------------- */
+    .m3-search-bar {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 56px;
+      border-radius: 28px;
+      background-color: var(--surface-container-high);
+      padding: 0 18px;
+      gap: 12px;
+      transition: background-color 0.25s ease, border-radius 0.3s var(--spring-smooth);
+    }
+
+    .m3-search-bar:focus-within {
+      background-color: var(--surface-container-highest);
+      border-radius: 20px;
+    }
+
+    .m3-search-input {
+      flex: 1;
+      background: transparent;
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 500;
+      outline: none;
+      min-width: 0;
+    }
+
+    .m3-search-input::placeholder {
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .m3-chips-scroll {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 4px 2px 10px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .m3-chips-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .m3-chip {
+      height: 36px;
+      padding: 0 15px;
+      border-radius: 18px;
+      background-color: var(--surface-container);
+      color: var(--text-sub);
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease, border-radius 0.3s var(--spring-smooth), transform 0.2s var(--spring-smooth);
+    }
+
+    .m3-chip:hover {
+      background-color: var(--surface-container-high);
+      color: var(--text);
+    }
+
+    .m3-chip:active {
+      transform: scale(0.95);
+    }
+
+    .m3-chip.active {
+      background-color: var(--secondary-container);
+      color: var(--on-secondary-container);
+      border-radius: 12px;
+    }
+
+    .m3-chip-count {
+      font-size: 11px;
+      opacity: 0.72;
+      font-weight: 700;
+    }
+
+    /* Grouped M3 Settings List */
+    .m3-settings-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .m3-setting-item {
+      background-color: var(--surface-container-low);
+      border-radius: 16px;
+      padding: 13px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+      transition: background-color 0.2s ease, border-radius 0.25s var(--spring-smooth), transform 0.2s var(--spring-smooth);
+    }
+
+    .m3-setting-item:first-child {
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+    }
+
+    .m3-setting-item:last-child {
+      border-bottom-left-radius: 24px;
+      border-bottom-right-radius: 24px;
+    }
+
+    .m3-setting-item:hover {
+      background-color: var(--surface-container);
+    }
+
+    .m3-setting-item:active {
+      transform: scale(0.99);
+      background-color: var(--surface-container-high);
+    }
+
+    .m3-setting-action {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--surface-container-high);
+      color: var(--text-sub);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      shrink: 0;
+      transition: background-color 0.2s ease, color 0.2s ease, border-radius 0.25s var(--spring-smooth), transform 0.2s var(--spring-smooth);
+    }
+
+    .m3-setting-action:hover {
+      background-color: var(--primary-container);
+      color: var(--on-primary-container);
+      border-radius: 32%;
+    }
+
+    .m3-setting-action.open-btn {
+      background-color: var(--secondary-container);
+      color: var(--on-secondary-container);
+    }
+
+    .m3-setting-action.open-btn:hover {
+      background-color: var(--primary);
+      color: var(--on-primary);
+    }
+
+    /* -------------------------------------------------------------
+       7. Authentic M3 Bottom Sheet / Dialog for F-Droid (With Swipe-Down Handle)
        ------------------------------------------------------------- */
     .modal-backdrop {
       position: fixed;
@@ -390,15 +546,20 @@
       border-radius: 32px 32px 0 0;
       max-width: 480px;
       width: 100%;
-      padding: 16px 24px 32px;
+      padding: 8px 24px 32px;
       transform: translateY(100%);
       transition: transform 0.45s var(--spring-smooth);
+      will-change: transform;
+    }
+
+    .modal-sheet.dragging {
+      transition: none !important;
     }
 
     @media (min-width: 640px) {
       .modal-sheet {
         border-radius: 32px;
-        padding: 24px 28px 28px;
+        padding: 12px 28px 28px;
         transform: scale(0.92) translateY(24px);
       }
     }
@@ -407,13 +568,35 @@
       transform: scale(1) translateY(0);
     }
 
+    .m3-drag-zone {
+      width: 100%;
+      padding: 10px 0 14px;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .m3-drag-zone:active {
+      cursor: grabbing;
+    }
+
     .m3-drag-handle {
       width: 36px;
       height: 4px;
       border-radius: 2px;
       background-color: var(--text-muted);
-      opacity: 0.4;
-      margin: 0 auto 20px;
+      opacity: 0.45;
+      transition: width 0.25s var(--spring-smooth), opacity 0.2s ease, background-color 0.2s ease;
+    }
+
+    .m3-drag-zone:hover .m3-drag-handle,
+    .m3-drag-zone:active .m3-drag-handle {
+      width: 48px;
+      opacity: 0.8;
+      background-color: var(--text);
     }
 
     .m3-copy-card {
@@ -444,6 +627,7 @@
     }
     .delay-1 { animation-delay: 0.07s; }
     .delay-2 { animation-delay: 0.14s; }
+    .delay-3 { animation-delay: 0.21s; }
 
     @keyframes springReveal {
       to { opacity: 1; transform: translateY(0) scale(1); }
@@ -477,7 +661,7 @@
 </head>
 <body class="selection:bg-[var(--primary-container)] selection:text-[var(--on-primary-container)]">
 
-  <!-- Monotone Top Dock (Flush & Clinging to Top/Sides with Fluid Curved Ears) -->
+  <!-- Real Frosted Glass Top App Bar -->
   <header class="m3-top-dock">
     <div class="max-w-3xl mx-auto flex items-center justify-between">
       <!-- Brand (Strictly Original Repo Asset Path) -->
@@ -490,6 +674,10 @@
 
       <!-- Minimal Actions -->
       <div class="relative z-10 flex items-center gap-2">
+        <a href="#settings-catalog" class="m3-icon-btn" title="Поиск по настройкам клиента" aria-label="Поиск по настройкам">
+          <span class="material-symbols-rounded text-[20px]">search</span>
+        </a>
+
         <button id="themeToggleBtn" class="m3-icon-btn" title="Тема (Светлая / Тёмная)" aria-label="Сменить тему">
           <span class="material-symbols-rounded text-[20px]" id="themeIcon">light_mode</span>
         </button>
@@ -501,8 +689,8 @@
     </div>
   </header>
 
-  <!-- Main Minimalist Centerpiece (Strictly Hero & Download Only) -->
-  <main class="flex-1 flex flex-col items-center justify-center max-w-2xl w-full mx-auto px-5 py-10">
+  <!-- Main Minimalist Centerpiece -->
+  <main class="flex-1 flex flex-col items-center justify-center max-w-2xl w-full mx-auto px-5 py-10 gap-14">
 
     <section class="text-center w-full">
       <!-- Expressive Material 3 12-Sided Scallop Cookie + Original Logo Asset -->
@@ -562,6 +750,85 @@
       </div>
     </section>
 
+    <!-- Minimalist Material Design 3 Real Client Settings Search with Deep Links -->
+    <section id="settings-catalog" class="reveal delay-3 w-full">
+      <div class="flex items-center justify-between px-1 mb-3">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-rounded text-[20px] text-[var(--primary)]">tune</span>
+          <h2 class="font-bold text-base tracking-tight">Настройки клиента</h2>
+        </div>
+        <span id="settingsCounterLabel" class="text-xs text-[var(--text-muted)] font-medium"></span>
+      </div>
+
+      <!-- M3 Search Bar -->
+      <div class="m3-search-bar mb-3">
+        <span class="material-symbols-rounded text-[20px] text-[var(--text-muted)]">search</span>
+        <input type="text"
+               id="settingsSearchInput"
+               class="m3-search-input"
+               placeholder="Поиск настройки, раздела или ключа (например, Glyph, Monet, Tor)..."
+               autocomplete="off"
+               spellcheck="false">
+        <button id="clearSearchBtn"
+                class="hidden w-7 h-7 rounded-full bg-[var(--surface-container)] text-[var(--text-sub)] items-center justify-center hover:text-[var(--text)]"
+                aria-label="Очистить поиск">
+          <span class="material-symbols-rounded text-[16px]">close</span>
+        </button>
+      </div>
+
+      <!-- M3 Horizontal Filter Chips -->
+      <div class="m3-chips-scroll mb-3" id="settingsCategoryChips">
+        <button class="m3-chip active" data-cat="all">
+          <span>Все</span>
+          <span class="m3-chip-count" id="cat-count-all"></span>
+        </button>
+        <button class="m3-chip" data-cat="general">
+          <span>Основные</span>
+          <span class="m3-chip-count" id="cat-count-general"></span>
+        </button>
+        <button class="m3-chip" data-cat="appearance">
+          <span>Оформление</span>
+          <span class="m3-chip-count" id="cat-count-appearance"></span>
+        </button>
+        <button class="m3-chip" data-cat="chats">
+          <span>Чаты и медиа</span>
+          <span class="m3-chip-count" id="cat-count-chats"></span>
+        </button>
+        <button class="m3-chip" data-cat="glyph">
+          <span>Nothing Glyph</span>
+          <span class="m3-chip-count" id="cat-count-glyph"></span>
+        </button>
+        <button class="m3-chip" data-cat="ayu">
+          <span>AyuMoments</span>
+          <span class="m3-chip-count" id="cat-count-ayu"></span>
+        </button>
+        <button class="m3-chip" data-cat="navigation">
+          <span>Навигация и пилюли</span>
+          <span class="m3-chip-count" id="cat-count-navigation"></span>
+        </button>
+        <button class="m3-chip" data-cat="ai">
+          <span>ИИ и перевод</span>
+          <span class="m3-chip-count" id="cat-count-ai"></span>
+        </button>
+        <button class="m3-chip" data-cat="other">
+          <span>Система и прочее</span>
+          <span class="m3-chip-count" id="cat-count-other"></span>
+        </button>
+      </div>
+
+      <!-- M3 Settings List Container -->
+      <div id="settingsListContainer" class="m3-settings-list"></div>
+
+      <!-- Show All / Collapse Toggle -->
+      <div id="settingsExpandWrap" class="mt-3 text-center hidden">
+        <button id="settingsExpandBtn"
+                class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-[var(--surface-container)] hover:bg-[var(--surface-container-high)] text-xs font-semibold text-[var(--text-sub)] transition-colors">
+          <span id="settingsExpandText">Показать все настройки</span>
+          <span class="material-symbols-rounded text-[18px]" id="settingsExpandIcon">expand_more</span>
+        </button>
+      </div>
+    </section>
+
   </main>
 
   <!-- Minimal Tonal Footer -->
@@ -583,9 +850,11 @@
 
   <!-- Authentic Android Material 3 Bottom Sheet / Dialog for F-Droid -->
   <div class="modal-backdrop" id="fdroidModal" onclick="if(event.target === this) closeFdroidModal()">
-    <div class="modal-sheet">
-      <!-- M3 Sheet Handle -->
-      <div class="m3-drag-handle"></div>
+    <div class="modal-sheet" id="fdroidSheet">
+      <!-- Interactive M3 Drag Handle (Swipe down or tap to dismiss) -->
+      <div class="m3-drag-zone" id="fdroidDragZone" title="Потяните вниз или нажмите, чтобы свернуть">
+        <div class="m3-drag-handle"></div>
+      </div>
 
       <!-- Header -->
       <div class="flex items-start justify-between gap-4 mb-5">
@@ -710,21 +979,89 @@
     });
 
     // -------------------------------------------------------------
-    // 3. F-Droid Modal & Clipboard Copy
+    // 3. F-Droid Modal & Swipe-to-Dismiss Drag Handle
     // -------------------------------------------------------------
     const fdroidModal = document.getElementById('fdroidModal');
+    const fdroidSheet = document.getElementById('fdroidSheet');
+    const fdroidDragZone = document.getElementById('fdroidDragZone');
 
     function openFdroidModal() {
+      fdroidSheet.style.transform = '';
+      fdroidModal.style.backgroundColor = '';
       fdroidModal.classList.add('open');
     }
 
     function closeFdroidModal() {
+      fdroidSheet.classList.remove('dragging');
+      fdroidSheet.style.transform = '';
+      fdroidModal.style.backgroundColor = '';
       fdroidModal.classList.remove('open');
     }
 
     window.addEventListener('keydown', e => {
       if (e.key === 'Escape') closeFdroidModal();
     });
+
+    // Interactive Drag-Down / Tap-to-Collapse on .m3-drag-zone & sheet header
+    (function initBottomSheetDrag() {
+      let isDragging = false;
+      let startY = 0;
+      let currentDeltaY = 0;
+      let startTime = 0;
+
+      function onDragStart(clientY) {
+        if (!fdroidModal.classList.contains('open')) return;
+        isDragging = true;
+        startY = clientY;
+        currentDeltaY = 0;
+        startTime = performance.now();
+        fdroidSheet.classList.add('dragging');
+      }
+
+      function onDragMove(clientY) {
+        if (!isDragging) return;
+        const rawDelta = clientY - startY;
+        // Allow downward drag freely, upward drag with strong rubber-band resistance
+        currentDeltaY = rawDelta > 0 ? rawDelta : rawDelta * 0.18;
+        fdroidSheet.style.transform = `translateY(${currentDeltaY}px)`;
+        const progress = Math.min(1, Math.max(0, currentDeltaY / 280));
+        fdroidModal.style.backgroundColor = `rgba(10, 13, 10, ${(0.72 * (1 - progress * 0.65)).toFixed(2)})`;
+      }
+
+      function onDragEnd() {
+        if (!isDragging) return;
+        isDragging = false;
+        fdroidSheet.classList.remove('dragging');
+        const elapsed = Math.max(1, performance.now() - startTime);
+        const velocity = currentDeltaY / elapsed; // px/ms
+
+        // Tap on the drag handle (minimal movement) or drag down past threshold / flick down
+        if (Math.abs(currentDeltaY) < 6 && elapsed < 260) {
+          closeFdroidModal();
+          return;
+        }
+        if (currentDeltaY > 75 || (currentDeltaY > 25 && velocity > 0.45)) {
+          closeFdroidModal();
+        } else {
+          fdroidSheet.style.transform = '';
+          fdroidModal.style.backgroundColor = '';
+        }
+      }
+
+      fdroidDragZone.addEventListener('pointerdown', e => {
+        e.preventDefault();
+        fdroidDragZone.setPointerCapture(e.pointerId);
+        onDragStart(e.clientY);
+      });
+
+      fdroidDragZone.addEventListener('pointermove', e => {
+        if (!isDragging) return;
+        onDragMove(e.clientY);
+      });
+
+      fdroidDragZone.addEventListener('pointerup', () => onDragEnd());
+      fdroidDragZone.addEventListener('pointercancel', () => onDragEnd());
+    })();
 
     function copyText(text, toastMsg) {
       if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -759,7 +1096,353 @@
     }
 
     // -------------------------------------------------------------
-    // 4. Auto-fetch Latest APK & Version Tag from GitHub Releases
+    // 4. Complete Real Client Settings Catalog with Deep Links
+    // -------------------------------------------------------------
+    const CLIENT_SETTINGS = [
+      // === ОСНОВНЫЕ (general / tor) ===
+      { cat: 'general', section: 'Основные', title: 'Не округлять числа', key: 'disableNumberRounding', link: 'tg://moltengram/general?row=disableNumberRounding' },
+      { cat: 'general', section: 'Основные', title: 'Время с секундами', key: 'formatTimeWithSeconds', link: 'tg://moltengram/general?row=formatTimeWithSeconds' },
+      { cat: 'general', section: 'Основные', title: 'Вибрация в приложении', key: 'inAppVibration', link: 'tg://moltengram/general?row=inAppVibration' },
+      { cat: 'general', section: 'Основные', title: 'Фильтр символов Zalgo', key: 'filterZalgo', link: 'tg://moltengram/general?row=filterZalgo' },
+      { cat: 'general', section: 'Скорость', title: 'Ускорение загрузки (Download Boost)', key: 'downloadSpeed', link: 'tg://moltengram/general?row=downloadSpeed' },
+      { cat: 'general', section: 'Скорость', title: 'Ускорение отправки (Upload Boost)', key: 'uploadBoost', link: 'tg://moltengram/general?row=uploadBoost' },
+      { cat: 'general', section: 'Сеть', title: 'Использовать IPv6', key: 'IPv6', link: 'tg://moltengram/general?row=IPv6' },
+      { cat: 'general', section: 'Сеть', title: 'Тип DNS (Системный / DoH)', key: 'dnsType', link: 'tg://moltengram/general?row=dnsType' },
+      { cat: 'general', section: 'Сеть', title: 'Свой сервер DoH', key: 'customDoH', link: 'tg://moltengram/general?row=customDoH' },
+      { cat: 'general', section: 'Сеть • Tor', title: 'Встроенный Tor (Orbot)', key: 'torSettings', link: 'tg://moltengram/tor_settings' },
+      { cat: 'general', section: 'Сеть • Tor', title: 'Страна выходного узла Tor', key: 'exitCountry', link: 'tg://moltengram/tor_settings?row=exitCountry' },
+      { cat: 'general', section: 'Сеть • Tor', title: 'Тип мостов Tor (obfs4 / snowflake / webtunnel)', key: 'bridgeType', link: 'tg://moltengram/tor_settings?row=bridgeType' },
+      { cat: 'general', section: 'Сеть • Tor', title: 'Запросить мосты у @GetBridgesBot', key: 'autoGetBridges', link: 'tg://moltengram/tor_settings?row=autoGetBridges' },
+      { cat: 'general', section: 'Сеть • Tor', title: 'Свои строки мостов Tor', key: 'customBridges', link: 'tg://moltengram/tor_settings?row=customBridges' },
+      { cat: 'general', section: 'Хранилище', title: 'Сохранять медиа в подпапки чатов', key: 'saveToChatSubfolder', link: 'tg://moltengram/general?row=saveToChatSubfolder' },
+      { cat: 'general', section: 'Хранилище', title: 'Путь сохранения файлов', key: 'savePath', link: 'tg://moltengram/general?row=savePath' },
+      { cat: 'general', section: 'Профиль', title: 'Относительное время захода', key: 'relativeLastSeen', link: 'tg://moltengram/general?row=relativeLastSeen' },
+      { cat: 'general', section: 'Профиль', title: 'Скрыть номер телефона', key: 'hidePhone', link: 'tg://moltengram/general?row=hidePhone' },
+      { cat: 'general', section: 'Профиль', title: 'Показывать ID и дата-центр (DC)', key: 'showIdAndDc', link: 'tg://moltengram/general?row=showIdAndDc' },
+      { cat: 'general', section: 'Профиль', title: 'Скробблинг музыки Last.fm в профиле', key: 'lastfm', link: 'tg://moltengram/general?row=lastfm' },
+      { cat: 'general', section: 'Архив', title: 'Сортировать архив по непрочитанным', key: 'sortByUnread', link: 'tg://moltengram/general?row=sortByUnread' },
+      { cat: 'general', section: 'Архив', title: 'Скрыть архив из списка чатов', key: 'hideArchive', link: 'tg://moltengram/general?row=hideArchive' },
+      { cat: 'general', section: 'Архив', title: 'Открывать архив вытягиванием вниз', key: 'archiveOnPull', link: 'tg://moltengram/general?row=archiveOnPull' },
+      { cat: 'general', section: 'Архив', title: 'Отключить свайп разархивации', key: 'disableUnarchiveSwipe', link: 'tg://moltengram/general?row=disableUnarchiveSwipe' },
+      { cat: 'general', section: 'Карты', title: 'Провайдер карт (OSMDroid / Google)', key: 'mapProvider', link: 'tg://moltengram/general?row=mapProvider' },
+      { cat: 'general', section: 'Карты', title: 'Исправление смещения координат (GCJ-02)', key: 'mapDriftingFix', link: 'tg://moltengram/general?row=mapDriftingFix' },
+      { cat: 'general', section: 'Карты', title: 'Предпросмотр карт в чатах', key: 'mapPreview', link: 'tg://moltengram/general?row=mapPreview' },
+      { cat: 'general', section: 'Уведомления', title: 'Тип службы Push-уведомлений', key: 'pushServiceType', link: 'tg://moltengram/general?row=pushServiceType' },
+      { cat: 'general', section: 'Уведомления', title: 'Шлюз UnifiedPush', key: 'pushServiceTypeUnifiedGateway', link: 'tg://moltengram/general?row=pushServiceTypeUnifiedGateway' },
+      { cat: 'general', section: 'Уведомления', title: 'Постоянное фоновое уведомление', key: 'pushServiceTypeInAppDialog', link: 'tg://moltengram/general?row=pushServiceTypeInAppDialog' },
+      { cat: 'general', section: 'Уведомления', title: 'Отключить всплывающие пузыри (Bubbles)', key: 'disableNotificationBubbles', link: 'tg://moltengram/general?row=disableNotificationBubbles' },
+      { cat: 'general', section: 'Уведомления', title: 'Диагностика статуса Push', key: 'pushStatus', link: 'tg://moltengram/general?row=pushStatus' },
+      { cat: 'general', section: 'Уведомления', title: 'Оптимизация батареи', key: 'batteryOptimization', link: 'tg://moltengram/general?row=batteryOptimization' },
+      { cat: 'general', section: 'Уведомления', title: 'Ускорение уведомлений через Shizuku', key: 'shizukuBoost', link: 'tg://moltengram/general?row=shizukuBoost' },
+
+      // === ОФОРМЛЕНИЕ (appearance / avatar_shapes / chip_folders / player_settings) ===
+      { cat: 'appearance', section: 'Аватарки', title: 'Скругление углов аватарок', key: 'avatarCorners', link: 'tg://moltengram/appearance?row=avatarCorners' },
+      { cat: 'appearance', section: 'Аватарки', title: 'Единый радиус аватарок', key: 'singleCornerRadius', link: 'tg://moltengram/appearance?row=singleCornerRadius' },
+      { cat: 'appearance', section: 'Аватарки • MD3', title: 'Экспрессивные формы аватарок Material 3', key: 'md3AvatarShapes', link: 'tg://moltengram/avatar_shapes' },
+      { cat: 'appearance', section: 'Аватарки • MD3', title: 'Форма аватарок: Пользователи', key: 'Md3AvatarShapeUsers', link: 'tg://moltengram/avatar_shapes?row=Md3AvatarShapeUsers' },
+      { cat: 'appearance', section: 'Аватарки • MD3', title: 'Форма аватарок: Боты', key: 'Md3AvatarShapeBots', link: 'tg://moltengram/avatar_shapes?row=Md3AvatarShapeBots' },
+      { cat: 'appearance', section: 'Аватарки • MD3', title: 'Форма аватарок: Группы', key: 'Md3AvatarShapeGroups', link: 'tg://moltengram/avatar_shapes?row=Md3AvatarShapeGroups' },
+      { cat: 'appearance', section: 'Аватарки • MD3', title: 'Форма аватарок: Каналы', key: 'Md3AvatarShapeChannels', link: 'tg://moltengram/avatar_shapes?row=Md3AvatarShapeChannels' },
+      { cat: 'appearance', section: 'Аватарки • MD3', title: 'Форма аватарок: Избранное и профиль', key: 'Md3AvatarShapeSelf', link: 'tg://moltengram/avatar_shapes?row=Md3AvatarShapeSelf' },
+      { cat: 'appearance', section: 'Аватарки • MD3', title: 'Сбросить формы аватарок к кругу', key: 'Md3AvatarShapesReset', link: 'tg://moltengram/avatar_shapes?row=Md3AvatarShapesReset' },
+      { cat: 'appearance', section: 'Оформление', title: 'Динамическая палитра Monet', key: 'monetPalette', link: 'tg://moltengram/appearance?row=monetPalette' },
+      { cat: 'appearance', section: 'Оформление', title: 'Иконка приложения (10 стилей)', key: 'appIcon', link: 'tg://moltengram/appearance?row=appIcon' },
+      { cat: 'appearance', section: 'Оформление', title: 'Наборы иконок (Icon Packs)', key: 'iconPacks', link: 'tg://moltengram/appearance?row=iconPacks' },
+      { cat: 'appearance', section: 'Оформление', title: 'Наборы эмодзи', key: 'emojiSets', link: 'tg://moltengram/appearance?row=emojiSets' },
+      { cat: 'appearance', section: 'Оформление', title: 'Форма плавающей кнопки (FAB)', key: 'fabShape', link: 'tg://moltengram/appearance?row=fabShape' },
+      { cat: 'appearance', section: 'Оформление', title: 'Системный шрифт', key: 'useSystemFonts', link: 'tg://moltengram/appearance?row=useSystemFonts' },
+      { cat: 'appearance', section: 'Material Design 3', title: 'Стили компонентов Material Design 3', key: 'md3Styles', link: 'tg://moltengram/appearance?row=md3Styles' },
+      { cat: 'appearance', section: 'Material Design 3', title: 'Индикатор загрузки MD3 Expressive', key: 'md3Loading', link: 'tg://moltengram/appearance?row=md3Loading' },
+      { cat: 'appearance', section: 'Material Design 3', title: 'Слайдеры в стиле MD3', key: 'md3Slider', link: 'tg://moltengram/appearance?row=md3Slider' },
+      { cat: 'appearance', section: 'Material Design 3', title: 'Переключатели (Switches) MD3', key: 'md3Switch', link: 'tg://moltengram/appearance?row=md3Switch' },
+      { cat: 'appearance', section: 'Material Design 3', title: 'Шапка чата в стиле MD3', key: 'md3ChatHeader', link: 'tg://moltengram/appearance?row=md3ChatHeader' },
+      { cat: 'appearance', section: 'Material Design 3', title: 'Нижняя панель навигации MD3', key: 'md3NavBar', link: 'tg://moltengram/appearance?row=md3NavBar' },
+      { cat: 'appearance', section: 'Material Design 3', title: 'Скруглённые карточки списков MD3', key: 'md3ListItems', link: 'tg://moltengram/appearance?row=md3ListItems' },
+      { cat: 'appearance', section: 'Material Design 3', title: 'Аудиоплеер в стиле MD3', key: 'md3Player', link: 'tg://moltengram/appearance?row=md3Player' },
+      { cat: 'appearance', section: 'Material Design 3', title: 'Мини-плеер в стиле MD3', key: 'md3MiniPlayer', link: 'tg://moltengram/appearance?row=md3MiniPlayer' },
+      { cat: 'appearance', section: 'Material Design 3', title: 'Альбомы медиа как карусель MD3', key: 'mediaGroupCarousel', link: 'tg://moltengram/appearance?row=mediaGroupCarousel' },
+      { cat: 'appearance', section: 'Оформление', title: 'Каплевидное перетекание аватарки (Gooey)', key: 'gooeyAvatar', link: 'tg://moltengram/appearance?row=gooeyAvatar' },
+      { cat: 'appearance', section: 'Оформление', title: 'Пользовательские темы', key: 'customThemes', link: 'tg://moltengram/appearance?row=customThemes' },
+      { cat: 'appearance', section: 'Секции', title: 'Радиус скругления секций', key: 'sectionRadius', link: 'tg://moltengram/appearance?row=sectionRadius' },
+      { cat: 'appearance', section: 'Секции', title: 'Отдельные заголовки секций', key: 'separateHeaders', link: 'tg://moltengram/appearance?row=separateHeaders' },
+      { cat: 'appearance', section: 'Секции', title: 'Стиль разделителей', key: 'dividerStyle', link: 'tg://moltengram/appearance?row=dividerStyle' },
+      { cat: 'appearance', section: 'Размытие и стекло', title: 'Стеклянный контур элементов', key: 'glassOutline', link: 'tg://moltengram/appearance?row=glassOutline' },
+      { cat: 'appearance', section: 'Размытие и стекло', title: 'Стеклянное меню сообщений', key: 'glassMessageMenu', link: 'tg://moltengram/appearance?row=glassMessageMenu' },
+      { cat: 'appearance', section: 'Размытие и стекло', title: 'Принудительное размытие (Force Blur)', key: 'forceBlur', link: 'tg://moltengram/appearance?row=forceBlur' },
+      { cat: 'appearance', section: 'Размытие и стекло', title: 'Отключить размытие аватарок', key: 'disableAvatarBlur', link: 'tg://moltengram/appearance?row=disableAvatarBlur' },
+      { cat: 'appearance', section: 'Список чатов', title: 'Снег в шапке и списке чатов', key: 'forceSnow', link: 'tg://moltengram/appearance?row=forceSnow' },
+      { cat: 'appearance', section: 'Список чатов', title: 'Заголовок по центру', key: 'centerTitle', link: 'tg://moltengram/appearance?row=centerTitle' },
+      { cat: 'appearance', section: 'Список чатов', title: 'Скрыть истории (Stories)', key: 'hideStories', link: 'tg://moltengram/appearance?row=hideStories' },
+      { cat: 'appearance', section: 'Список чатов', title: 'Скрыть плавающую кнопку (FAB)', key: 'hideFloatingButton', link: 'tg://moltengram/appearance?row=hideFloatingButton' },
+      { cat: 'appearance', section: 'Список чатов', title: 'Скрыть строку поиска', key: 'hideSearchBar', link: 'tg://moltengram/appearance?row=hideSearchBar' },
+      { cat: 'appearance', section: 'Список чатов', title: 'Мини-аватарки отправителей в группах', key: 'senderMiniAvatars', link: 'tg://moltengram/appearance?row=senderMiniAvatars' },
+      { cat: 'appearance', section: 'Список чатов', title: 'Текст заголовка в шапке', key: 'titleText', link: 'tg://moltengram/appearance?row=titleText' },
+      { cat: 'appearance', section: 'Папки', title: 'Папки в виде чипов (Chip Folders)', key: 'chipFolders', link: 'tg://moltengram/chip_folders_settings' },
+      { cat: 'appearance', section: 'Папки', title: 'Стиль заголовков вкладок папок', key: 'tabTitleStyle', link: 'tg://moltengram/appearance?row=tabTitleStyle' },
+      { cat: 'appearance', section: 'Папки', title: 'Счётчик сообщений на вкладках', key: 'tabCounter', link: 'tg://moltengram/appearance?row=tabCounter' },
+      { cat: 'appearance', section: 'Папки', title: 'Скрыть вкладку «Все чаты»', key: 'hideAllChats', link: 'tg://moltengram/appearance?row=hideAllChats' },
+      { cat: 'appearance', section: 'Плеер', title: 'Настройки аудиоплеера (фон, обложка, тексты песен)', key: 'playerSettings', link: 'tg://moltengram/player_settings' },
+      { cat: 'appearance', section: 'Плеер', title: 'Синхронизированные тексты песен (Lyrics)', key: 'lyricsExperimental', link: 'tg://moltengram/player_settings?row=lyricsExperimental' },
+      { cat: 'appearance', section: 'Плеер', title: 'Плавный переход между треками (Crossfade)', key: 'crossfade', link: 'tg://moltengram/player_settings?row=crossfade' },
+      { cat: 'appearance', section: 'Плеер', title: 'Таймер сна в плеере', key: 'sleepTimer', link: 'tg://moltengram/player_settings?row=sleepTimer' },
+
+      // === ЧАТЫ И МЕДИА (chats / text_animation) ===
+      { cat: 'chats', section: 'Стикеры', title: 'Размер стикеров в чате', key: 'stickerSize', link: 'tg://moltengram/chats?row=stickerSize' },
+      { cat: 'chats', section: 'Стикеры', title: 'Скрыть время на стикерах', key: 'hideTimeOnStickers', link: 'tg://moltengram/chats?row=hideTimeOnStickers' },
+      { cat: 'chats', section: 'Стикеры', title: 'Форма скругления стикеров', key: 'stickerShape', link: 'tg://moltengram/chats?row=stickerShape' },
+      { cat: 'chats', section: 'Стикеры и эмодзи', title: 'Отключить популярные стикеры', key: 'disableTrending', link: 'tg://moltengram/chats?row=disableTrending' },
+      { cat: 'chats', section: 'Стикеры и эмодзи', title: 'Кастомные эмодзи без Premium', key: 'CustomEmojiForNonPremium', link: 'tg://moltengram/chats?row=CustomEmojiForNonPremium' },
+      { cat: 'chats', section: 'Стикеры и эмодзи', title: 'Скрыть реакции в каналах и группах', key: 'hideReactions', link: 'tg://moltengram/chats?row=hideReactions' },
+      { cat: 'chats', section: 'Двойное нажатие', title: 'Действие по двойному тапу (входящие)', key: 'doubleTapIncoming', link: 'tg://moltengram/chats?row=doubleTapIncoming' },
+      { cat: 'chats', section: 'Двойное нажатие', title: 'Действие по двойному тапу (исходящие)', key: 'doubleTapOutgoing', link: 'tg://moltengram/chats?row=doubleTapOutgoing' },
+      { cat: 'chats', section: 'Чаты', title: 'Стиль нижней кнопки в каналах', key: 'bottomButton', link: 'tg://moltengram/chats?row=bottomButton' },
+      { cat: 'chats', section: 'Чаты', title: 'Быстрые действия администратора', key: 'adminShortcuts', link: 'tg://moltengram/chats?row=adminShortcuts' },
+      { cat: 'chats', section: 'Чаты', title: 'Быстрый переход между каналами и темами', key: 'quickTransition', link: 'tg://moltengram/chats?row=quickTransition' },
+      { cat: 'chats', section: 'Чаты', title: 'Скрыть стикер приветствия', key: 'disableGreeting', link: 'tg://moltengram/chats?row=disableGreeting' },
+      { cat: 'chats', section: 'Чаты', title: 'Удалять чат для обеих сторон по умолчанию', key: 'deleteChatForBothSides', link: 'tg://moltengram/chats?row=deleteChatForBothSides' },
+      { cat: 'chats', section: 'Чаты', title: 'Скрывать клавиатуру при прокрутке чата', key: 'hideKeyboardOnScroll', link: 'tg://moltengram/chats?row=hideKeyboardOnScroll' },
+      { cat: 'chats', section: 'Чаты', title: 'Запятая после упоминания (@username,)', key: 'addCommaAfterMention', link: 'tg://moltengram/chats?row=addCommaAfterMention' },
+      { cat: 'chats', section: 'Чаты', title: 'Подсказки команд плагинов', key: 'pluginCommandSuggestions', link: 'tg://moltengram/chats?row=pluginCommandSuggestions' },
+      { cat: 'chats', section: 'Чаты', title: 'Кастомный эмодзи-статус в профиле без Premium', key: 'customEmojiStatus', link: 'tg://moltengram/chats?row=customEmojiStatus' },
+      { cat: 'chats', section: 'Чаты', title: 'Вычисление математики и валют в поле ввода', key: 'inlineMathResult', link: 'tg://moltengram/chats?row=inlineMathResult' },
+      { cat: 'chats', section: 'Чаты', title: 'Скрыть кнопку отправки от имени канала', key: 'hideSendAsPeer', link: 'tg://moltengram/chats?row=hideSendAsPeer' },
+      { cat: 'chats', section: 'Чаты', title: 'Анимация набора текста и курсора', key: 'textAnimation', link: 'tg://moltengram/text_animation_settings' },
+      { cat: 'chats', section: 'Сообщения', title: 'Убрать хвостики у пузырей сообщений', key: 'removeMessageTail', link: 'tg://moltengram/chats?row=removeMessageTail' },
+      { cat: 'chats', section: 'Сообщения', title: 'Плавающее поле ввода MD3', key: 'OEChatsMd3ChatInput', link: 'tg://moltengram/chats?row=OEChatsMd3ChatInput' },
+      { cat: 'chats', section: 'Сообщения', title: 'Анимация входящих сообщений', key: 'incomingMessageAnimation', link: 'tg://moltengram/chats?row=incomingMessageAnimation' },
+      { cat: 'chats', section: 'Сообщения', title: 'Анимация исходящих сообщений', key: 'outgoingMessageAnimation', link: 'tg://moltengram/chats?row=outgoingMessageAnimation' },
+      { cat: 'chats', section: 'Сообщения', title: 'Иконка карандаша вместо слова «изменено»', key: 'replaceEdited', link: 'tg://moltengram/chats?row=replaceEdited' },
+      { cat: 'chats', section: 'Сообщения', title: 'Индикатор онлайна в шапке и сообщениях', key: 'showOnlineStatus', link: 'tg://moltengram/chats?row=showOnlineStatus' },
+      { cat: 'chats', section: 'Сообщения', title: 'Показывать результаты опросов до голосования', key: 'showResultsBeforeVoting', link: 'tg://moltengram/chats?row=showResultsBeforeVoting' },
+      { cat: 'chats', section: 'Сообщения', title: 'Дата оригинала у пересланных сообщений', key: 'dateOfForwardedMsg', link: 'tg://moltengram/chats?row=dateOfForwardedMsg' },
+      { cat: 'chats', section: 'Сообщения', title: 'Настройка пунктов контекстного меню сообщения', key: 'messageMenu', link: 'tg://moltengram/chats?row=messageMenu' },
+      { cat: 'chats', section: 'Сообщения', title: 'Настройка меню в шапке чата', key: 'chatMenu', link: 'tg://moltengram/chats?row=chatMenu' },
+      { cat: 'chats', section: 'Ссылки', title: 'Очистка ссылок от UTM и трекеров при вставке/открытии', key: 'stripTracking', link: 'tg://moltengram/chats?row=stripTracking' },
+      { cat: 'chats', section: 'Каналы', title: 'Широкие посты в каналах (от края до края)', key: 'wideChannelPosts', link: 'tg://moltengram/chats?row=wideChannelPosts' },
+      { cat: 'chats', section: 'Каналы', title: 'Лента новостей каналов (Feed)', key: 'feedSettings', link: 'tg://moltengram/chats?row=feedSettings' },
+      { cat: 'chats', section: 'Камера', title: 'Движок камеры (CameraX / Camera2 / Системная)', key: 'cameraType', link: 'tg://moltengram/chats?row=cameraType' },
+      { cat: 'chats', section: 'Камера', title: 'Расширенные настройки камеры (60 FPS, стабилизация)', key: 'extendedSettings', link: 'tg://moltengram/chats?row=extendedSettings' },
+      { cat: 'chats', section: 'Камера', title: 'Камера по умолчанию для видеокружков', key: 'videoMessagesCamera', link: 'tg://moltengram/chats?row=videoMessagesCamera' },
+      { cat: 'chats', section: 'Камера', title: 'Плавный слайдер зума в кружках', key: 'zoomSlider', link: 'tg://moltengram/chats?row=zoomSlider' },
+      { cat: 'chats', section: 'Фото и видео', title: 'Всегда отправлять фото в HD-качестве', key: 'alwaysSendInHD', link: 'tg://moltengram/chats?row=alwaysSendInHD' },
+      { cat: 'chats', section: 'Фото и видео', title: 'Поддержка Ultra HDR фотографий', key: 'hdrPhotos', link: 'tg://moltengram/chats?row=hdrPhotos' },
+      { cat: 'chats', section: 'Фото и видео', title: 'Предпочитать исходное качество видео', key: 'preferOriginalQuality', link: 'tg://moltengram/chats?row=preferOriginalQuality' },
+      { cat: 'chats', section: 'Фото и видео', title: 'Свайп вверх для картинки в картинке (PiP)', key: 'swipeToPip', link: 'tg://moltengram/chats?row=swipeToPip' },
+      { cat: 'chats', section: 'Фото и видео', title: 'Отключить датчик приближения при прослушивании ГС', key: 'disableProximityEvents', link: 'tg://moltengram/chats?row=disableProximityEvents' },
+      { cat: 'chats', section: 'Расшифровка ГС', title: 'Провайдер распознавания речи (Vosk / Whisper / Gemini)', key: 'transcribeProvider', link: 'tg://moltengram/chats?row=transcribeProvider' },
+      { cat: 'chats', section: 'Расшифровка ГС', title: 'Офлайн-модели распознавания речи Vosk', key: 'voskModels', link: 'tg://moltengram/chats?row=voskModels' },
+
+      // === NOTHING GLYPH (glyph) ===
+      { cat: 'glyph', section: 'Nothing Glyph', title: 'Интерфейс Nothing Glyph (Мастер-переключатель)', key: 'OEGlyphEnabled', link: 'tg://moltengram/glyph?row=OEGlyphEnabled' },
+      { cat: 'glyph', section: 'Nothing Glyph', title: 'Вспышка при новых сообщениях', key: 'OEGlyphNewMessage', link: 'tg://moltengram/glyph?row=OEGlyphNewMessage' },
+      { cat: 'glyph', section: 'Nothing Glyph', title: 'Стиль анимации новых сообщений', key: 'OEGlyphMessageAnim', link: 'tg://moltengram/glyph?row=OEGlyphMessageAnim' },
+      { cat: 'glyph', section: 'Nothing Glyph', title: 'Свечение при входящем звонке', key: 'OEGlyphCalls', link: 'tg://moltengram/glyph?row=OEGlyphCalls' },
+      { cat: 'glyph', section: 'Nothing Glyph', title: 'Стиль анимации звонка', key: 'OEGlyphCallAnim', link: 'tg://moltengram/glyph?row=OEGlyphCallAnim' },
+      { cat: 'glyph', section: 'Nothing Glyph', title: 'Свечение при записи голосовых (ГС)', key: 'OEGlyphRecording', link: 'tg://moltengram/glyph?row=OEGlyphRecording' },
+      { cat: 'glyph', section: 'Nothing Glyph', title: 'Свечение при записи кружков и видео', key: 'OEGlyphVideoRecording', link: 'tg://moltengram/glyph?row=OEGlyphVideoRecording' },
+      { cat: 'glyph', section: 'Nothing Glyph', title: 'Красный индикатор записи (Rec. Light)', key: 'OEGlyphRedIndicator', link: 'tg://moltengram/glyph?row=OEGlyphRedIndicator' },
+      { cat: 'glyph', section: 'Nothing Glyph', title: 'Стиль анимации записи', key: 'OEGlyphRecordAnim', link: 'tg://moltengram/glyph?row=OEGlyphRecordAnim' },
+      { cat: 'glyph', section: 'Nothing Glyph', title: 'Сообщения только при выключенном экране', key: 'OEGlyphScreenOff', link: 'tg://moltengram/glyph?row=OEGlyphScreenOff' },
+      { cat: 'glyph', section: 'Nothing Glyph', title: 'Иконка с контрастной инверсией на Glyph Matrix', key: 'OEGlyphMatrixShowIcon', link: 'tg://moltengram/glyph?row=OEGlyphMatrixShowIcon' },
+      { cat: 'glyph', section: 'Nothing Glyph', title: 'Живой предпросмотр глифов на модели смартфона', key: 'glyphDevicePreview', link: 'tg://moltengram/glyph?row=glyphDevicePreview' },
+
+      // === AYUMOMENTS & GHOST MODE (ayumoments / ghost_mode) ===
+      { cat: 'ayu', section: 'AyuMoments', title: 'Режим призрака (Ghost Mode)', key: 'ayuGhost', link: 'tg://moltengram/ghost_mode' },
+      { cat: 'ayu', section: 'Режим призрака', title: 'Не отправлять статус прочтения сообщений', key: 'sendReadMessagePackets', link: 'tg://moltengram/ghost_mode' },
+      { cat: 'ayu', section: 'Режим призрака', title: 'Не отправлять статус прочтения историй', key: 'sendReadStoriesPackets', link: 'tg://moltengram/ghost_mode' },
+      { cat: 'ayu', section: 'Режим призрака', title: 'Не отправлять статус «в сети» (Online)', key: 'sendOnlinePackets', link: 'tg://moltengram/ghost_mode' },
+      { cat: 'ayu', section: 'Режим призрака', title: 'Не отправлять статус набора текста и записи', key: 'sendUploadProgress', link: 'tg://moltengram/ghost_mode' },
+      { cat: 'ayu', section: 'AyuMoments', title: 'Спрашивать перед открытием историй', key: 'AskBeforeOpeningStory', link: 'tg://moltengram/ayumoments?row=AskBeforeOpeningStory' },
+      { cat: 'ayu', section: 'AyuMoments', title: 'Регулярные фильтры сообщений (Regex)', key: 'RegexFiltersEnabled', link: 'tg://moltengram/ayumoments?row=RegexFiltersEnabled' },
+      { cat: 'ayu', section: 'AyuMoments', title: 'Локальная фиксация времени последнего захода', key: 'SaveLocalLastSeen', link: 'tg://moltengram/ayumoments?row=SaveLocalLastSeen' },
+      { cat: 'ayu', section: 'AyuMoments', title: 'Сохранять точное время прочтения', key: 'SaveReadDate', link: 'tg://moltengram/ayumoments?row=SaveReadDate' },
+      { cat: 'ayu', section: 'AyuMoments', title: 'Сохранять удалённые сообщения', key: 'EnableSaveDeletedMessages', link: 'tg://moltengram/ayumoments?row=EnableSaveDeletedMessages' },
+      { cat: 'ayu', section: 'AyuMoments', title: 'Сохранять историю редактирования сообщений', key: 'EnableSaveEditsHistory', link: 'tg://moltengram/ayumoments?row=EnableSaveEditsHistory' },
+      { cat: 'ayu', section: 'AyuMoments', title: 'Сохранять исчезающие и удалённые медиафайлы', key: 'MessageSavingSaveMedia', link: 'tg://moltengram/ayumoments?row=MessageSavingSaveMedia' },
+      { cat: 'ayu', section: 'AyuMoments', title: 'Полупрозрачность удалённых сообщений', key: 'TranslucentDeletedMessages', link: 'tg://moltengram/ayumoments?row=TranslucentDeletedMessages' },
+      { cat: 'ayu', section: 'AyuMoments', title: 'Иконка корзины у удалённых сообщений', key: 'UseDeletedIcon', link: 'tg://moltengram/ayumoments?row=UseDeletedIcon' },
+      { cat: 'ayu', section: 'AyuMoments', title: 'Пересылка и копирование из закрытых каналов', key: 'ForwardProtectedAsCopy', link: 'tg://moltengram/ayumoments?row=ForwardProtectedAsCopy' },
+      { cat: 'ayu', section: 'AyuMoments', title: 'Экспорт базы сохранённых сообщений', key: 'databaseExport', link: 'tg://moltengram/ayumoments?row=databaseExport' },
+      { cat: 'ayu', section: 'AyuMoments', title: 'Очистить базу удалённых сообщений', key: 'ayuClearDatabase', link: 'tg://moltengram/ayumoments?row=ayuClearDatabase' },
+
+      // === НАВИГАЦИЯ И ПИЛЮЛИ (navigation / pillstack) ===
+      { cat: 'navigation', section: 'Навигация', title: 'Навигация и редактор бокового меню', key: 'appNavigation', link: 'tg://moltengram/navigation' },
+      { cat: 'navigation', section: 'Навигация', title: 'Режим нижней панели (Показать / Скрыть / Плавающая)', key: 'BottomNavigationBarMode', link: 'tg://moltengram/navigation' },
+      { cat: 'navigation', section: 'Навигация', title: 'Скрыть подписи вкладок нижней панели', key: 'MainTabsHideTitles', link: 'tg://moltengram/navigation?row=MainTabsHideTitles' },
+      { cat: 'navigation', section: 'Навигация', title: 'Скрыть вкладку «Контакты»', key: 'MainTabsHideContacts', link: 'tg://moltengram/navigation?row=MainTabsHideContacts' },
+      { cat: 'navigation', section: 'Навигация', title: 'Скрыть вкладку «Звонки»', key: 'MainTabsHideCallsSettings', link: 'tg://moltengram/navigation?row=MainTabsHideCallsSettings' },
+      { cat: 'navigation', section: 'Навигация', title: 'Скрыть вкладку «Профиль»', key: 'MainTabsHideProfile', link: 'tg://moltengram/navigation?row=MainTabsHideProfile' },
+      { cat: 'navigation', section: 'Пилюли (Pill Stack)', title: 'Стек виджетов-пилюль в боковом меню (Погода, Курсы, Музыка)', key: 'pillStack', link: 'tg://moltengram/pillstack' },
+      { cat: 'navigation', section: 'Пилюли (Pill Stack)', title: 'Бесконечная прокрутка пилюль', key: 'infiniteScrolling', link: 'tg://moltengram/pillstack?row=infiniteScrolling' },
+      { cat: 'navigation', section: 'Пилюли (Pill Stack)', title: 'Добавить виджет курса валют / крипты', key: 'addRate', link: 'tg://moltengram/pillstack?row=addRate' },
+      { cat: 'navigation', section: 'Пилюли (Pill Stack)', title: 'Настройки виджета погоды', key: 'weather', link: 'tg://moltengram/pillstack?row=weather' },
+
+      // === ИИ И ПЕРЕВОД (ai_settings / translator) ===
+      { cat: 'ai', section: 'ИИ-ассистент', title: 'Настройки ИИ-чата и провайдера LLM', key: 'ai_settings', link: 'tg://moltengram/ai_settings' },
+      { cat: 'ai', section: 'ИИ-ассистент', title: 'Провайдер и модель ИИ (Gemini, OpenAI, Claude, DeepSeek)', key: 'model', link: 'tg://moltengram/ai_settings?row=model' },
+      { cat: 'ai', section: 'ИИ-ассистент', title: 'API-ключ языковой модели', key: 'key', link: 'tg://moltengram/ai_settings?row=key' },
+      { cat: 'ai', section: 'ИИ-ассистент', title: 'Глубина рассуждений (Reasoning Effort)', key: 'reasoning', link: 'tg://moltengram/ai_settings?row=reasoning' },
+      { cat: 'ai', section: 'ИИ-ассистент', title: 'Системный промпт и роль ИИ', key: 'role', link: 'tg://moltengram/ai_settings?row=role' },
+      { cat: 'ai', section: 'ИИ-ассистент', title: 'Температура генерации и потоковый вывод', key: 'temperature', link: 'tg://moltengram/ai_settings?row=temperature' },
+      { cat: 'ai', section: 'Переводчик', title: 'Настройки переводчика сообщений', key: 'translator', link: 'tg://moltengram/translator' },
+      { cat: 'ai', section: 'Переводчик', title: 'Провайдер перевода (Google, DeepL, Yandex, LLM)', key: 'translationProvider', link: 'tg://moltengram/general?row=translationProvider' },
+      { cat: 'ai', section: 'Переводчик', title: 'Целевой язык перевода', key: 'translateToLang', link: 'tg://moltengram/general?row=translateToLang' },
+
+      // === СИСТЕМА, ОБЛАКО, ПЛАГИНЫ И ПРОЧЕЕ (other / cloud / ota_updates / shizuku / plugins) ===
+      { cat: 'other', section: 'Облако', title: 'Облачная синхронизация настроек в Избранное', key: 'cloud', link: 'tg://moltengram/cloud' },
+      { cat: 'other', section: 'Облако', title: 'Автоматическая синхронизация с облаком', key: 'cloudAutoSync', link: 'tg://moltengram/cloud?row=cloudAutoSync' },
+      { cat: 'other', section: 'Обновления', title: 'Центр OTA-обновлений MoltenGram', key: 'ota_updates', link: 'tg://moltengram/ota_updates' },
+      { cat: 'other', section: 'Обновления', title: 'Получать тестовые сборки (Canary)', key: 'includeCanary', link: 'tg://moltengram/ota_updates?row=includeCanary' },
+      { cat: 'other', section: 'Обновления', title: 'Автопроверка обновлений при запуске', key: 'autoCheck', link: 'tg://moltengram/ota_updates?row=autoCheck' },
+      { cat: 'other', section: 'Shizuku', title: 'Интеграция с Shizuku (системные привилегии)', key: 'shizuku_settings', link: 'tg://moltengram/shizuku_settings' },
+      { cat: 'other', section: 'Shizuku', title: 'Тихая установка обновлений и APK через Shizuku', key: 'silentUpdates', link: 'tg://moltengram/shizuku_settings?row=silentUpdates' },
+      { cat: 'other', section: 'Shizuku', title: 'Оптимизация DEX-профилей (cmd package compile)', key: 'optimizeDex', link: 'tg://moltengram/shizuku_settings?row=optimizeDex' },
+      { cat: 'other', section: 'Плагины', title: 'Менеджер плагинов (.plugin)', key: 'plugins', link: 'tg://moltengram/plugins' },
+      { cat: 'other', section: 'Плагины', title: 'Настройки каталога плагинов и источников', key: 'plugin_store_settings', link: 'tg://moltengram/plugin_store_settings' },
+      { cat: 'other', section: 'Экспериментальное', title: 'Локальный Telegram Premium (иконки и лимиты UI)', key: 'localPremium', link: 'tg://moltengram/other?row=localPremium' },
+      { cat: 'other', section: 'Экспериментальное', title: 'Безлимитное закрепление чатов в списке', key: 'unlimitedPinnedDialogs', link: 'tg://moltengram/other?row=unlimitedPinnedDialogs' },
+      { cat: 'other', section: 'Экспериментальное', title: 'Шумоподавление и улучшение голоса в ГС', key: 'noiseSuppressAndVoiceEnhance', link: 'tg://moltengram/other?row=noiseSuppressAndVoiceEnhance' },
+      { cat: 'other', section: 'Экспериментальное', title: 'Повышенный битрейт записи видеосообщений', key: 'enhancedVideoBitrate', link: 'tg://moltengram/other?row=enhancedVideoBitrate' },
+      { cat: 'other', section: 'Экспериментальное', title: 'Отключить фильтрацию чувствительного контента (18+)', key: 'sensitiveDisableFiltering', link: 'tg://moltengram/other?row=sensitiveDisableFiltering' },
+      { cat: 'other', section: 'Резервная копия', title: 'Экспорт настроек в файл (.etg)', key: 'exportEtgSettings', link: 'tg://moltengram/other?row=exportEtgSettings' },
+      { cat: 'other', section: 'Резервная копия', title: 'Импорт настроек из файла (.etg)', key: 'importEtgSettings', link: 'tg://moltengram/other?row=importEtgSettings' },
+      { cat: 'other', section: 'Сброс', title: 'Сбросить все настройки MoltenGram', key: 'resetSettings', link: 'tg://moltengram/other?row=resetSettings' }
+    ];
+
+    (function initSettingsCatalog() {
+      const searchInput = document.getElementById('settingsSearchInput');
+      const clearBtn = document.getElementById('clearSearchBtn');
+      const chipsWrap = document.getElementById('settingsCategoryChips');
+      const listContainer = document.getElementById('settingsListContainer');
+      const counterLabel = document.getElementById('settingsCounterLabel');
+      const expandWrap = document.getElementById('settingsExpandWrap');
+      const expandBtn = document.getElementById('settingsExpandBtn');
+      const expandText = document.getElementById('settingsExpandText');
+      const expandIcon = document.getElementById('settingsExpandIcon');
+
+      const DEFAULT_COLLAPSED_LIMIT = 8;
+      let activeCategory = 'all';
+      let searchQuery = '';
+      let isExpanded = false;
+
+      // Populate chip counts
+      const counts = { all: CLIENT_SETTINGS.length };
+      CLIENT_SETTINGS.forEach(s => {
+        counts[s.cat] = (counts[s.cat] || 0) + 1;
+      });
+      Object.keys(counts).forEach(cat => {
+        const el = document.getElementById(`cat-count-${cat}`);
+        if (el) el.textContent = counts[cat];
+      });
+
+      function renderCatalog() {
+        const q = searchQuery.trim().toLowerCase();
+        const filtered = CLIENT_SETTINGS.filter(item => {
+          if (activeCategory !== 'all' && item.cat !== activeCategory) return false;
+          if (!q) return true;
+          return (
+            item.title.toLowerCase().includes(q) ||
+            item.section.toLowerCase().includes(q) ||
+            item.key.toLowerCase().includes(q) ||
+            item.link.toLowerCase().includes(q)
+          );
+        });
+
+        counterLabel.textContent = `${filtered.length} из ${CLIENT_SETTINGS.length}`;
+
+        if (filtered.length === 0) {
+          listContainer.innerHTML = `
+            <div class="rounded-3xl bg-[var(--surface-container-low)] px-6 py-8 text-center">
+              <div class="text-sm font-semibold text-[var(--text)] mb-1">Ничего не найдено</div>
+              <div class="text-xs text-[var(--text-muted)]">Попробуйте другой запрос или переключите категорию</div>
+            </div>
+          `;
+          expandWrap.classList.add('hidden');
+          return;
+        }
+
+        const shouldLimit = !q && activeCategory === 'all' && !isExpanded && filtered.length > DEFAULT_COLLAPSED_LIMIT;
+        const visibleItems = shouldLimit ? filtered.slice(0, DEFAULT_COLLAPSED_LIMIT) : filtered;
+
+        listContainer.innerHTML = visibleItems.map(item => `
+          <div class="m3-setting-item">
+            <a href="${item.link}" class="min-w-0 flex-1 pr-2">
+              <div class="flex items-center gap-2 mb-0.5">
+                <span class="text-[11px] font-semibold text-[var(--primary)] truncate">${item.section}</span>
+                <span class="text-[10px] opacity-35">•</span>
+                <code class="text-[11px] font-mono text-[var(--text-muted)] truncate">${item.key}</code>
+              </div>
+              <div class="text-sm font-semibold text-[var(--text)] leading-snug">${item.title}</div>
+            </a>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button type="button"
+                      onclick="copyText('${item.link}', 'Диплинк скопирован: ${item.key}')"
+                      class="m3-setting-action"
+                      title="Скопировать диплинк (${item.link})"
+                      aria-label="Скопировать диплинк">
+                <span class="material-symbols-rounded text-[17px]">content_copy</span>
+              </button>
+              <a href="${item.link}"
+                 class="m3-setting-action open-btn"
+                 title="Открыть в MoltenGram (${item.link})"
+                 aria-label="Открыть в клиенте">
+                <span class="material-symbols-rounded text-[18px]">north_east</span>
+              </a>
+            </div>
+          </div>
+        `).join('');
+
+        if (!q && activeCategory === 'all' && filtered.length > DEFAULT_COLLAPSED_LIMIT) {
+          expandWrap.classList.remove('hidden');
+          expandText.textContent = isExpanded
+            ? 'Свернуть список'
+            : `Показать все настройки (${filtered.length})`;
+          expandIcon.textContent = isExpanded ? 'expand_less' : 'expand_more';
+        } else {
+          expandWrap.classList.add('hidden');
+        }
+      }
+
+      searchInput.addEventListener('input', e => {
+        searchQuery = e.target.value;
+        if (searchQuery) {
+          clearBtn.classList.remove('hidden');
+          clearBtn.classList.add('inline-flex');
+        } else {
+          clearBtn.classList.add('hidden');
+          clearBtn.classList.remove('inline-flex');
+        }
+        renderCatalog();
+      });
+
+      clearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        searchQuery = '';
+        clearBtn.classList.add('hidden');
+        clearBtn.classList.remove('inline-flex');
+        searchInput.focus();
+        renderCatalog();
+      });
+
+      chipsWrap.addEventListener('click', e => {
+        const chip = e.target.closest('.m3-chip');
+        if (!chip) return;
+        chipsWrap.querySelectorAll('.m3-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        activeCategory = chip.getAttribute('data-cat') || 'all';
+        renderCatalog();
+      });
+
+      expandBtn.addEventListener('click', () => {
+        isExpanded = !isExpanded;
+        renderCatalog();
+      });
+
+      renderCatalog();
+    })();
+
+    // -------------------------------------------------------------
+    // 5. Auto-fetch Latest APK & Version Tag from GitHub Releases
     // -------------------------------------------------------------
     (async function resolveLatestApk() {
       try {
