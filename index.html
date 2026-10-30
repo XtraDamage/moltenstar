@@ -48,20 +48,20 @@
   <!-- Google Fonts & Material Symbols -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,500,1,0&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,500,1,0&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
     /* -------------------------------------------------------------
-       0. Local Fonts (Google Sans & Material Symbols from Repo)
+       0. Local Fonts (Inter for Cyrillic, Google Sans for Latin, Material Symbols & Authentic Nothing NDot 55/57)
        ------------------------------------------------------------- */
     @font-face {
-      font-family: 'Google Sans';
+      font-family: 'Inter Cyrillic';
       font-style: normal;
-      font-weight: 400 700;
-      src: url('/fonts/gs-cyrillic.woff2') format('woff2');
+      font-weight: 400 800;
+      src: local('Inter'), url('https://fonts.gstatic.com/s/inter/v18/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7W0Q5n-wU.woff2') format('woff2');
       unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
       font-display: swap;
     }
@@ -81,6 +81,27 @@
       font-weight: 100 700;
       src: url('/fonts/material-symbols-rounded.woff2') format('woff2');
       font-display: block;
+    }
+
+    /* Authentic Nothing NDot 55 / NDot 57 from xeji01/nothingfont */
+    @font-face {
+      font-family: 'NDot55';
+      font-style: normal;
+      font-weight: 400 700;
+      src: url('https://github.com/xeji01/nothingfont/raw/refs/heads/main/fonts/Ndot55-Regular.otf') format('opentype'),
+           url('https://raw.githubusercontent.com/xeji01/nothingfont/refs/heads/main/fonts/Ndot55-Regular.otf') format('opentype'),
+           url('https://cdn.jsdelivr.net/gh/xeji01/nothingfont@main/fonts/Ndot55-Regular.otf') format('opentype');
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'NDot57';
+      font-style: normal;
+      font-weight: 400 700;
+      src: url('https://github.com/xeji01/nothingfont/raw/refs/heads/main/fonts/Ndot57-Regular.otf') format('opentype'),
+           url('https://raw.githubusercontent.com/xeji01/nothingfont/refs/heads/main/fonts/Ndot57-Regular.otf') format('opentype'),
+           url('https://cdn.jsdelivr.net/gh/xeji01/nothingfont@main/fonts/Ndot57-Regular.otf') format('opentype');
+      font-display: swap;
     }
 
     /* -------------------------------------------------------------
@@ -139,6 +160,94 @@
     }
 
     /* -------------------------------------------------------------
+       1b. NOTHING (R) Easter Egg Mode (Monochrome + Real NDot + Invert Dots)
+       ------------------------------------------------------------- */
+    html[data-nothing="true"],
+    html[data-nothing="true"][data-theme="dark"],
+    html[data-nothing="true"][data-theme="light"] {
+      --bg: #000000;
+      --surface-container-lowest: #050505;
+      --surface-container-low: #0d0d0d;
+      --surface-container: #141414;
+      --surface-container-high: #1c1c1c;
+      --surface-container-highest: #262626;
+
+      --primary: #ffffff;
+      --on-primary: #000000;
+      --primary-container: #222222;
+      --on-primary-container: #ffffff;
+
+      --secondary-container: #1b1b1b;
+      --on-secondary-container: #ffffff;
+
+      --text: #ffffff;
+      --text-sub: #b8b8b8;
+      --text-muted: #737373;
+
+      --glass-top: rgba(14, 14, 14, 0.92);
+      --glass-bottom: rgba(10, 10, 10, 0.88);
+      --glass-border: rgba(255, 255, 255, 0.16);
+      --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.75);
+    }
+
+    html[data-nothing="true"] body,
+    html[data-nothing="true"] input,
+    html[data-nothing="true"] button,
+    html[data-nothing="true"] code,
+    html[data-nothing="true"] h1,
+    html[data-nothing="true"] h2,
+    html[data-nothing="true"] h3,
+    html[data-nothing="true"] span:not(.material-symbols-rounded),
+    html[data-nothing="true"] p,
+    html[data-nothing="true"] a,
+    html[data-nothing="true"] div {
+      font-family: 'NDot57', 'NDot55', 'Inter Cyrillic', 'Inter', monospace !important;
+      font-weight: 400 !important;
+      letter-spacing: 0.04em;
+    }
+
+    html[data-nothing="true"] img {
+      filter: grayscale(1) contrast(1.28);
+      /* Маска из круглых точек 2.5x2.5px превращает логотипы в матричную графику Nothing */
+      -webkit-mask-image: radial-gradient(circle at center, #000 1.05px, transparent 1.15px);
+      -webkit-mask-size: 2.5px 2.5px;
+      mask-image: radial-gradient(circle at center, #000 1.05px, transparent 1.15px);
+      mask-size: 2.5px 2.5px;
+    }
+
+    /* В режиме Nothing все иконки Material Symbols проходят через точечный растровый фильтр */
+    html[data-nothing="true"] .material-symbols-rounded {
+      -webkit-mask-image: radial-gradient(circle at center, #000 1px, transparent 1.1px);
+      -webkit-mask-size: 2.25px 2.25px;
+      mask-image: radial-gradient(circle at center, #000 1px, transparent 1.1px);
+      mask-size: 2.25px 2.25px;
+      filter: contrast(1.5);
+    }
+
+    /* Fixed Screen-Wide Inverting Dot Matrix Overlay:
+       z-index: 40 keeps it ABOVE page content, but STRICTLY BELOW the Top App Bar (z-index: 50) and Modals (z-index: 200) */
+    .nothing-dots-overlay {
+      position: fixed;
+      top: 70px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 40;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      /* Fixed matrix of crisp dots every 76px that invert whatever passes underneath */
+      background-image: radial-gradient(circle, rgba(255, 255, 255, 0.75) 1.35px, transparent 1.6px);
+      background-size: 76px 76px;
+      background-position: center top;
+      mix-blend-mode: difference;
+    }
+
+    html[data-nothing="true"] .nothing-dots-overlay {
+      opacity: 1;
+    }
+
+    /* -------------------------------------------------------------
        2. Material 3 Expressive Spatial Springs & Base Rules
        ------------------------------------------------------------- */
     :root {
@@ -157,7 +266,7 @@
     body {
       background-color: var(--bg);
       color: var(--text);
-      font-family: 'Google Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Inter Cyrillic', 'Google Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       transition: background-color 0.3s var(--spring-standard), color 0.25s ease;
       overflow-x: hidden;
       min-height: 100dvh;
@@ -167,11 +276,12 @@
     }
 
     .material-symbols-rounded {
-      font-family: 'Material Symbols Rounded';
-      font-weight: normal;
+      font-family: 'Material Symbols Rounded' !important;
+      font-weight: normal !important;
       font-style: normal;
       font-size: 22px;
       line-height: 1;
+      letter-spacing: normal !important;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -558,7 +668,7 @@
     }
 
     /* -------------------------------------------------------------
-       7. Authentic M3 Bottom Sheet / Dialog for F-Droid (With Swipe-Down Handle)
+       7. Authentic M3 Bottom Sheet / Dialog for F-Droid + Overscroll Skirt & Secret Nothing Drawer
        ------------------------------------------------------------- */
     .modal-backdrop {
       position: fixed;
@@ -587,14 +697,27 @@
     }
 
     .modal-sheet {
+      position: relative;
       background-color: var(--surface-container-high);
       border-radius: 32px 32px 0 0;
       max-width: 480px;
       width: 100%;
-      padding: 8px 24px 32px;
+      padding: 8px 24px 28px;
       transform: translateY(100%);
       transition: transform 0.45s var(--spring-smooth);
       will-change: transform;
+    }
+
+    /* Seamless bottom skirt so dragging upward NEVER reveals a gap at the bottom of the screen */
+    .modal-sheet::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 99%;
+      height: 360px;
+      background-color: var(--surface-container-high);
+      pointer-events: none;
     }
 
     .modal-sheet.dragging {
@@ -606,6 +729,9 @@
         border-radius: 32px;
         padding: 12px 28px 28px;
         transform: scale(0.92) translateY(24px);
+      }
+      .modal-sheet::after {
+        display: none;
       }
     }
 
@@ -620,8 +746,10 @@
       touch-action: none;
       user-select: none;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
+      gap: 4px;
     }
 
     .m3-drag-zone:active {
@@ -642,6 +770,68 @@
       width: 48px;
       opacity: 0.8;
       background-color: var(--text);
+    }
+
+    /* Secret Nothing Easter Egg Compartment inside the Bottom Sheet */
+    .nothing-secret-compartment {
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      transition: max-height 0.45s var(--spring-smooth), opacity 0.3s ease, margin-top 0.35s var(--spring-smooth);
+    }
+
+    .modal-sheet.secret-unlocked .nothing-secret-compartment {
+      max-height: 90px;
+      opacity: 1;
+      margin-top: 14px;
+    }
+
+    .nothing-easter-btn {
+      width: 100%;
+      height: 50px;
+      border-radius: 16px;
+      background-color: #000000;
+      color: #ffffff;
+      border: 1px dashed rgba(255, 255, 255, 0.32);
+      font-family: 'NDot57', 'NDot55', monospace !important;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      cursor: pointer;
+      transition: transform 0.25s var(--spring-smooth), background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .nothing-easter-btn:hover {
+      border-color: #ffffff;
+      background-color: #111111;
+    }
+
+    .nothing-easter-btn:active {
+      transform: scale(0.97);
+    }
+
+    .nothing-led-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #ff1e1e;
+      box-shadow: 0 0 10px #ff1e1e;
+      animation: nothingPulse 1.6s infinite ease-in-out;
+    }
+
+    html[data-nothing="true"] .nothing-led-dot {
+      background-color: #ffffff;
+      box-shadow: 0 0 12px #ffffff;
+    }
+
+    @keyframes nothingPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.82); }
     }
 
     .m3-copy-card {
@@ -705,6 +895,9 @@
   </style>
 </head>
 <body class="selection:bg-[var(--primary-container)] selection:text-[var(--on-primary-container)]">
+
+  <!-- Fixed Screen-Wide Inverting Dot Matrix Overlay for NOTHING (R) Easter Egg (Strictly below header & modal) -->
+  <div class="nothing-dots-overlay" aria-hidden="true"></div>
 
   <!-- Real Frosted Glass Top App Bar with Seamless Concave Edge Wrapping -->
   <header class="m3-top-dock">
@@ -899,8 +1092,8 @@
   <!-- Authentic Android Material 3 Bottom Sheet / Dialog for F-Droid -->
   <div class="modal-backdrop" id="fdroidModal" onclick="if(event.target === this) closeFdroidModal()">
     <div class="modal-sheet" id="fdroidSheet">
-      <!-- Interactive M3 Drag Handle (Swipe down or tap to dismiss) -->
-      <div class="m3-drag-zone" id="fdroidDragZone" title="Потяните вниз или нажмите, чтобы свернуть">
+      <!-- Interactive M3 Drag Handle (Swipe down to dismiss, pull UP to reveal secret Nothing Easter Egg) -->
+      <div class="m3-drag-zone" id="fdroidDragZone" title="Потяните вниз чтобы свернуть, или вверх — для секрета">
         <div class="m3-drag-handle"></div>
       </div>
 
@@ -958,6 +1151,14 @@
           <span>Открыть веб-страницу репо</span>
         </a>
       </div>
+
+      <!-- Secret Nothing Easter Egg Compartment (Unlocked by pulling the drag handle UP) -->
+      <div class="nothing-secret-compartment" id="nothingSecretCompartment">
+        <button type="button" onclick="toggleNothingMode()" class="nothing-easter-btn" id="nothingEasterBtn">
+          <span id="nothingEasterLabel">NOTHING (R) • DOT MATRIX MODE</span>
+          <span class="nothing-led-dot"></span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -987,7 +1188,7 @@
     })();
 
     // -------------------------------------------------------------
-    // 1. Light / Dark Mode Switch (Fixed Emerald MoltenGram Theme)
+    // 1. Light / Dark Mode Switch + NOTHING (R) Easter Egg Mode
     // -------------------------------------------------------------
     const htmlEl = document.documentElement;
     const themeToggleBtn = document.getElementById('themeToggleBtn');
@@ -995,16 +1196,50 @@
     const metaThemeColor = document.getElementById('theme-color-meta');
 
     const savedTheme = localStorage.getItem('mg_theme') || 'dark';
+    const savedNothing = localStorage.getItem('mg_nothing') === 'true';
     applyTheme(savedTheme);
+    if (savedNothing) setNothingMode(true, false);
 
     function applyTheme(theme) {
       htmlEl.setAttribute('data-theme', theme);
       localStorage.setItem('mg_theme', theme);
       themeIcon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
-      metaThemeColor.setAttribute('content', theme === 'dark' ? '#111411' : '#f7faf4');
+      if (htmlEl.getAttribute('data-nothing') === 'true') {
+        metaThemeColor.setAttribute('content', '#000000');
+      } else {
+        metaThemeColor.setAttribute('content', theme === 'dark' ? '#111411' : '#f7faf4');
+      }
+    }
+
+    function setNothingMode(enabled, announce = true) {
+      const labelEl = document.getElementById('nothingEasterLabel');
+      if (enabled) {
+        htmlEl.setAttribute('data-nothing', 'true');
+        localStorage.setItem('mg_nothing', 'true');
+        metaThemeColor.setAttribute('content', '#000000');
+        if (labelEl) labelEl.textContent = 'NOTHING (R) • ACTIVE [EXIT]';
+        if (announce) showToast('NOTHING (R) OS • DOT MATRIX ACTIVATED');
+      } else {
+        htmlEl.removeAttribute('data-nothing');
+        localStorage.setItem('mg_nothing', 'false');
+        const currentTheme = htmlEl.getAttribute('data-theme') || 'dark';
+        metaThemeColor.setAttribute('content', currentTheme === 'dark' ? '#111411' : '#f7faf4');
+        if (labelEl) labelEl.textContent = 'NOTHING (R) • DOT MATRIX MODE';
+        if (announce) showToast('Стандартная тема Material 3 возвращена');
+      }
+    }
+
+    function toggleNothingMode() {
+      const isNothing = htmlEl.getAttribute('data-nothing') === 'true';
+      setNothingMode(!isNothing, true);
     }
 
     themeToggleBtn.addEventListener('click', () => {
+      if (htmlEl.getAttribute('data-nothing') === 'true') {
+        // Clicking the theme button while in Nothing mode exits Nothing mode cleanly
+        setNothingMode(false, true);
+        return;
+      }
       const current = htmlEl.getAttribute('data-theme');
       applyTheme(current === 'dark' ? 'light' : 'dark');
     });
@@ -1027,7 +1262,7 @@
     });
 
     // -------------------------------------------------------------
-    // 3. F-Droid Modal & Swipe-to-Dismiss Drag Handle
+    // 3. F-Droid Modal & Swipe-to-Dismiss / Pull-Up-for-Secret Drag Handle
     // -------------------------------------------------------------
     const fdroidModal = document.getElementById('fdroidModal');
     const fdroidSheet = document.getElementById('fdroidSheet');
@@ -1036,6 +1271,9 @@
     function openFdroidModal() {
       fdroidSheet.style.transform = '';
       fdroidModal.style.backgroundColor = '';
+      if (htmlEl.getAttribute('data-nothing') === 'true') {
+        fdroidSheet.classList.add('secret-unlocked');
+      }
       fdroidModal.classList.add('open');
     }
 
@@ -1050,7 +1288,7 @@
       if (e.key === 'Escape') closeFdroidModal();
     });
 
-    // Interactive Drag-Down / Tap-to-Collapse on .m3-drag-zone & sheet header
+    // Interactive Drag-Down to collapse OR Pull-Up to unlock the secret Nothing button
     (function initBottomSheetDrag() {
       let isDragging = false;
       let startY = 0;
@@ -1069,8 +1307,16 @@
       function onDragMove(clientY) {
         if (!isDragging) return;
         const rawDelta = clientY - startY;
-        // Allow downward drag freely, upward drag with strong rubber-band resistance
-        currentDeltaY = rawDelta > 0 ? rawDelta : rawDelta * 0.18;
+        if (rawDelta > 0) {
+          currentDeltaY = rawDelta;
+        } else {
+          // Smooth rubber-band upward pull (clamped to -64px so it feels taut and never breaks layout)
+          currentDeltaY = -Math.min(64, Math.pow(Math.abs(rawDelta), 0.78) * 2.2);
+          if (rawDelta < -32 && !fdroidSheet.classList.contains('secret-unlocked')) {
+            fdroidSheet.classList.add('secret-unlocked');
+            if (navigator.vibrate) navigator.vibrate(18);
+          }
+        }
         fdroidSheet.style.transform = `translateY(${currentDeltaY}px)`;
         const progress = Math.min(1, Math.max(0, currentDeltaY / 280));
         fdroidModal.style.backgroundColor = `rgba(10, 13, 10, ${(0.72 * (1 - progress * 0.65)).toFixed(2)})`;
