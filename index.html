@@ -107,7 +107,7 @@
       --text-muted: #8a9389;
 
       --glass-top: rgba(30, 35, 30, 0.72);
-      --glass-bottom: rgba(24, 28, 24, 0.50);
+      --glass-bottom: rgba(24, 28, 24, 0.56);
       --glass-border: rgba(255, 255, 255, 0.08);
       --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.28);
     }
@@ -133,7 +133,7 @@
       --text-muted: #717970;
 
       --glass-top: rgba(247, 250, 244, 0.78);
-      --glass-bottom: rgba(232, 238, 230, 0.56);
+      --glass-bottom: rgba(232, 238, 230, 0.62);
       --glass-border: rgba(24, 29, 24, 0.07);
       --glass-shadow: 0 8px 28px 0 rgba(13, 31, 19, 0.06);
     }
@@ -145,6 +145,7 @@
       --spring-expressive: cubic-bezier(0.34, 1.45, 0.64, 1);
       --spring-smooth: cubic-bezier(0.22, 1, 0.36, 1);
       --spring-standard: cubic-bezier(0.2, 0, 0, 1);
+      --dock-wing-size: 28px;
     }
 
     * {
@@ -178,22 +179,52 @@
     }
 
     /* -------------------------------------------------------------
-       3. Authentic Frosted Glass Top App Bar (Backdrop Blur + Saturate + Noise)
+       3. Authentic Frosted Glass Top App Bar with Inverted (Concave) Wings
        ------------------------------------------------------------- */
     .m3-top-dock {
       position: sticky;
       top: 0;
       z-index: 50;
       width: 100%;
-      background: linear-gradient(to bottom, var(--glass-top), var(--glass-bottom));
+      /* Height includes the 28px concave bottom skirt so it's 100% seamless */
+      padding: 14px 20px calc(14px + var(--dock-wing-size)) 20px;
+      margin-bottom: calc(-1 * var(--dock-wing-size));
+      background: linear-gradient(to bottom, var(--glass-top) 0%, var(--glass-bottom) calc(100% - var(--dock-wing-size)), var(--glass-bottom) 100%);
       backdrop-filter: blur(20px) saturate(180%);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border-bottom: 1px solid var(--glass-border);
-      box-shadow: var(--glass-shadow);
-      border-radius: 0 0 28px 28px;
-      padding: 14px 20px;
-      overflow: hidden;
-      transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      /* Single unified mask: solid top bar + concave left/right bottom corners */
+      -webkit-mask-image:
+        linear-gradient(#000, #000),
+        radial-gradient(circle at 100% 100%, transparent calc(var(--dock-wing-size) - 0.5px), #000 calc(var(--dock-wing-size) + 0.5px)),
+        radial-gradient(circle at 0% 100%, transparent calc(var(--dock-wing-size) - 0.5px), #000 calc(var(--dock-wing-size) + 0.5px));
+      -webkit-mask-size:
+        100% calc(100% - var(--dock-wing-size)),
+        var(--dock-wing-size) var(--dock-wing-size),
+        var(--dock-wing-size) var(--dock-wing-size);
+      -webkit-mask-position:
+        top left,
+        bottom left,
+        bottom right;
+      -webkit-mask-repeat: no-repeat;
+      mask-image:
+        linear-gradient(#000, #000),
+        radial-gradient(circle at 100% 100%, transparent calc(var(--dock-wing-size) - 0.5px), #000 calc(var(--dock-wing-size) + 0.5px)),
+        radial-gradient(circle at 0% 100%, transparent calc(var(--dock-wing-size) - 0.5px), #000 calc(var(--dock-wing-size) + 0.5px));
+      mask-size:
+        100% calc(100% - var(--dock-wing-size)),
+        var(--dock-wing-size) var(--dock-wing-size),
+        var(--dock-wing-size) var(--dock-wing-size);
+      mask-position:
+        top left,
+        bottom left,
+        bottom right;
+      mask-repeat: no-repeat;
+      pointer-events: none;
+      transition: background 0.25s ease;
+    }
+
+    .m3-top-dock-inner {
+      pointer-events: auto;
     }
 
     /* Subtle real frosted glass micro-grain overlay (SVG fractalNoise) */
@@ -204,6 +235,20 @@
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
       pointer-events: none;
       z-index: 0;
+    }
+
+    /* Continuous 1px inner-arch border that follows the concave curve without seams */
+    .m3-dock-arch-border {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: var(--dock-wing-size);
+      border-top: 1px solid var(--glass-border);
+      border-top-left-radius: var(--dock-wing-size);
+      border-top-right-radius: var(--dock-wing-size);
+      pointer-events: none;
+      z-index: 2;
     }
 
     /* -------------------------------------------------------------
@@ -661,9 +706,9 @@
 </head>
 <body class="selection:bg-[var(--primary-container)] selection:text-[var(--on-primary-container)]">
 
-  <!-- Real Frosted Glass Top App Bar -->
+  <!-- Real Frosted Glass Top App Bar with Seamless Concave Edge Wrapping -->
   <header class="m3-top-dock">
-    <div class="max-w-3xl mx-auto flex items-center justify-between">
+    <div class="m3-top-dock-inner max-w-3xl mx-auto flex items-center justify-between">
       <!-- Brand (Strictly Original Repo Asset Path) -->
       <a href="#" class="relative z-10 flex items-center gap-3 pl-1 group">
         <img src="assets/icons/ic_launcher_moltengram.png" 
@@ -687,6 +732,9 @@
         </a>
       </div>
     </div>
+
+    <!-- Single Continuous Arch Border (No horizontal seam across corners) -->
+    <div class="m3-dock-arch-border" aria-hidden="true"></div>
   </header>
 
   <!-- Main Minimalist Centerpiece -->
@@ -741,7 +789,7 @@
         <button onclick="openFdroidModal()" class="m3-btn m3-btn-tonal w-full sm:w-auto ripple-btn">
           <span class="material-symbols-rounded text-[22px]">inventory_2</span>
           <span>F-Droid репо</span>
-        </button>
+        </a>
 
         <a href="https://t.me/MoltenGram" target="_blank" rel="noopener" class="m3-btn m3-btn-surface w-full sm:w-auto !px-6 ripple-btn" title="Канал в Telegram">
           <span class="material-symbols-rounded text-[22px] text-[var(--primary)]">send</span>
