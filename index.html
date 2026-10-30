@@ -207,21 +207,17 @@
     }
 
     html[data-nothing="true"] img {
-      filter: grayscale(1) contrast(1.28);
-      /* Маска из круглых точек 2.5x2.5px превращает логотипы в матричную графику Nothing */
-      -webkit-mask-image: radial-gradient(circle at center, #000 1.05px, transparent 1.15px);
-      -webkit-mask-size: 2.5px 2.5px;
-      mask-image: radial-gradient(circle at center, #000 1.05px, transparent 1.15px);
-      mask-size: 2.5px 2.5px;
+      /* Настоящий SVG-фильтр дискретной пикселизации круглыми точками (Halftone / Dot-Matrix) */
+      filter: url(#nothing-photo-dots);
+      -webkit-mask-image: none;
+      mask-image: none;
     }
 
-    /* В режиме Nothing все иконки Material Symbols проходят через точечный растровый фильтр */
+    /* В режиме Nothing все иконки Material Symbols перестраиваются из цельных круглых точек по сетке (без обрезанных краёв) */
     html[data-nothing="true"] .material-symbols-rounded {
-      -webkit-mask-image: radial-gradient(circle at center, #000 1px, transparent 1.1px);
-      -webkit-mask-size: 2.25px 2.25px;
-      mask-image: radial-gradient(circle at center, #000 1px, transparent 1.1px);
-      mask-size: 2.25px 2.25px;
-      filter: contrast(1.5);
+      filter: url(#nothing-icon-dots);
+      -webkit-mask-image: none;
+      mask-image: none;
     }
 
     /* Fixed Screen-Wide Inverting Dot Matrix Overlay:
@@ -895,6 +891,60 @@
   </style>
 </head>
 <body class="selection:bg-[var(--primary-container)] selection:text-[var(--on-primary-container)]">
+
+  <!-- Настоящие SVG-фильтры дискретной пикселизации точками (Dot-Matrix Quantizer & Halftone) -->
+  <svg width="0" height="0" class="fixed pointer-events-none opacity-0" aria-hidden="true">
+    <defs>
+      <!-- 1. Фильтр для иконок (шаг сетки 3x3px): сэмплирует центр каждой ячейки и рисует только ЦЕЛЬНЫЕ круглые точки -->
+      <filter id="nothing-icon-dots" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+        <!-- Слегка расширяем тонкие штрихи иконки, чтобы диагонали не терялись при квантизации -->
+        <feMorphology operator="dilate" radius="0.35" in="SourceAlpha" result="dilatedAlpha" />
+        <feGaussianBlur stdDeviation="0.45" in="dilatedAlpha" result="smoothedAlpha" />
+        <!-- Бинарный порог: превращаем полутона в чёткую матрицу включённых/выключенных ячеек -->
+        <feComponentTransfer in="smoothedAlpha" result="quantizedAlpha">
+          <feFuncA type="discrete" tableValues="0 1" />
+        </feComponentTransfer>
+        <!-- Сетка 3x3px: в центре каждой ячейки 1 пиксель-триггер -->
+        <feImage width="3" height="3" result="centerTile"
+                 xlink:href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='3' height='3'%3E%3Crect x='1' y='1' width='1' height='1' fill='black'/%3E%3C/svg%3E" />
+        <feTile in="centerTile" result="samplingGrid" />
+        <!-- Оставляем только центры тех ячеек, где есть иконка -->
+        <feComposite in="quantizedAlpha" in2="samplingGrid" operator="in" result="cellCenters" />
+        <!-- Раздуваем каждый активный центр в квадрат 3x3px на всю ячейку -->
+        <feMorphology operator="dilate" radius="1" in="cellCenters" result="pixelBlocks" />
+        <!-- Сетка 3x3px с идеальным антиалиасинговым кругом внутри каждой ячейки -->
+        <feImage width="3" height="3" result="dotShapeTile"
+                 xlink:href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='3' height='3'%3E%3Ccircle cx='1.5' cy='1.5' r='1.12' fill='black'/%3E%3C/svg%3E" />
+        <feTile in="dotShapeTile" result="dotGrid" />
+        <!-- Вырезаем цельные кружки из активных пиксельных блоков -->
+        <feComposite in="pixelBlocks" in2="dotGrid" operator="in" result="finalDotsAlpha" />
+        <!-- Возвращаем исходный цвет иконки (currentColor) с новой точечно-пиксельной альфой -->
+        <feMorphology operator="dilate" radius="2" in="SourceGraphic" result="colorSpread" />
+        <feComposite in="colorSpread" in2="finalDotsAlpha" operator="in" />
+      </filter>
+
+      <!-- 2. Halftone Dot-Matrix фильтр для фото и логотипов (шаг 4x4px, размер точки зависит от яркости пикселя) -->
+      <filter id="nothing-photo-dots" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+        <!-- Переводим изображение в Ч/Б -->
+        <feColorMatrix type="saturate" values="0" in="SourceGraphic" result="gray" />
+        <!-- Сглаживаем внутри ячейки для равномерного радиуса каждой точки -->
+        <feGaussianBlur stdDeviation="0.85" in="gray" result="blurredGray" />
+        <!-- Радиальная карта 4x4px (в центре яркая, к краям темнеет) для эффекта Halftone-точек разного диаметра -->
+        <feImage width="4" height="4" result="halftoneTile"
+                 xlink:href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Cdefs%3E%3CradialGradient id='g' cx='50%25' cy='50%25' r='58%25'%3E%3Cstop offset='0%25' stop-color='%23e8e8e8'/%3E%3Cstop offset='55%25' stop-color='%23808080'/%3E%3Cstop offset='100%25' stop-color='%23080808'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='4' height='4' fill='%23050505'/%3E%3Ccircle cx='2' cy='2' r='1.95' fill='url(%23g)'/%3E%3C/svg%3E" />
+        <feTile in="halftoneTile" result="halftoneGrid" />
+        <!-- Складываем яркость фото с конусом точки: чем светлее участок, тем крупнее получается белая точка -->
+        <feBlend mode="screen" in="blurredGray" in2="halftoneGrid" result="combined" />
+        <feComponentTransfer in="combined" result="quantizedHalftone">
+          <feFuncR type="discrete" tableValues="0 0 1" />
+          <feFuncG type="discrete" tableValues="0 0 1" />
+          <feFuncB type="discrete" tableValues="0 0 1" />
+        </feComponentTransfer>
+        <!-- Сохраняем прозрачность краёв логотипа -->
+        <feComposite in="quantizedHalftone" in2="SourceAlpha" operator="in" />
+      </filter>
+    </defs>
+  </svg>
 
   <!-- Fixed Screen-Wide Inverting Dot Matrix Overlay for NOTHING (R) Easter Egg (Strictly below header & modal) -->
   <div class="nothing-dots-overlay" aria-hidden="true"></div>
