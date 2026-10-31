@@ -160,7 +160,7 @@
     }
 
     /* -------------------------------------------------------------
-       1b. NOTHING (R) Easter Egg Mode (Monochrome + Real NDot + Invert Dots)
+       1b. NOTHING (R) Easter Egg Mode (Monochrome + Real NDot + Smooth Monochrome Original Icon)
        ------------------------------------------------------------- */
     html[data-nothing="true"],
     html[data-nothing="true"][data-theme="dark"],
@@ -206,18 +206,13 @@
       letter-spacing: 0.04em;
     }
 
-    html[data-nothing="true"] img {
-      /* Настоящий SVG-фильтр дискретной пикселизации круглыми точками (Halftone / Dot-Matrix) */
-      filter: url(#nothing-photo-dots);
-      -webkit-mask-image: none;
-      mask-image: none;
+    /* В пасхалке та же самая оригинальная иконка становится чисто монохромной (без пикселей и без точек) */
+    .monochrome-target-logo {
+      transition: filter 0.35s ease, transform 0.3s ease;
     }
 
-    /* В режиме Nothing все иконки Material Symbols перестраиваются из цельных круглых точек по сетке (без обрезанных краёв) */
-    html[data-nothing="true"] .material-symbols-rounded {
-      filter: url(#nothing-icon-dots);
-      -webkit-mask-image: none;
-      mask-image: none;
+    html[data-nothing="true"] .monochrome-target-logo {
+      filter: grayscale(100%) contrast(1.18) brightness(1.06);
     }
 
     /* Fixed Screen-Wide Inverting Dot Matrix Overlay:
@@ -664,7 +659,7 @@
     }
 
     /* -------------------------------------------------------------
-       7. Authentic M3 Bottom Sheet / Dialog for F-Droid + Overscroll Skirt & Secret Nothing Drawer
+       7. Authentic M3 Bottom Sheet / Dialog for F-Droid + Overscroll Skirt & Secret Nothing MD3 Switch
        ------------------------------------------------------------- */
     .modal-backdrop {
       position: fixed;
@@ -778,56 +773,99 @@
     }
 
     .modal-sheet.secret-unlocked .nothing-secret-compartment {
-      max-height: 90px;
+      max-height: 104px;
       opacity: 1;
       margin-top: 14px;
     }
 
-    .nothing-easter-btn {
+    /* Authentic Material Design 3 Switch Row */
+    .m3-switch-card {
       width: 100%;
-      height: 50px;
-      border-radius: 16px;
-      background-color: #000000;
-      color: #ffffff;
-      border: 1px dashed rgba(255, 255, 255, 0.32);
-      font-family: 'NDot57', 'NDot55', monospace !important;
-      font-size: 13px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      background-color: var(--surface-container-lowest);
+      border-radius: 22px;
+      padding: 13px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 18px;
+      gap: 14px;
       cursor: pointer;
-      transition: transform 0.25s var(--spring-smooth), background-color 0.2s ease, border-color 0.2s ease;
+      user-select: none;
+      text-align: left;
+      transition: background-color 0.2s ease, transform 0.2s var(--spring-smooth);
     }
 
-    .nothing-easter-btn:hover {
-      border-color: #ffffff;
-      background-color: #111111;
+    .m3-switch-card:hover {
+      background-color: var(--surface-container);
     }
 
-    .nothing-easter-btn:active {
-      transform: scale(0.97);
+    .m3-switch-card:active {
+      transform: scale(0.985);
     }
 
-    .nothing-led-dot {
-      width: 8px;
-      height: 8px;
+    .m3-switch-track {
+      position: relative;
+      width: 52px;
+      height: 32px;
+      border-radius: 16px;
+      background-color: var(--surface-container-highest);
+      border: 2px solid var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      padding: 0 4px;
+      shrink: 0;
+      transition: background-color 0.25s var(--spring-smooth), border-color 0.25s var(--spring-smooth);
+    }
+
+    .m3-switch-thumb {
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
-      background-color: #ff1e1e;
-      box-shadow: 0 0 10px #ff1e1e;
-      animation: nothingPulse 1.6s infinite ease-in-out;
+      background-color: var(--text-sub);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateX(0);
+      transition: transform 0.35s var(--spring-expressive),
+                  width 0.25s var(--spring-smooth),
+                  height 0.25s var(--spring-smooth),
+                  background-color 0.25s ease;
     }
 
-    html[data-nothing="true"] .nothing-led-dot {
-      background-color: #ffffff;
-      box-shadow: 0 0 12px #ffffff;
+    .m3-switch-icon {
+      font-size: 15px !important;
+      opacity: 0;
+      transform: scale(0.4);
+      color: var(--primary-container);
+      transition: opacity 0.2s ease, transform 0.28s var(--spring-expressive), color 0.2s ease;
     }
 
-    @keyframes nothingPulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.35; transform: scale(0.82); }
+    /* Checked State (Authentic MD3 Switch Spec: 24dp thumb with check icon inside) */
+    .m3-switch-card[aria-checked="true"] .m3-switch-track {
+      background-color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .m3-switch-card[aria-checked="true"] .m3-switch-thumb {
+      width: 24px;
+      height: 24px;
+      background-color: var(--on-primary);
+      transform: translateX(18px);
+    }
+
+    .m3-switch-card[aria-checked="true"] .m3-switch-icon {
+      opacity: 1;
+      transform: scale(1);
+      color: var(--primary);
+    }
+
+    /* Pressed Thumb Expansion (MD3 28dp pressed state) */
+    .m3-switch-card:active .m3-switch-thumb {
+      width: 26px;
+      height: 26px;
+    }
+
+    .m3-switch-card[aria-checked="true"]:active .m3-switch-thumb {
+      transform: translateX(16px);
     }
 
     .m3-copy-card {
@@ -892,71 +930,17 @@
 </head>
 <body class="selection:bg-[var(--primary-container)] selection:text-[var(--on-primary-container)]">
 
-  <!-- Настоящие SVG-фильтры дискретной пикселизации точками (Dot-Matrix Quantizer & Halftone) -->
-  <svg width="0" height="0" class="fixed pointer-events-none opacity-0" aria-hidden="true">
-    <defs>
-      <!-- 1. Фильтр для иконок (шаг сетки 3x3px): сэмплирует центр каждой ячейки и рисует только ЦЕЛЬНЫЕ круглые точки -->
-      <filter id="nothing-icon-dots" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
-        <!-- Слегка расширяем тонкие штрихи иконки, чтобы диагонали не терялись при квантизации -->
-        <feMorphology operator="dilate" radius="0.35" in="SourceAlpha" result="dilatedAlpha" />
-        <feGaussianBlur stdDeviation="0.45" in="dilatedAlpha" result="smoothedAlpha" />
-        <!-- Бинарный порог: превращаем полутона в чёткую матрицу включённых/выключенных ячеек -->
-        <feComponentTransfer in="smoothedAlpha" result="quantizedAlpha">
-          <feFuncA type="discrete" tableValues="0 1" />
-        </feComponentTransfer>
-        <!-- Сетка 3x3px: в центре каждой ячейки 1 пиксель-триггер -->
-        <feImage width="3" height="3" result="centerTile"
-                 xlink:href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='3' height='3'%3E%3Crect x='1' y='1' width='1' height='1' fill='black'/%3E%3C/svg%3E" />
-        <feTile in="centerTile" result="samplingGrid" />
-        <!-- Оставляем только центры тех ячеек, где есть иконка -->
-        <feComposite in="quantizedAlpha" in2="samplingGrid" operator="in" result="cellCenters" />
-        <!-- Раздуваем каждый активный центр в квадрат 3x3px на всю ячейку -->
-        <feMorphology operator="dilate" radius="1" in="cellCenters" result="pixelBlocks" />
-        <!-- Сетка 3x3px с идеальным антиалиасинговым кругом внутри каждой ячейки -->
-        <feImage width="3" height="3" result="dotShapeTile"
-                 xlink:href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='3' height='3'%3E%3Ccircle cx='1.5' cy='1.5' r='1.12' fill='black'/%3E%3C/svg%3E" />
-        <feTile in="dotShapeTile" result="dotGrid" />
-        <!-- Вырезаем цельные кружки из активных пиксельных блоков -->
-        <feComposite in="pixelBlocks" in2="dotGrid" operator="in" result="finalDotsAlpha" />
-        <!-- Возвращаем исходный цвет иконки (currentColor) с новой точечно-пиксельной альфой -->
-        <feMorphology operator="dilate" radius="2" in="SourceGraphic" result="colorSpread" />
-        <feComposite in="colorSpread" in2="finalDotsAlpha" operator="in" />
-      </filter>
-
-      <!-- 2. Halftone Dot-Matrix фильтр для фото и логотипов (шаг 4x4px, размер точки зависит от яркости пикселя) -->
-      <filter id="nothing-photo-dots" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
-        <!-- Переводим изображение в Ч/Б -->
-        <feColorMatrix type="saturate" values="0" in="SourceGraphic" result="gray" />
-        <!-- Сглаживаем внутри ячейки для равномерного радиуса каждой точки -->
-        <feGaussianBlur stdDeviation="0.85" in="gray" result="blurredGray" />
-        <!-- Радиальная карта 4x4px (в центре яркая, к краям темнеет) для эффекта Halftone-точек разного диаметра -->
-        <feImage width="4" height="4" result="halftoneTile"
-                 xlink:href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Cdefs%3E%3CradialGradient id='g' cx='50%25' cy='50%25' r='58%25'%3E%3Cstop offset='0%25' stop-color='%23e8e8e8'/%3E%3Cstop offset='55%25' stop-color='%23808080'/%3E%3Cstop offset='100%25' stop-color='%23080808'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='4' height='4' fill='%23050505'/%3E%3Ccircle cx='2' cy='2' r='1.95' fill='url(%23g)'/%3E%3C/svg%3E" />
-        <feTile in="halftoneTile" result="halftoneGrid" />
-        <!-- Складываем яркость фото с конусом точки: чем светлее участок, тем крупнее получается белая точка -->
-        <feBlend mode="screen" in="blurredGray" in2="halftoneGrid" result="combined" />
-        <feComponentTransfer in="combined" result="quantizedHalftone">
-          <feFuncR type="discrete" tableValues="0 0 1" />
-          <feFuncG type="discrete" tableValues="0 0 1" />
-          <feFuncB type="discrete" tableValues="0 0 1" />
-        </feComponentTransfer>
-        <!-- Сохраняем прозрачность краёв логотипа -->
-        <feComposite in="quantizedHalftone" in2="SourceAlpha" operator="in" />
-      </filter>
-    </defs>
-  </svg>
-
   <!-- Fixed Screen-Wide Inverting Dot Matrix Overlay for NOTHING (R) Easter Egg (Strictly below header & modal) -->
   <div class="nothing-dots-overlay" aria-hidden="true"></div>
 
   <!-- Real Frosted Glass Top App Bar with Seamless Concave Edge Wrapping -->
   <header class="m3-top-dock">
     <div class="m3-top-dock-inner max-w-3xl mx-auto flex items-center justify-between">
-      <!-- Brand (Strictly Original Repo Asset Path) -->
+      <!-- Brand (Original Icon — becomes clean non-pixelated monochrome in Nothing Mode) -->
       <a href="#" class="relative z-10 flex items-center gap-3 pl-1 group">
         <img src="assets/icons/ic_launcher_moltengram.png" 
              alt="MoltenGram Logo" 
-             class="w-9 h-9 rounded-[30%] object-cover transition-transform duration-300 group-hover:scale-105">
+             class="monochrome-target-logo w-9 h-9 rounded-[30%] object-cover group-hover:scale-105">
         <span class="font-bold text-lg tracking-tight">MoltenGram</span>
       </a>
 
@@ -984,7 +968,7 @@
   <main class="flex-1 flex flex-col items-center justify-center max-w-2xl w-full mx-auto px-5 py-10 gap-14">
 
     <section class="text-center w-full">
-      <!-- Expressive Material 3 12-Sided Scallop Cookie + Original Logo Asset -->
+      <!-- Expressive Material 3 12-Sided Scallop Cookie + Original Logo Asset (Monochrome in Easter Egg) -->
       <div class="reveal mb-7">
         <div class="hero-shape-stage">
           <svg id="m3CookieSvg" class="m3-cookie-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
@@ -993,7 +977,7 @@
           <div class="hero-logo-surface">
             <img src="assets/exterams_md3.png" 
                  alt="MoltenGram Logo" 
-                 class="w-full h-full object-cover">
+                 class="monochrome-target-logo w-full h-full object-cover">
           </div>
         </div>
       </div>
@@ -1202,11 +1186,28 @@
         </a>
       </div>
 
-      <!-- Secret Nothing Easter Egg Compartment (Unlocked by pulling the drag handle UP) -->
+      <!-- Secret Nothing Easter Egg Compartment with Authentic Material Design 3 Switch -->
       <div class="nothing-secret-compartment" id="nothingSecretCompartment">
-        <button type="button" onclick="toggleNothingMode()" class="nothing-easter-btn" id="nothingEasterBtn">
-          <span id="nothingEasterLabel">NOTHING (R) • DOT MATRIX MODE</span>
-          <span class="nothing-led-dot"></span>
+        <button type="button"
+                role="switch"
+                aria-checked="false"
+                onclick="toggleNothingMode()"
+                class="m3-switch-card"
+                id="nothingSwitchCard">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-9 h-9 rounded-[32%] bg-[var(--surface-container-high)] text-[var(--primary)] flex items-center justify-center shrink-0">
+              <span class="material-symbols-rounded text-[19px]">contrast</span>
+            </div>
+            <div class="min-w-0">
+              <div class="text-sm font-bold text-[var(--text)] leading-tight">Режим Nothing OS</div>
+              <div class="text-[11px] text-[var(--text-muted)] truncate mt-0.5">Монохромная тема и шрифт NDot</div>
+            </div>
+          </div>
+          <div class="m3-switch-track">
+            <div class="m3-switch-thumb">
+              <span class="material-symbols-rounded m3-switch-icon">check</span>
+            </div>
+          </div>
         </button>
       </div>
     </div>
@@ -1262,19 +1263,19 @@
     }
 
     function setNothingMode(enabled, announce = true) {
-      const labelEl = document.getElementById('nothingEasterLabel');
+      const switchCard = document.getElementById('nothingSwitchCard');
       if (enabled) {
         htmlEl.setAttribute('data-nothing', 'true');
         localStorage.setItem('mg_nothing', 'true');
         metaThemeColor.setAttribute('content', '#000000');
-        if (labelEl) labelEl.textContent = 'NOTHING (R) • ACTIVE [EXIT]';
-        if (announce) showToast('NOTHING (R) OS • DOT MATRIX ACTIVATED');
+        if (switchCard) switchCard.setAttribute('aria-checked', 'true');
+        if (announce) showToast('Режим Nothing OS включён');
       } else {
         htmlEl.removeAttribute('data-nothing');
         localStorage.setItem('mg_nothing', 'false');
         const currentTheme = htmlEl.getAttribute('data-theme') || 'dark';
         metaThemeColor.setAttribute('content', currentTheme === 'dark' ? '#111411' : '#f7faf4');
-        if (labelEl) labelEl.textContent = 'NOTHING (R) • DOT MATRIX MODE';
+        if (switchCard) switchCard.setAttribute('aria-checked', 'false');
         if (announce) showToast('Стандартная тема Material 3 возвращена');
       }
     }
@@ -1338,7 +1339,7 @@
       if (e.key === 'Escape') closeFdroidModal();
     });
 
-    // Interactive Drag-Down to collapse OR Pull-Up to unlock the secret Nothing button
+    // Interactive Drag-Down to collapse OR Pull-Up to unlock the secret Nothing MD3 Switch
     (function initBottomSheetDrag() {
       let isDragging = false;
       let startY = 0;
