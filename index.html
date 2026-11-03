@@ -1013,9 +1013,14 @@
           <span id="apkBtnVersion" class="text-xs px-2.5 py-0.5 rounded-full bg-[var(--primary-container)] text-[var(--on-primary-container)] font-bold">12.10.6</span>
         </a>
 
-        <button onclick="openFdroidModal()" class="m3-btn m3-btn-tonal w-full sm:w-auto ripple-btn">
+        <button onclick="openArchiveModal()" class="m3-btn m3-btn-tonal w-full sm:w-auto ripple-btn">
+          <span class="material-symbols-rounded text-[22px]">history</span>
+          <span>Архив версий</span>
+        </button>
+
+        <button onclick="openFdroidModal()" class="m3-btn m3-btn-surface w-full sm:w-auto ripple-btn">
           <span class="material-symbols-rounded text-[22px]">inventory_2</span>
-          <span>F-Droid репо</span>
+          <span>F-Droid</span>
         </button>
 
         <a href="https://t.me/MoltenGram" target="_blank" rel="noopener" class="m3-btn m3-btn-surface w-full sm:w-auto !px-6 ripple-btn" title="Канал в Telegram">
@@ -1115,6 +1120,7 @@
         <span>moltenstar.space</span>
       </div>
       <div class="flex items-center gap-5 font-medium">
+        <button onclick="openArchiveModal()" class="hover:text-[var(--primary)] transition-colors">Архив</button>
         <a href="https://github.com/MoltenSt4r/MoltenGram/releases" target="_blank" rel="noopener" class="hover:text-[var(--primary)] transition-colors">Релизы</a>
         <a href="https://t.me/MoltenGram" target="_blank" rel="noopener" class="hover:text-[var(--primary)] transition-colors">Telegram</a>
         <button onclick="openFdroidModal()" class="hover:text-[var(--primary)] transition-colors">F-Droid</button>
@@ -1209,6 +1215,74 @@
             </div>
           </div>
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Material 3 Archive Bottom Sheet / Modal (Релизы, Бета, Canary) -->
+  <div class="modal-backdrop" id="archiveModal" onclick="if(event.target === this) closeArchiveModal()">
+    <div class="modal-sheet" id="archiveSheet" style="max-height: 85vh; display: flex; flex-direction: column;">
+      <!-- M3 Drag Handle -->
+      <div class="m3-drag-zone" id="archiveDragZone" title="Потяните вниз чтобы свернуть">
+        <div class="m3-drag-handle"></div>
+      </div>
+
+      <!-- Header -->
+      <div class="flex items-start justify-between gap-4 mb-4 shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-[30%] bg-[var(--primary-container)] text-[var(--on-primary-container)] flex items-center justify-center shrink-0">
+            <span class="material-symbols-rounded text-[22px]">history</span>
+          </div>
+          <div>
+            <h3 class="font-bold text-lg leading-tight">Архив версий</h3>
+            <p class="text-xs text-[var(--text-sub)] mt-0.5">Все сборки: стабильные релизы, бета и канари</p>
+          </div>
+        </div>
+        <button onclick="closeArchiveModal()" class="m3-icon-btn shrink-0" aria-label="Закрыть">
+          <span class="material-symbols-rounded text-[20px]">close</span>
+        </button>
+      </div>
+
+      <!-- M3 Segmented Tabs (Release, Beta, Canary) -->
+      <div class="flex p-1 rounded-2xl bg-[var(--surface-container-high)] mb-4 shrink-0 gap-1" id="archiveTabs">
+        <button onclick="switchArchiveTab('release')" id="tabRelease"
+                class="flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 bg-[var(--primary)] text-[var(--on-primary)] shadow-sm">
+          <span class="material-symbols-rounded text-[16px]">verified</span>
+          <span>Релизы</span>
+          <span id="releaseCount" class="text-[10px] opacity-75 font-mono ml-0.5"></span>
+        </button>
+        <button onclick="switchArchiveTab('beta')" id="tabBeta"
+                class="flex-1 py-2 px-3 rounded-xl text-xs font-semibold text-[var(--text-sub)] hover:text-[var(--text)] transition-all flex items-center justify-center gap-1.5">
+          <span class="material-symbols-rounded text-[16px]">science</span>
+          <span>Бета</span>
+          <span id="betaCount" class="text-[10px] opacity-75 font-mono ml-0.5"></span>
+        </button>
+        <button onclick="switchArchiveTab('canary')" id="tabCanary"
+                class="flex-1 py-2 px-3 rounded-xl text-xs font-semibold text-[var(--text-sub)] hover:text-[var(--text)] transition-all flex items-center justify-center gap-1.5">
+          <span class="material-symbols-rounded text-[16px]">bolt</span>
+          <span>Canary</span>
+          <span id="canaryCount" class="text-[10px] opacity-75 font-mono ml-0.5"></span>
+        </button>
+      </div>
+
+      <!-- Scrollable List of Builds with Custom Smooth Scrollbar -->
+      <div class="overflow-y-auto space-y-2.5 pr-1 flex-1 min-h-0" id="archiveList" style="scrollbar-width: thin;">
+        <div class="py-10 text-center text-xs text-[var(--text-muted)] flex items-center justify-center gap-2">
+          <span class="material-symbols-rounded animate-spin text-[18px]">progress_activity</span>
+          <span>Загрузка архива...</span>
+        </div>
+      </div>
+
+      <!-- Footer Info Link -->
+      <div class="pt-3 mt-2 border-t border-[var(--outline-variant)] flex items-center justify-between text-xs text-[var(--text-muted)] shrink-0">
+        <span class="flex items-center gap-1">
+          <span class="material-symbols-rounded text-[14px]">shield</span>
+          Чистые сборки без трекеров
+        </span>
+        <a href="https://github.com/MoltenSt4r/MoltenGram/releases" target="_blank" rel="noopener" class="hover:text-[var(--primary)] flex items-center gap-0.5 font-medium">
+          GitHub Releases
+          <span class="material-symbols-rounded text-[14px]">north_east</span>
+        </a>
       </div>
     </div>
   </div>
@@ -1795,6 +1869,247 @@
 
       renderCatalog();
     })();
+
+    // -------------------------------------------------------------
+    // 4b. Material Design 3 Version Archive (Release / Beta / Canary)
+    // -------------------------------------------------------------
+    const archiveModal = document.getElementById('archiveModal');
+    const archiveSheet = document.getElementById('archiveSheet');
+    const archiveDragZone = document.getElementById('archiveDragZone');
+    let archiveCurrentTab = 'release';
+    let archiveLoaded = false;
+    let archiveData = { release: [], beta: [], canary: [] };
+
+    function openArchiveModal() {
+      archiveSheet.style.transform = '';
+      archiveModal.style.backgroundColor = '';
+      archiveModal.classList.add('open');
+      if (!archiveLoaded) {
+        fetchArchiveReleases();
+      }
+    }
+
+    function closeArchiveModal() {
+      archiveSheet.classList.remove('dragging');
+      archiveSheet.style.transform = '';
+      archiveModal.style.backgroundColor = '';
+      archiveModal.classList.remove('open');
+    }
+
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && archiveModal.classList.contains('open')) {
+        closeArchiveModal();
+      }
+    });
+
+    (function initArchiveSheetDrag() {
+      let isDragging = false;
+      let startY = 0;
+      let currentDeltaY = 0;
+      let startTime = 0;
+
+      function onDragStart(clientY) {
+        if (!archiveModal.classList.contains('open')) return;
+        isDragging = true;
+        startY = clientY;
+        currentDeltaY = 0;
+        startTime = performance.now();
+        archiveSheet.classList.add('dragging');
+      }
+
+      function onDragMove(clientY) {
+        if (!isDragging) return;
+        const diff = clientY - startY;
+        currentDeltaY = Math.max(0, diff);
+        archiveSheet.style.transform = `translateY(${currentDeltaY}px)`;
+      }
+
+      function onDragEnd() {
+        if (!isDragging) return;
+        isDragging = false;
+        archiveSheet.classList.remove('dragging');
+        const elapsed = Math.max(1, performance.now() - startTime);
+        const velocity = currentDeltaY / elapsed;
+        if (currentDeltaY > 75 || (currentDeltaY > 25 && velocity > 0.45)) {
+          closeArchiveModal();
+        } else {
+          archiveSheet.style.transform = '';
+        }
+      }
+
+      archiveDragZone.addEventListener('pointerdown', e => {
+        e.preventDefault();
+        onDragStart(e.clientY);
+        const onMove = ev => onDragMove(ev.clientY);
+        const onUp = () => {
+          onDragEnd();
+          window.removeEventListener('pointermove', onMove);
+          window.removeEventListener('pointerup', onUp);
+        };
+        window.addEventListener('pointermove', onMove);
+        window.addEventListener('pointerup', onUp);
+      });
+    })();
+
+    async function fetchArchiveReleases() {
+      const listEl = document.getElementById('archiveList');
+      try {
+        const res = await fetch('https://api.github.com/repos/MoltenSt4r/MoltenGram/releases?per_page=40');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const raw = await res.json();
+
+        archiveData = { release: [], beta: [], canary: [] };
+
+        raw.forEach(r => {
+          const tag = (r.tag_name || '').toLowerCase();
+          const name = r.name || r.tag_name || '';
+
+          if (tag === 'canary') {
+            // Canary release stores assets from recent staging builds
+            const apks = (r.assets || []).filter(a => a.name && a.name.endsWith('.apk'));
+            apks.sort((a, b) => new Date(b.updated_at || 0) - new Date(a.updated_at || 0));
+            apks.forEach(apk => {
+              // Extract commit hash or build id if available
+              const m = apk.name.match(/v?12\.\d+\.\d+-(?:([a-f0-9]{7})\.)?(\d+)/i) || [];
+              const commit = m[1] || '';
+              const buildNum = m[2] ? `#${m[2]}` : '';
+              archiveData.canary.push({
+                version: 'Canary ' + (buildNum || commit || apk.name.replace('.apk', '')),
+                subtitle: commit ? `Коммит ${commit}` : 'Nightly тест-билд',
+                date: apk.updated_at ? new Date(apk.updated_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' }) : '',
+                size: apk.size ? (apk.size / (1024 * 1024)).toFixed(1) + ' МБ' : '',
+                downloadUrl: apk.browser_download_url,
+                releaseUrl: r.html_url,
+                isPre: true
+              });
+            });
+          } else if (tag.includes('beta') || r.prerelease) {
+            const apks = (r.assets || []).filter(a => a.name && a.name.endsWith('.apk'));
+            const mainApk = apks[0];
+            archiveData.beta.push({
+              version: r.tag_name,
+              name: name,
+              subtitle: name.includes('«') ? name.split('—')[1] || name.split('«')[1]?.replace('»', '') || '' : 'Бета-версия',
+              date: r.created_at ? new Date(r.created_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' }) : '',
+              size: mainApk && mainApk.size ? (mainApk.size / (1024 * 1024)).toFixed(1) + ' МБ' : '',
+              downloadUrl: mainApk ? mainApk.browser_download_url : (r.html_url || ''),
+              releaseUrl: r.html_url,
+              isPre: true,
+              body: r.body || ''
+            });
+          } else {
+            const apks = (r.assets || []).filter(a => a.name && a.name.endsWith('.apk'));
+            const mainApk = apks[0];
+            archiveData.release.push({
+              version: r.tag_name,
+              name: name,
+              subtitle: name.includes('—') ? name.split('—')[1] : (name.includes('–') ? name.split('–')[1] : 'Стабильный релиз'),
+              date: r.created_at ? new Date(r.created_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' }) : '',
+              size: mainApk && mainApk.size ? (mainApk.size / (1024 * 1024)).toFixed(1) + ' МБ' : '',
+              downloadUrl: mainApk ? mainApk.browser_download_url : (r.html_url || ''),
+              releaseUrl: r.html_url,
+              isPre: false,
+              body: r.body || ''
+            });
+          }
+        });
+
+        document.getElementById('releaseCount').textContent = `(${archiveData.release.length})`;
+        document.getElementById('betaCount').textContent = `(${archiveData.beta.length})`;
+        document.getElementById('canaryCount').textContent = `(${archiveData.canary.length})`;
+
+        archiveLoaded = true;
+        renderArchiveTab();
+      } catch (err) {
+        listEl.innerHTML = `
+          <div class="py-8 text-center text-xs text-[var(--text-muted)]">
+            <span class="material-symbols-rounded text-2xl text-[var(--text-sub)] mb-2 block">cloud_off</span>
+            Не удалось загрузить архив версий.
+            <div class="mt-3">
+              <a href="https://github.com/MoltenSt4r/MoltenGram/releases" target="_blank" rel="noopener" class="m3-btn m3-btn-tonal !py-1.5 !px-4 text-xs inline-flex">
+                Открыть на GitHub
+              </a>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function switchArchiveTab(tab) {
+      archiveCurrentTab = tab;
+      const tabs = ['release', 'beta', 'canary'];
+      tabs.forEach(t => {
+        const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
+        if (t === tab) {
+          btn.className = 'flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 bg-[var(--primary)] text-[var(--on-primary)] shadow-sm';
+        } else {
+          btn.className = 'flex-1 py-2 px-3 rounded-xl text-xs font-semibold text-[var(--text-sub)] hover:text-[var(--text)] transition-all flex items-center justify-center gap-1.5';
+        }
+      });
+      renderArchiveTab();
+    }
+
+    function renderArchiveTab() {
+      const listEl = document.getElementById('archiveList');
+      const items = archiveData[archiveCurrentTab] || [];
+
+      if (!items.length) {
+        listEl.innerHTML = `
+          <div class="py-8 text-center text-xs text-[var(--text-muted)]">
+            В этом разделе пока нет сборок.
+          </div>
+        `;
+        return;
+      }
+
+      listEl.innerHTML = items.map((item, idx) => {
+        const badgeColor = archiveCurrentTab === 'release' 
+          ? 'bg-[var(--secondary-container)] text-[var(--on-secondary-container)]'
+          : (archiveCurrentTab === 'beta' 
+              ? 'bg-[var(--primary-container)] text-[var(--on-primary-container)]' 
+              : 'bg-[var(--surface-container-high)] text-[var(--text)]');
+        
+        const iconName = archiveCurrentTab === 'release' ? 'verified' : (archiveCurrentTab === 'beta' ? 'science' : 'bolt');
+        
+        return `
+          <div class="m3-copy-card !p-3.5 flex items-center justify-between gap-3 group" style="cursor: default;">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-10 h-10 rounded-[28%] ${badgeColor} flex items-center justify-center shrink-0">
+                <span class="material-symbols-rounded text-[20px]">${iconName}</span>
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="font-bold text-sm text-[var(--text)] leading-tight">${item.version}</span>
+                  ${item.subtitle ? `<span class="text-[11px] font-medium text-[var(--text-muted)] truncate max-w-[180px]">${item.subtitle}</span>` : ''}
+                </div>
+                <div class="flex items-center gap-2 text-[11px] text-[var(--text-muted)] mt-0.5">
+                  ${item.date ? `<span>${item.date}</span>` : ''}
+                  ${item.date && item.size ? `<span>•</span>` : ''}
+                  ${item.size ? `<span>${item.size}</span>` : ''}
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-1.5 shrink-0">
+              ${item.downloadUrl ? `
+                <a href="${item.downloadUrl}"
+                   class="w-9 h-9 rounded-[28%] bg-[var(--surface-container-high)] text-[var(--primary)] hover:bg-[var(--primary)] hover:text-[var(--on-primary)] transition-all flex items-center justify-center"
+                   title="Скачать APK">
+                  <span class="material-symbols-rounded text-[18px]">download</span>
+                </a>
+              ` : ''}
+              ${item.releaseUrl ? `
+                <a href="${item.releaseUrl}" target="_blank" rel="noopener"
+                   class="w-9 h-9 rounded-[28%] bg-[var(--surface-container-high)] text-[var(--text-sub)] hover:text-[var(--text)] transition-all flex items-center justify-center"
+                   title="Подробнее на GitHub">
+                  <span class="material-symbols-rounded text-[18px]">open_in_new</span>
+                </a>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
 
     // -------------------------------------------------------------
     // 5. Auto-fetch Latest APK & Version Tag from GitHub Releases
