@@ -926,6 +926,217 @@
       transform: translateX(-50%) translateY(0) scale(1);
       opacity: 1;
     }
+
+    /* -------------------------------------------------------------
+       4c. Material Design 3 Expressive Version Archive Enhancements
+       ------------------------------------------------------------- */
+    #archiveSheet {
+      max-width: 520px;
+    }
+
+    /* Segmented Tab Bar with Sliding Pill Indicator */
+    .archive-tabs-container {
+      position: relative;
+      background-color: var(--surface-container-lowest);
+      border-radius: 20px;
+      padding: 4px;
+      display: flex;
+      gap: 4px;
+      user-select: none;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    .archive-tab-indicator {
+      position: absolute;
+      top: 4px;
+      bottom: 4px;
+      left: 4px;
+      width: calc((100% - 16px) / 3);
+      border-radius: 16px;
+      background-color: var(--primary);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.22);
+      transition: transform 0.32s var(--spring-smooth);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .archive-tab-btn {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      padding: 9px 8px;
+      border-radius: 16px;
+      font-size: 12.5px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      color: var(--text-sub);
+      transition: color 0.22s ease;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .archive-tab-btn:hover {
+      color: var(--text);
+    }
+
+    .archive-tab-btn.active {
+      color: var(--on-primary);
+      font-weight: 700;
+    }
+
+    .archive-tab-btn .tab-count {
+      font-family: monospace;
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 10px;
+      background-color: rgba(0, 0, 0, 0.15);
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .archive-tab-btn:not(.active) .tab-count {
+      background-color: var(--surface-container-high);
+      color: var(--text-muted);
+    }
+
+    /* Search & Filter Bar */
+    .archive-search-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 16px;
+      background-color: var(--surface-container-lowest);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .archive-search-box:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(122, 216, 149, 0.16);
+    }
+
+    /* Staggered Card Entrance Animation */
+    @keyframes archiveCardIn {
+      0% {
+        opacity: 0;
+        transform: translateY(16px) scale(0.97);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .archive-card {
+      position: relative;
+      background-color: var(--surface-container);
+      border-radius: 20px;
+      padding: 13px 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: transform 0.22s var(--spring-smooth), 
+                  background-color 0.2s ease, 
+                  border-color 0.2s ease, 
+                  box-shadow 0.22s ease;
+      animation: archiveCardIn 0.34s cubic-bezier(0.2, 0.75, 0.34, 0.94) both;
+      animation-delay: calc(var(--stagger, 0) * 0.028s);
+    }
+
+    .archive-card:hover {
+      background-color: var(--surface-container-high);
+      border-color: rgba(122, 216, 149, 0.24);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.4);
+    }
+
+    .archive-card.is-latest {
+      border-color: rgba(122, 216, 149, 0.38);
+      background: linear-gradient(135deg, rgba(122, 216, 149, 0.1) 0%, var(--surface-container) 100%);
+    }
+
+    .archive-commit-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 2px 7px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 11px;
+      font-weight: 600;
+      background-color: var(--surface-container-highest);
+      color: var(--primary);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.16s ease;
+    }
+
+    .archive-commit-chip:hover {
+      background-color: var(--primary);
+      color: var(--on-primary);
+      transform: scale(1.05);
+    }
+
+    .archive-commit-chip:active {
+      transform: scale(0.95);
+    }
+
+    .archive-action-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s var(--spring-smooth);
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .archive-action-btn.btn-download {
+      background-color: var(--primary);
+      color: var(--on-primary);
+      box-shadow: 0 2px 10px rgba(122, 216, 149, 0.28);
+    }
+
+    .archive-action-btn.btn-download:hover {
+      transform: scale(1.08) translateY(-1px);
+      box-shadow: 0 4px 16px rgba(122, 216, 149, 0.45);
+    }
+
+    .archive-action-btn.btn-download:active {
+      transform: scale(0.93);
+    }
+
+    .archive-action-btn.btn-github {
+      background-color: var(--surface-container-high);
+      color: var(--text-sub);
+    }
+
+    .archive-action-btn.btn-github:hover {
+      background-color: var(--surface-container-highest);
+      color: var(--text);
+      transform: scale(1.08);
+    }
+
+    .archive-action-btn.btn-github:active {
+      transform: scale(0.93);
+    }
+
+    /* Skeleton shimmer */
+    @keyframes skeletonShimmer {
+      0% { opacity: 0.35; }
+      50% { opacity: 0.75; }
+      100% { opacity: 0.35; }
+    }
+    .skeleton-card {
+      animation: skeletonShimmer 1.4s ease-in-out infinite;
+    }
   </style>
 </head>
 <body class="selection:bg-[var(--primary-container)] selection:text-[var(--on-primary-container)]">
@@ -1228,14 +1439,14 @@
       </div>
 
       <!-- Header -->
-      <div class="flex items-start justify-between gap-4 mb-4 shrink-0">
+      <div class="flex items-start justify-between gap-4 mb-3.5 shrink-0">
         <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-[30%] bg-[var(--primary-container)] text-[var(--on-primary-container)] flex items-center justify-center shrink-0">
+          <div class="w-11 h-11 rounded-[30%] bg-[var(--primary-container)] text-[var(--on-primary-container)] flex items-center justify-center shrink-0 shadow-sm">
             <span class="material-symbols-rounded text-[22px]">history</span>
           </div>
           <div>
             <h3 class="font-bold text-lg leading-tight">Архив версий</h3>
-            <p class="text-xs text-[var(--text-sub)] mt-0.5">Все сборки: стабильные релизы, бета и канари</p>
+            <p class="text-xs text-[var(--text-sub)] mt-0.5">Все сборки: стабильные релизы, бета и canary</p>
           </div>
         </div>
         <button onclick="closeArchiveModal()" class="m3-icon-btn shrink-0" aria-label="Закрыть">
@@ -1243,45 +1454,54 @@
         </button>
       </div>
 
-      <!-- M3 Segmented Tabs (Release, Beta, Canary) -->
-      <div class="flex p-1 rounded-2xl bg-[var(--surface-container-high)] mb-4 shrink-0 gap-1" id="archiveTabs">
-        <button onclick="switchArchiveTab('release')" id="tabRelease"
-                class="flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 bg-[var(--primary)] text-[var(--on-primary)] shadow-sm">
+      <!-- M3 Segmented Tabs (Release, Beta, Canary) with Sliding Pill Indicator -->
+      <div class="archive-tabs-container mb-3 shrink-0" id="archiveTabs">
+        <div class="archive-tab-indicator" id="archiveTabIndicator"></div>
+        <button onclick="switchArchiveTab('release')" id="tabRelease" class="archive-tab-btn active">
           <span class="material-symbols-rounded text-[16px]">verified</span>
           <span>Релизы</span>
-          <span id="releaseCount" class="text-[10px] opacity-75 font-mono ml-0.5"></span>
+          <span id="releaseCount" class="tab-count"></span>
         </button>
-        <button onclick="switchArchiveTab('beta')" id="tabBeta"
-                class="flex-1 py-2 px-3 rounded-xl text-xs font-semibold text-[var(--text-sub)] hover:text-[var(--text)] transition-all flex items-center justify-center gap-1.5">
+        <button onclick="switchArchiveTab('beta')" id="tabBeta" class="archive-tab-btn">
           <span class="material-symbols-rounded text-[16px]">science</span>
           <span>Бета</span>
-          <span id="betaCount" class="text-[10px] opacity-75 font-mono ml-0.5"></span>
+          <span id="betaCount" class="tab-count"></span>
         </button>
-        <button onclick="switchArchiveTab('canary')" id="tabCanary"
-                class="flex-1 py-2 px-3 rounded-xl text-xs font-semibold text-[var(--text-sub)] hover:text-[var(--text)] transition-all flex items-center justify-center gap-1.5">
+        <button onclick="switchArchiveTab('canary')" id="tabCanary" class="archive-tab-btn">
           <span class="material-symbols-rounded text-[16px]">bolt</span>
           <span>Canary</span>
-          <span id="canaryCount" class="text-[10px] opacity-75 font-mono ml-0.5"></span>
+          <span id="canaryCount" class="tab-count"></span>
+        </button>
+      </div>
+
+      <!-- Live Search / Filter Input (for fast navigation in large lists) -->
+      <div class="archive-search-box mb-3 shrink-0" id="archiveSearchWrapper">
+        <span class="material-symbols-rounded text-[18px] text-[var(--text-muted)]">search</span>
+        <input type="text" id="archiveSearchInput" placeholder="Поиск по номеру, коммиту или дате..." 
+               class="bg-transparent text-xs text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none flex-1 font-sans">
+        <button id="archiveSearchClear" onclick="clearArchiveSearch()" class="hidden text-[var(--text-muted)] hover:text-[var(--text)] transition-colors" title="Очистить">
+          <span class="material-symbols-rounded text-[16px]">close</span>
         </button>
       </div>
 
       <!-- Scrollable List of Builds with Custom Smooth Scrollbar -->
-      <div class="overflow-y-auto space-y-2.5 pr-1 flex-1 min-h-0" id="archiveList" style="scrollbar-width: thin;">
-        <div class="py-10 text-center text-xs text-[var(--text-muted)] flex items-center justify-center gap-2">
-          <span class="material-symbols-rounded animate-spin text-[18px]">progress_activity</span>
-          <span>Загрузка архива...</span>
+      <div class="overflow-y-auto space-y-2.5 pr-1 flex-1 min-h-0" id="archiveList" style="scrollbar-width: thin; transition: opacity 0.18s ease, transform 0.18s ease;">
+        <div class="space-y-2.5 py-2">
+          <div class="h-20 rounded-2xl bg-[var(--surface-container)] skeleton-card"></div>
+          <div class="h-20 rounded-2xl bg-[var(--surface-container)] skeleton-card" style="animation-delay: 0.15s"></div>
+          <div class="h-20 rounded-2xl bg-[var(--surface-container)] skeleton-card" style="animation-delay: 0.3s"></div>
         </div>
       </div>
 
       <!-- Footer Info Link -->
       <div class="pt-3 mt-2 border-t border-[var(--outline-variant)] flex items-center justify-between text-xs text-[var(--text-muted)] shrink-0">
-        <span class="flex items-center gap-1">
-          <span class="material-symbols-rounded text-[14px]">shield</span>
-          Чистые сборки без трекеров
+        <span class="flex items-center gap-1.5">
+          <span class="material-symbols-rounded text-[14px] text-[var(--primary)]">verified_user</span>
+          Официальные сборки без трекеров
         </span>
-        <a href="https://github.com/MoltenSt4r/MoltenGram/releases" target="_blank" rel="noopener" class="hover:text-[var(--primary)] flex items-center gap-0.5 font-medium">
-          GitHub Releases
-          <span class="material-symbols-rounded text-[14px]">north_east</span>
+        <a href="https://github.com/MoltenSt4r/MoltenGram/releases" target="_blank" rel="noopener" class="hover:text-[var(--primary)] flex items-center gap-1 font-medium transition-colors">
+          <span>GitHub Releases</span>
+          <span class="material-symbols-rounded text-[13px]">north_east</span>
         </a>
       </div>
     </div>
@@ -1884,6 +2104,7 @@
       archiveSheet.style.transform = '';
       archiveModal.style.backgroundColor = '';
       archiveModal.classList.add('open');
+      setTimeout(updateArchiveTabIndicator, 25);
       if (!archiveLoaded) {
         fetchArchiveReleases();
       }
@@ -1949,7 +2170,57 @@
         window.addEventListener('pointermove', onMove);
         window.addEventListener('pointerup', onUp);
       });
+
+      // Live search input listener
+      const searchInput = document.getElementById('archiveSearchInput');
+      if (searchInput) {
+        searchInput.addEventListener('input', () => {
+          const clearBtn = document.getElementById('archiveSearchClear');
+          if (clearBtn) clearBtn.classList.toggle('hidden', !searchInput.value);
+          renderArchiveTab();
+        });
+      }
+
+      window.addEventListener('resize', () => {
+        if (archiveModal.classList.contains('open')) {
+          updateArchiveTabIndicator();
+        }
+      });
     })();
+
+    function updateArchiveTabIndicator() {
+      const tabs = ['release', 'beta', 'canary'];
+      const idx = tabs.indexOf(archiveCurrentTab);
+      const indicator = document.getElementById('archiveTabIndicator');
+      if (indicator && idx >= 0) {
+        if (idx === 0) {
+          indicator.style.transform = 'translateX(0)';
+        } else if (idx === 1) {
+          indicator.style.transform = 'translateX(calc(100% + 4px))';
+        } else {
+          indicator.style.transform = 'translateX(calc(200% + 8px))';
+        }
+      }
+    }
+
+    function clearArchiveSearch() {
+      const input = document.getElementById('archiveSearchInput');
+      if (input) {
+        input.value = '';
+        document.getElementById('archiveSearchClear')?.classList.add('hidden');
+        renderArchiveTab();
+      }
+    }
+
+    function copyCommitHash(e, hash) {
+      if (e) e.stopPropagation();
+      if (!hash) return;
+      navigator.clipboard.writeText(hash).then(() => {
+        showToast('Коммит ' + hash + ' скопирован');
+      }).catch(() => {
+        showToast('Коммит: ' + hash);
+      });
+    }
 
     async function fetchArchiveReleases() {
       const listEl = document.getElementById('archiveList');
@@ -1965,17 +2236,17 @@
           const name = r.name || r.tag_name || '';
 
           if (tag === 'canary') {
-            // Canary release stores assets from recent staging builds
             const apks = (r.assets || []).filter(a => a.name && a.name.endsWith('.apk'));
             apks.sort((a, b) => new Date(b.updated_at || 0) - new Date(a.updated_at || 0));
             apks.forEach(apk => {
-              // Extract commit hash or build id if available
               const m = apk.name.match(/v?12\.\d+\.\d+-(?:([a-f0-9]{7})\.)?(\d+)/i) || [];
               const commit = m[1] || '';
               const buildNum = m[2] ? `#${m[2]}` : '';
               archiveData.canary.push({
                 version: 'Canary ' + (buildNum || commit || apk.name.replace('.apk', '')),
                 subtitle: commit ? `Коммит ${commit}` : 'Nightly тест-билд',
+                commit: commit,
+                buildNum: buildNum,
                 date: apk.updated_at ? new Date(apk.updated_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' }) : '',
                 size: apk.size ? (apk.size / (1024 * 1024)).toFixed(1) + ' МБ' : '',
                 downloadUrl: apk.browser_download_url,
@@ -1990,6 +2261,7 @@
               version: r.tag_name,
               name: name,
               subtitle: name.includes('«') ? name.split('—')[1] || name.split('«')[1]?.replace('»', '') || '' : 'Бета-версия',
+              commit: (r.target_commitish && r.target_commitish.length === 40) ? r.target_commitish.substring(0, 7) : '',
               date: r.created_at ? new Date(r.created_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' }) : '',
               size: mainApk && mainApk.size ? (mainApk.size / (1024 * 1024)).toFixed(1) + ' МБ' : '',
               downloadUrl: mainApk ? mainApk.browser_download_url : (r.html_url || ''),
@@ -2004,6 +2276,7 @@
               version: r.tag_name,
               name: name,
               subtitle: name.includes('—') ? name.split('—')[1] : (name.includes('–') ? name.split('–')[1] : 'Стабильный релиз'),
+              commit: (r.target_commitish && r.target_commitish.length === 40) ? r.target_commitish.substring(0, 7) : '',
               date: r.created_at ? new Date(r.created_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' }) : '',
               size: mainApk && mainApk.size ? (mainApk.size / (1024 * 1024)).toFixed(1) + ' МБ' : '',
               downloadUrl: mainApk ? mainApk.browser_download_url : (r.html_url || ''),
@@ -2020,72 +2293,131 @@
 
         archiveLoaded = true;
         renderArchiveTab();
+        updateArchiveTabIndicator();
       } catch (err) {
         listEl.innerHTML = `
-          <div class="py-8 text-center text-xs text-[var(--text-muted)]">
-            <span class="material-symbols-rounded text-2xl text-[var(--text-sub)] mb-2 block">cloud_off</span>
-            Не удалось загрузить архив версий.
-            <div class="mt-3">
-              <a href="https://github.com/MoltenSt4r/MoltenGram/releases" target="_blank" rel="noopener" class="m3-btn m3-btn-tonal !py-1.5 !px-4 text-xs inline-flex">
-                Открыть на GitHub
-              </a>
+          <div class="py-10 text-center text-xs text-[var(--text-muted)] flex flex-col items-center justify-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-[var(--surface-container-high)] flex items-center justify-center text-[var(--text-sub)]">
+              <span class="material-symbols-rounded text-2xl">cloud_off</span>
             </div>
+            <span>Не удалось загрузить архив версий.</span>
+            <a href="https://github.com/MoltenSt4r/MoltenGram/releases" target="_blank" rel="noopener" class="m3-btn m3-btn-tonal !py-2 !px-4 text-xs inline-flex items-center gap-1.5 shadow-sm">
+              <span>Открыть на GitHub</span>
+              <span class="material-symbols-rounded text-[14px]">north_east</span>
+            </a>
           </div>
         `;
       }
     }
 
     function switchArchiveTab(tab) {
+      if (archiveCurrentTab === tab) return;
       archiveCurrentTab = tab;
       const tabs = ['release', 'beta', 'canary'];
       tabs.forEach(t => {
         const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
-        if (t === tab) {
-          btn.className = 'flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 bg-[var(--primary)] text-[var(--on-primary)] shadow-sm';
-        } else {
-          btn.className = 'flex-1 py-2 px-3 rounded-xl text-xs font-semibold text-[var(--text-sub)] hover:text-[var(--text)] transition-all flex items-center justify-center gap-1.5';
+        if (btn) {
+          btn.classList.toggle('active', t === tab);
         }
       });
-      renderArchiveTab();
+      updateArchiveTabIndicator();
+
+      const listEl = document.getElementById('archiveList');
+      if (listEl) {
+        listEl.style.opacity = '0';
+        listEl.style.transform = 'translateY(8px)';
+        setTimeout(() => {
+          renderArchiveTab();
+          listEl.style.opacity = '1';
+          listEl.style.transform = 'translateY(0)';
+        }, 120);
+      }
     }
 
     function renderArchiveTab() {
       const listEl = document.getElementById('archiveList');
-      const items = archiveData[archiveCurrentTab] || [];
+      if (!listEl) return;
+      const allItems = archiveData[archiveCurrentTab] || [];
+      const searchInput = document.getElementById('archiveSearchInput');
+      const q = (searchInput?.value || '').trim().toLowerCase();
+
+      const items = q ? allItems.filter(item => {
+        return (item.version || '').toLowerCase().includes(q) ||
+               (item.subtitle || '').toLowerCase().includes(q) ||
+               (item.commit || '').toLowerCase().includes(q) ||
+               (item.date || '').toLowerCase().includes(q);
+      }) : allItems;
 
       if (!items.length) {
         listEl.innerHTML = `
-          <div class="py-8 text-center text-xs text-[var(--text-muted)]">
-            В этом разделе пока нет сборок.
+          <div class="py-12 text-center text-xs text-[var(--text-muted)] flex flex-col items-center justify-center gap-2">
+            <span class="material-symbols-rounded text-3xl text-[var(--text-sub)] opacity-60">search_off</span>
+            <span>${q ? 'По запросу «' + q + '» ничего не найдено' : 'В этом разделе пока нет сборок.'}</span>
           </div>
         `;
         return;
       }
 
       listEl.innerHTML = items.map((item, idx) => {
-        const badgeColor = archiveCurrentTab === 'release' 
-          ? 'bg-[var(--secondary-container)] text-[var(--on-secondary-container)]'
-          : (archiveCurrentTab === 'beta' 
-              ? 'bg-[var(--primary-container)] text-[var(--on-primary-container)]' 
-              : 'bg-[var(--surface-container-high)] text-[var(--text)]');
+        const isLatest = idx === 0 && !q;
+        const isCanary = archiveCurrentTab === 'canary';
+        const isBeta = archiveCurrentTab === 'beta';
         
-        const iconName = archiveCurrentTab === 'release' ? 'verified' : (archiveCurrentTab === 'beta' ? 'science' : 'bolt');
-        
+        let iconBg, iconColor, iconName;
+        if (isCanary) {
+          iconBg = 'bg-[rgba(122,216,149,0.14)] shadow-[0_0_16px_rgba(122,216,149,0.18)]';
+          iconColor = 'text-[var(--primary)]';
+          iconName = 'bolt';
+        } else if (isBeta) {
+          iconBg = 'bg-[rgba(0,210,180,0.18)] shadow-[0_0_16px_rgba(0,210,180,0.15)]';
+          iconColor = 'text-[#00E5C0]';
+          iconName = 'science';
+        } else {
+          iconBg = 'bg-[var(--primary-container)] shadow-[0_0_16px_rgba(0,82,39,0.25)]';
+          iconColor = 'text-[var(--on-primary-container)]';
+          iconName = 'verified';
+        }
+
+        const staggerDelay = Math.min(idx, 14);
+
         return `
-          <div class="m3-copy-card !p-3.5 flex items-center justify-between gap-3 group" style="cursor: default;">
-            <div class="flex items-center gap-3 min-w-0">
-              <div class="w-10 h-10 rounded-[28%] ${badgeColor} flex items-center justify-center shrink-0">
-                <span class="material-symbols-rounded text-[20px]">${iconName}</span>
+          <div class="archive-card ${isLatest ? 'is-latest' : ''}" style="--stagger: ${staggerDelay};">
+            <div class="flex items-center gap-3 min-w-0 flex-1">
+              <div class="w-11 h-11 rounded-[30%] ${iconBg} ${iconColor} flex items-center justify-center shrink-0 transition-transform group-hover:scale-105">
+                <span class="material-symbols-rounded text-[22px]">${iconName}</span>
               </div>
-              <div class="min-w-0">
-                <div class="flex items-center gap-2 flex-wrap">
-                  <span class="font-bold text-sm text-[var(--text)] leading-tight">${item.version}</span>
-                  ${item.subtitle ? `<span class="text-[11px] font-medium text-[var(--text-muted)] truncate max-w-[180px]">${item.subtitle}</span>` : ''}
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2 flex-wrap mb-0.5">
+                  <span class="font-bold text-sm text-[var(--text)] leading-tight tracking-tight">${item.version}</span>
+                  ${isLatest ? `
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[var(--primary)] text-[var(--on-primary)] shadow-sm">
+                      Свежая
+                    </span>
+                  ` : ''}
+                  ${item.commit ? `
+                    <button type="button" class="archive-commit-chip" onclick="copyCommitHash(event, '${item.commit}')" title="Нажмите, чтобы скопировать хеш коммита">
+                      <span class="material-symbols-rounded text-[12px]">commit</span>
+                      <span>${item.commit}</span>
+                    </button>
+                  ` : ''}
                 </div>
-                <div class="flex items-center gap-2 text-[11px] text-[var(--text-muted)] mt-0.5">
-                  ${item.date ? `<span>${item.date}</span>` : ''}
-                  ${item.date && item.size ? `<span>•</span>` : ''}
-                  ${item.size ? `<span>${item.size}</span>` : ''}
+                ${item.subtitle && !item.commit ? `
+                  <div class="text-[11.5px] font-medium text-[var(--text-sub)] truncate max-w-[260px] mb-0.5">${item.subtitle}</div>
+                ` : ''}
+                <div class="flex items-center gap-2 text-[11px] text-[var(--text-muted)] font-medium">
+                  ${item.date ? `
+                    <span class="flex items-center gap-1">
+                      <span class="material-symbols-rounded text-[13px] opacity-70">calendar_today</span>
+                      <span>${item.date}</span>
+                    </span>
+                  ` : ''}
+                  ${item.date && item.size ? `<span class="opacity-40">•</span>` : ''}
+                  ${item.size ? `
+                    <span class="flex items-center gap-1 font-mono">
+                      <span class="material-symbols-rounded text-[13px] opacity-70">straighten</span>
+                      <span>${item.size}</span>
+                    </span>
+                  ` : ''}
                 </div>
               </div>
             </div>
@@ -2093,15 +2425,15 @@
             <div class="flex items-center gap-1.5 shrink-0">
               ${item.downloadUrl ? `
                 <a href="${item.downloadUrl}"
-                   class="w-9 h-9 rounded-[28%] bg-[var(--surface-container-high)] text-[var(--primary)] hover:bg-[var(--primary)] hover:text-[var(--on-primary)] transition-all flex items-center justify-center"
-                   title="Скачать APK">
-                  <span class="material-symbols-rounded text-[18px]">download</span>
+                   class="archive-action-btn btn-download"
+                   title="Скачать APK (${item.size || 'Прямая ссылка'})">
+                  <span class="material-symbols-rounded text-[20px]">download</span>
                 </a>
               ` : ''}
               ${item.releaseUrl ? `
                 <a href="${item.releaseUrl}" target="_blank" rel="noopener"
-                   class="w-9 h-9 rounded-[28%] bg-[var(--surface-container-high)] text-[var(--text-sub)] hover:text-[var(--text)] transition-all flex items-center justify-center"
-                   title="Подробнее на GitHub">
+                   class="archive-action-btn btn-github"
+                   title="Открыть на GitHub Releases">
                   <span class="material-symbols-rounded text-[18px]">open_in_new</span>
                 </a>
               ` : ''}
