@@ -3,6 +3,22 @@
   "outputDirectory": ".",
   "framework": null,
   "rewrites": [
+    { "source": "/download/canary", "destination": "/api/download?channel=canary" },
+    { "source": "/download/beta", "destination": "/api/download?channel=beta" },
+    { "source": "/download/release", "destination": "/api/download?channel=release" },
+    { "source": "/download/stable", "destination": "/api/download?channel=release" },
+    { "source": "/download", "destination": "/api/download?channel=release" },
+
+    { "source": "/dl/canary", "destination": "/api/download?channel=canary" },
+    { "source": "/dl/beta", "destination": "/api/download?channel=beta" },
+    { "source": "/dl/release", "destination": "/api/download?channel=release" },
+    { "source": "/dl/stable", "destination": "/api/download?channel=release" },
+    { "source": "/dl", "destination": "/api/download?channel=release" },
+
+    { "source": "/canary", "destination": "/api/download?channel=canary" },
+    { "source": "/beta", "destination": "/api/download?channel=beta" },
+    { "source": "/release", "destination": "/api/download?channel=release" },
+
     { "source": "/((?!.*\\..*|favicon|icons/|assets/|fonts/|api/).*)", "destination": "/index.html" }
   ],
   "headers": [

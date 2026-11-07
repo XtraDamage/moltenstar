@@ -1223,8 +1223,7 @@
       <!-- Expressive Action Bar -->
       <div class="reveal delay-2 flex flex-col sm:flex-row items-center justify-center gap-3">
         <a id="mainApkBtn"
-           href="https://github.com/MoltenSt4r/MoltenGram/releases/download/v12.10.6/MoltenGram-v12.10.6-ae8723f.1261.apk" 
-           download 
+           href="/download/release" 
            class="m3-btn m3-btn-filled w-full sm:w-auto ripple-btn">
           <span class="material-symbols-rounded text-[24px]">download</span>
           <span>Скачать APK</span>
@@ -1500,8 +1499,27 @@
         </div>
       </div>
 
+      <!-- Direct Permanent Download Links Bar -->
+      <div class="pt-2 pb-1 flex items-center justify-between gap-2 text-[11px] text-[var(--text-sub)] shrink-0 flex-wrap">
+        <span class="flex items-center gap-1 font-semibold text-[var(--text)]">
+          <span class="material-symbols-rounded text-[14px] text-[var(--primary)]">link</span>
+          Прямые ссылки:
+        </span>
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <button type="button" onclick="copyDirectLink(event, 'release')" class="archive-commit-chip" title="Скопировать ссылку на релиз">
+            <span>/download/release</span>
+          </button>
+          <button type="button" onclick="copyDirectLink(event, 'beta')" class="archive-commit-chip" title="Скопировать ссылку на бету">
+            <span>/download/beta</span>
+          </button>
+          <button type="button" onclick="copyDirectLink(event, 'canary')" class="archive-commit-chip" title="Скопировать ссылку на канари">
+            <span>/download/canary</span>
+          </button>
+        </div>
+      </div>
+
       <!-- Footer Info Link -->
-      <div class="pt-3 mt-2 border-t border-[var(--outline-variant)] flex items-center justify-between text-xs text-[var(--text-muted)] shrink-0">
+      <div class="pt-2.5 mt-1 border-t border-[var(--outline-variant)] flex items-center justify-between text-xs text-[var(--text-muted)] shrink-0">
         <span class="flex items-center gap-1.5">
           <span class="material-symbols-rounded text-[14px] text-[var(--primary)]">verified_user</span>
           Официальные сборки без трекеров
@@ -2229,6 +2247,17 @@
       });
     }
 
+    function copyDirectLink(e, channel) {
+      if (e) e.stopPropagation();
+      const origin = window.location.origin;
+      const url = `${origin}/download/${channel}`;
+      navigator.clipboard.writeText(url).then(() => {
+        showToast('Прямая ссылка скопирована: /download/' + channel);
+      }).catch(() => {
+        showToast(url);
+      });
+    }
+
     async function fetchArchiveReleases() {
       const listEl = document.getElementById('archiveList');
       try {
@@ -2471,7 +2500,24 @@
           }
         }
       } catch (e) {
-        // Fallback silently to default v12.10.6 link
+        // Fallback silently to default link
+      }
+    })();
+
+    // -------------------------------------------------------------
+    // 6. Deep-link & Hash Routing (#canary, #beta, #archive)
+    // -------------------------------------------------------------
+    (function checkRouteHash() {
+      const hash = (window.location.hash || '').toLowerCase();
+      if (hash.includes('canary')) {
+        openArchiveModal();
+        switchArchiveTab('canary');
+      } else if (hash.includes('beta')) {
+        openArchiveModal();
+        switchArchiveTab('beta');
+      } else if (hash.includes('archive') || hash.includes('releases')) {
+        openArchiveModal();
+        switchArchiveTab('release');
       }
     })();
   </script>
