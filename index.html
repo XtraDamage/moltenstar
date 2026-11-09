@@ -658,6 +658,50 @@
       color: var(--on-primary);
     }
 
+    /* Smooth Animated M3 Accordion for Expanded Settings */
+    .settings-accordion {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.48s cubic-bezier(0.16, 1, 0.3, 1);
+      width: 100%;
+    }
+
+    .settings-accordion.is-expanded {
+      grid-template-rows: 1fr;
+    }
+
+    .settings-accordion-inner {
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-top: 6px;
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: opacity 0.32s ease, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .settings-accordion.is-expanded .settings-accordion-inner {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #settingsExpandBtn {
+      transition: background-color 0.2s ease, transform 0.2s var(--spring-smooth);
+    }
+
+    #settingsExpandBtn:active {
+      transform: scale(0.97);
+    }
+
+    #settingsExpandIcon {
+      transition: transform 0.36s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #settingsExpandBtn.expand-active #settingsExpandIcon {
+      transform: rotate(180deg);
+    }
+
     /* -------------------------------------------------------------
        7. Authentic M3 Bottom Sheet / Dialog for F-Droid + Overscroll Skirt & Secret Nothing MD3 Switch
        ------------------------------------------------------------- */
@@ -933,6 +977,20 @@
        ------------------------------------------------------------- */
     #archiveSheet {
       max-width: 520px;
+      height: 82vh;
+      max-height: 85vh;
+      min-height: 520px;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.45s var(--spring-smooth), height 0.35s cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    @media (max-width: 639px) {
+      #archiveSheet {
+        height: 85vh;
+        max-height: 88vh;
+        min-height: 480px;
+      }
     }
 
     /* Segmented Tab Bar with Sliding Pill Indicator */
@@ -1438,7 +1496,7 @@
 
   <!-- Material 3 Archive Bottom Sheet / Modal (Релизы, Бета, Canary) -->
   <div class="modal-backdrop" id="archiveModal" onclick="if(event.target === this) closeArchiveModal()">
-    <div class="modal-sheet" id="archiveSheet" style="max-height: 85vh; display: flex; flex-direction: column;">
+    <div class="modal-sheet" id="archiveSheet">
       <!-- M3 Drag Handle -->
       <div class="m3-drag-zone" id="archiveDragZone" title="Потяните вниз чтобы свернуть">
         <div class="m3-drag-handle"></div>
@@ -1830,6 +1888,14 @@
       { cat: 'appearance', section: 'Material Design 3', title: 'Аудиоплеер в стиле MD3', key: 'md3Player', link: 'tg://moltengram/appearance?row=md3Player' },
       { cat: 'appearance', section: 'Material Design 3', title: 'Мини-плеер в стиле MD3', key: 'md3MiniPlayer', link: 'tg://moltengram/appearance?row=md3MiniPlayer' },
       { cat: 'appearance', section: 'Material Design 3', title: 'Альбомы медиа как карусель MD3', key: 'mediaGroupCarousel', link: 'tg://moltengram/appearance?row=mediaGroupCarousel' },
+      { cat: 'appearance', section: 'iOS Design', title: 'Стили интерфейса iOS (сворачиваемая группа)', key: 'iosStyles', link: 'tg://moltengram/appearance?row=iosStyles' },
+      { cat: 'appearance', section: 'iOS Design', title: 'Панель навигации в стиле iOS', key: 'iosNavBar', link: 'tg://moltengram/appearance?row=iosNavBar' },
+      { cat: 'appearance', section: 'iOS Design', title: 'Шапка чата в стиле iOS', key: 'iosChatHeader', link: 'tg://moltengram/appearance?row=iosChatHeader' },
+      { cat: 'appearance', section: 'iOS Design', title: 'Liquid Glass (жидкое стекло) для панели навигации', key: 'iosLiquidGlassNavBar', link: 'tg://moltengram/appearance?row=iosLiquidGlassNavBar' },
+      { cat: 'appearance', section: 'iOS Design', title: 'Liquid Glass (жидкое стекло) для плавающей кнопки (FAB)', key: 'iosLiquidGlassFab', link: 'tg://moltengram/appearance?row=iosLiquidGlassFab' },
+      { cat: 'appearance', section: 'Плавающая кнопка (FAB)', title: 'Настройки меню FAB и действий Speed Dial', key: 'fabAppearance', link: 'tg://moltengram/fab_appearance' },
+      { cat: 'appearance', section: 'Плавающая кнопка (FAB)', title: 'Форма плавающей кнопки (круг, сквиркл, пилюля, MD3)', key: 'fabShape', link: 'tg://moltengram/fab_appearance?row=fabShape' },
+      { cat: 'appearance', section: 'Плавающая кнопка (FAB)', title: 'Цветовая палитра и акцент кнопки FAB', key: 'fabColor', link: 'tg://moltengram/fab_appearance?row=fabColor' },
       { cat: 'appearance', section: 'Оформление', title: 'Каплевидное перетекание аватарки (Gooey)', key: 'gooeyAvatar', link: 'tg://moltengram/appearance?row=gooeyAvatar' },
       { cat: 'appearance', section: 'Оформление', title: 'Пользовательские темы', key: 'customThemes', link: 'tg://moltengram/appearance?row=customThemes' },
       { cat: 'appearance', section: 'Секции', title: 'Радиус скругления секций', key: 'sectionRadius', link: 'tg://moltengram/appearance?row=sectionRadius' },
@@ -1851,6 +1917,15 @@
       { cat: 'appearance', section: 'Папки', title: 'Счётчик сообщений на вкладках', key: 'tabCounter', link: 'tg://moltengram/appearance?row=tabCounter' },
       { cat: 'appearance', section: 'Папки', title: 'Скрыть вкладку «Все чаты»', key: 'hideAllChats', link: 'tg://moltengram/appearance?row=hideAllChats' },
       { cat: 'appearance', section: 'Плеер', title: 'Настройки аудиоплеера (фон, обложка, тексты песен)', key: 'playerSettings', link: 'tg://moltengram/player_settings' },
+      { cat: 'appearance', section: 'Плеер', title: 'Стиль обложки трека (карточка, широкая, винил-диск)', key: 'playerCoverStyle', link: 'tg://moltengram/player_settings?row=coverStyle' },
+      { cat: 'appearance', section: 'Плеер', title: 'Вращение винилового диска во время воспроизведения', key: 'playerDiscSpin', link: 'tg://moltengram/player_settings?row=discSpin' },
+      { cat: 'appearance', section: 'Плеер', title: 'Размер элементов управления плеером (компактный, обычный, крупный)', key: 'playerControlsSize', link: 'tg://moltengram/player_settings?row=controlsSize' },
+      { cat: 'appearance', section: 'Плеер', title: 'Выравнивание названия трека и исполнителя', key: 'playerTitleAlign', link: 'tg://moltengram/player_settings?row=titleAlign' },
+      { cat: 'appearance', section: 'Плеер', title: 'Волнистый динамический прогресс-бар трека', key: 'playerWavySeekbar', link: 'tg://moltengram/player_settings?row=wavySeekbar' },
+      { cat: 'appearance', section: 'Плеер', title: 'Стиль панели действий: остров действий / кнопки', key: 'playerActionsStyle', link: 'tg://moltengram/player_settings?row=actionsStyle' },
+      { cat: 'appearance', section: 'Плеер', title: 'Компактный мини-плеер: форма, обложка и цвета', key: 'playerMiniAppearance', link: 'tg://moltengram/player_settings?row=miniCover' },
+      { cat: 'appearance', section: 'Плеер', title: 'Индикатор прогресса мини-плеера (кольцо, линия, рамка)', key: 'playerMiniProgress', link: 'tg://moltengram/player_settings?row=miniProgress' },
+      { cat: 'appearance', section: 'Плеер', title: 'Автопауза при отключении звука и возобновление при подключении Bluetooth', key: 'playerAudioBehaviors', link: 'tg://moltengram/player_settings?row=pauseOnMute' },
       { cat: 'appearance', section: 'Плеер', title: 'Синхронизированные тексты песен (Lyrics)', key: 'lyricsExperimental', link: 'tg://moltengram/player_settings?row=lyricsExperimental' },
       { cat: 'appearance', section: 'Плеер', title: 'Плавный переход между треками (Crossfade)', key: 'crossfade', link: 'tg://moltengram/player_settings?row=crossfade' },
       { cat: 'appearance', section: 'Плеер', title: 'Таймер сна в плеере', key: 'sleepTimer', link: 'tg://moltengram/player_settings?row=sleepTimer' },
@@ -1904,6 +1979,7 @@
       { cat: 'chats', section: 'Войсченджер', title: 'Пресеты: Перегрев ПК (Глитч), 8-Бит, Демон, Бурундук, Эхо, Рация', key: 'voiceChangerPresets', link: 'tg://moltengram/chats?row=voiceChanger' },
       { cat: 'chats', section: 'Войсченджер', title: 'Эффекты аудио: Pitch (Тональность), Freqcrush, Bitcrush, Эхо, Глитчи', key: 'voiceChangerEffects', link: 'tg://moltengram/chats?row=voiceChanger' },
       { cat: 'chats', section: 'Войсченджер', title: 'Проверка эффектов войсченджера с 3-секундной тестовой записью', key: 'voiceChangerTestAudio', link: 'tg://moltengram/chats?row=voiceChanger' },
+      { cat: 'chats', section: 'Войсченджер', title: 'Мгновенное прослушивание тестовой записи без ожидания 3 сек', key: 'voiceChangerQuickTest', link: 'tg://moltengram/chats?row=voiceChanger' },
 
       // === NOTHING GLYPH (glyph) ===
       { cat: 'glyph', section: 'Nothing Glyph', title: 'Интерфейс Nothing Glyph (Мастер-переключатель)', key: 'OEGlyphEnabled', link: 'tg://moltengram/glyph?row=OEGlyphEnabled' },
@@ -1940,6 +2016,8 @@
 
       // === НАВИГАЦИЯ И ПИЛЮЛИ (navigation / pillstack) ===
       { cat: 'navigation', section: 'Навигация', title: 'Навигация и редактор бокового меню', key: 'appNavigation', link: 'tg://moltengram/navigation' },
+      { cat: 'navigation', section: 'Навигация и FAB', title: 'Расположение плавающей кнопки (Слева, Центр, Справа)', key: 'fabAlignment', link: 'tg://moltengram/navigation' },
+      { cat: 'navigation', section: 'Навигация и FAB', title: 'Выравнивание кнопки камеры (Рядом с FAB / Скрыта)', key: 'cameraAlignment', link: 'tg://moltengram/navigation' },
       { cat: 'navigation', section: 'Навигация', title: 'Режим нижней панели (Показать / Скрыть / Плавающая)', key: 'BottomNavigationBarMode', link: 'tg://moltengram/navigation' },
       { cat: 'navigation', section: 'Навигация', title: 'Скрыть подписи вкладок нижней панели', key: 'MainTabsHideTitles', link: 'tg://moltengram/navigation?row=MainTabsHideTitles' },
       { cat: 'navigation', section: 'Навигация', title: 'Скрыть вкладку «Контакты»', key: 'MainTabsHideContacts', link: 'tg://moltengram/navigation?row=MainTabsHideContacts' },
@@ -2013,6 +2091,36 @@
         if (el) el.textContent = counts[cat];
       });
 
+      function renderItemHtml(item) {
+        return `
+          <div class="m3-setting-item">
+            <a href="${item.link}" class="min-w-0 flex-1 pr-2">
+              <div class="flex items-center gap-2 mb-0.5">
+                <span class="text-[11px] font-semibold text-[var(--primary)] truncate">${item.section}</span>
+                <span class="text-[10px] opacity-35">•</span>
+                <code class="text-[11px] font-mono text-[var(--text-muted)] truncate">${item.key}</code>
+              </div>
+              <div class="text-sm font-semibold text-[var(--text)] leading-snug">${item.title}</div>
+            </a>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button type="button"
+                      onclick="copyText('${item.link}', 'Диплинк скопирован: ${item.key}')"
+                      class="m3-setting-action"
+                      title="Скопировать диплинк (${item.link})"
+                      aria-label="Скопировать диплинк">
+                <span class="material-symbols-rounded text-[17px]">content_copy</span>
+              </button>
+              <a href="${item.link}"
+                 class="m3-setting-action open-btn"
+                 title="Открыть в MoltenGram (${item.link})"
+                 aria-label="Открыть в клиенте">
+                <span class="material-symbols-rounded text-[18px]">north_east</span>
+              </a>
+            </div>
+          </div>
+        `;
+      }
+
       function renderCatalog() {
         const q = searchQuery.trim().toLowerCase();
         const filtered = CLIENT_SETTINGS.filter(item => {
@@ -2039,44 +2147,28 @@
           return;
         }
 
-        const shouldLimit = !q && activeCategory === 'all' && !isExpanded && filtered.length > DEFAULT_COLLAPSED_LIMIT;
-        const visibleItems = shouldLimit ? filtered.slice(0, DEFAULT_COLLAPSED_LIMIT) : filtered;
+        const isCollapsible = !q && activeCategory === 'all' && filtered.length > DEFAULT_COLLAPSED_LIMIT;
 
-        listContainer.innerHTML = visibleItems.map(item => `
-          <div class="m3-setting-item">
-            <a href="${item.link}" class="min-w-0 flex-1 pr-2">
-              <div class="flex items-center gap-2 mb-0.5">
-                <span class="text-[11px] font-semibold text-[var(--primary)] truncate">${item.section}</span>
-                <span class="text-[10px] opacity-35">•</span>
-                <code class="text-[11px] font-mono text-[var(--text-muted)] truncate">${item.key}</code>
+        if (isCollapsible) {
+          const primaryItems = filtered.slice(0, DEFAULT_COLLAPSED_LIMIT);
+          const extraItems = filtered.slice(DEFAULT_COLLAPSED_LIMIT);
+
+          listContainer.innerHTML = `
+            ${primaryItems.map(renderItemHtml).join('')}
+            <div class="settings-accordion ${isExpanded ? 'is-expanded' : ''}" id="settingsAccordion">
+              <div class="settings-accordion-inner">
+                ${extraItems.map(renderItemHtml).join('')}
               </div>
-              <div class="text-sm font-semibold text-[var(--text)] leading-snug">${item.title}</div>
-            </a>
-            <div class="flex items-center gap-1.5 shrink-0">
-              <button type="button"
-                      onclick="copyText('${item.link}', 'Диплинк скопирован: ${item.key}')"
-                      class="m3-setting-action"
-                      title="Скопировать диплинк (${item.link})"
-                      aria-label="Скопировать диплинк">
-                <span class="material-symbols-rounded text-[17px]">content_copy</span>
-              </button>
-              <a href="${item.link}"
-                 class="m3-setting-action open-btn"
-                 title="Открыть в MoltenGram (${item.link})"
-                 aria-label="Открыть в клиенте">
-                <span class="material-symbols-rounded text-[18px]">north_east</span>
-              </a>
             </div>
-          </div>
-        `).join('');
+          `;
 
-        if (!q && activeCategory === 'all' && filtered.length > DEFAULT_COLLAPSED_LIMIT) {
           expandWrap.classList.remove('hidden');
+          expandBtn.classList.toggle('expand-active', isExpanded);
           expandText.textContent = isExpanded
             ? 'Свернуть список'
             : `Показать все настройки (${filtered.length})`;
-          expandIcon.textContent = isExpanded ? 'expand_less' : 'expand_more';
         } else {
+          listContainer.innerHTML = filtered.map(renderItemHtml).join('');
           expandWrap.classList.add('hidden');
         }
       }
@@ -2108,12 +2200,31 @@
         chipsWrap.querySelectorAll('.m3-chip').forEach(c => c.classList.remove('active'));
         chip.classList.add('active');
         activeCategory = chip.getAttribute('data-cat') || 'all';
+        isExpanded = false;
         renderCatalog();
       });
 
       expandBtn.addEventListener('click', () => {
         isExpanded = !isExpanded;
-        renderCatalog();
+        const accordion = document.getElementById('settingsAccordion');
+        if (accordion) {
+          accordion.classList.toggle('is-expanded', isExpanded);
+          expandBtn.classList.toggle('expand-active', isExpanded);
+          expandText.textContent = isExpanded
+            ? 'Свернуть список'
+            : `Показать все настройки (${CLIENT_SETTINGS.length})`;
+          if (!isExpanded) {
+            const catalog = document.getElementById('settings-catalog');
+            if (catalog) {
+              const rect = catalog.getBoundingClientRect();
+              if (rect.top < 0) {
+                catalog.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+            }
+          }
+        } else {
+          renderCatalog();
+        }
       });
 
       renderCatalog();
@@ -2364,13 +2475,15 @@
 
       const listEl = document.getElementById('archiveList');
       if (listEl) {
+        listEl.style.transition = 'opacity 0.16s ease, transform 0.16s ease';
         listEl.style.opacity = '0';
-        listEl.style.transform = 'translateY(8px)';
+        listEl.style.transform = 'translateY(6px)';
         setTimeout(() => {
           renderArchiveTab();
+          listEl.scrollTop = 0;
           listEl.style.opacity = '1';
           listEl.style.transform = 'translateY(0)';
-        }, 120);
+        }, 150);
       }
     }
 
