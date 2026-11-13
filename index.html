@@ -105,7 +105,7 @@
     }
 
     /* -------------------------------------------------------------
-       1. Authentic MoltenGram MD3 Tonal Palette
+       1. Authentic MoltenGram MD3 Tonal Palette & Brand Shape Tokens
        ------------------------------------------------------------- */
     :root, [data-theme="dark"] {
       --bg: #150D0C;
@@ -131,6 +131,16 @@
       --glass-bottom: rgba(30, 18, 17, 0.60);
       --glass-border: rgba(254, 138, 115, 0.12);
       --glass-shadow: 0 8px 32px 0 rgba(126, 29, 10, 0.25);
+
+      /* Brand Palette for Draggable MD3 Expressive Shapes */
+      --md3-shape-0: #FE8A73;
+      --md3-shape-1: #FFB6A6;
+      --md3-shape-2: #D9533B;
+      --md3-shape-3: #8E2411;
+      --md3-shape-4: #F2725A;
+      --md3-shape-stroke: transparent;
+      --md3-baseline: rgba(254, 138, 115, 0.26);
+      --carousel-card-border: transparent;
     }
 
     [data-theme="light"] {
@@ -157,6 +167,16 @@
       --glass-bottom: rgba(255, 232, 227, 0.70);
       --glass-border: rgba(200, 70, 48, 0.08);
       --glass-shadow: 0 8px 28px 0 rgba(126, 29, 10, 0.08);
+
+      /* Light Mode Brand Palette for Draggable MD3 Expressive Shapes */
+      --md3-shape-0: #C84630;
+      --md3-shape-1: #FF8A73;
+      --md3-shape-2: #E25B43;
+      --md3-shape-3: #FFB4A5;
+      --md3-shape-4: #992916;
+      --md3-shape-stroke: transparent;
+      --md3-baseline: rgba(200, 70, 48, 0.22);
+      --carousel-card-border: transparent;
     }
 
     /* -------------------------------------------------------------
@@ -188,6 +208,16 @@
       --glass-bottom: rgba(10, 10, 10, 0.88);
       --glass-border: rgba(255, 255, 255, 0.16);
       --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.75);
+
+      /* Nothing OS Monochrome Palette for Draggable MD3 Shapes */
+      --md3-shape-0: #FFFFFF;
+      --md3-shape-1: #CCCCCC;
+      --md3-shape-2: #767676;
+      --md3-shape-3: #1E1E1E;
+      --md3-shape-4: #444444;
+      --md3-shape-stroke: rgba(255, 255, 255, 0.36);
+      --md3-baseline: rgba(255, 255, 255, 0.42);
+      --carousel-card-border: rgba(255, 255, 255, 0.15);
     }
 
     html[data-nothing="true"] body,
@@ -206,7 +236,6 @@
       letter-spacing: 0.04em;
     }
 
-    /* В пасхалке та же самая оригинальная иконка становится чисто монохромной (без пикселей и без точек) */
     .monochrome-target-logo {
       transition: filter 0.35s ease, transform 0.3s ease;
     }
@@ -215,8 +244,7 @@
       filter: grayscale(100%) contrast(1.18) brightness(1.06);
     }
 
-    /* Fixed Screen-Wide Inverting Dot Matrix Overlay:
-       z-index: 40 keeps it ABOVE page content, but STRICTLY BELOW the Top App Bar (z-index: 50) and Modals (z-index: 200) */
+    /* Fixed Screen-Wide Inverting Dot Matrix Overlay */
     .nothing-dots-overlay {
       position: fixed;
       top: 70px;
@@ -227,7 +255,6 @@
       pointer-events: none;
       opacity: 0;
       transition: opacity 0.35s ease;
-      /* Fixed matrix of crisp dots every 76px that invert whatever passes underneath */
       background-image: radial-gradient(circle, rgba(255, 255, 255, 0.75) 1.35px, transparent 1.6px);
       background-size: 76px 76px;
       background-position: center top;
@@ -287,13 +314,11 @@
       top: 0;
       z-index: 50;
       width: 100%;
-      /* Height includes the 28px concave bottom skirt so it's 100% seamless */
       padding: 14px 20px calc(14px + var(--dock-wing-size)) 20px;
       margin-bottom: calc(-1 * var(--dock-wing-size));
       background: linear-gradient(to bottom, var(--glass-top) 0%, var(--glass-bottom) calc(100% - var(--dock-wing-size)), var(--glass-bottom) 100%);
       backdrop-filter: blur(20px) saturate(180%);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
-      /* Single unified mask: solid top bar + concave left/right bottom corners */
       -webkit-mask-image:
         linear-gradient(#000, #000),
         radial-gradient(circle at 100% 100%, transparent calc(var(--dock-wing-size) - 0.5px), #000 calc(var(--dock-wing-size) + 0.5px)),
@@ -328,7 +353,6 @@
       pointer-events: auto;
     }
 
-    /* Subtle real frosted glass micro-grain overlay (SVG fractalNoise) */
     .m3-top-dock::before {
       content: "";
       position: absolute;
@@ -338,7 +362,6 @@
       z-index: 0;
     }
 
-    /* Continuous 1px inner-arch border that follows the concave curve without seams */
     .m3-dock-arch-border {
       position: absolute;
       left: 0;
@@ -401,7 +424,6 @@
       to { transform: rotate(360deg); }
     }
 
-    /* Circular Icon Button with Smooth Circle -> Squircle Morph */
     .m3-icon-btn {
       width: 42px;
       height: 42px;
@@ -428,7 +450,7 @@
     }
 
     /* -------------------------------------------------------------
-       5. Pure M3 Expressive Buttons (Flat Tonal Surfaces + Smooth Radius Morph)
+       5. Pure M3 Expressive Buttons
        ------------------------------------------------------------- */
     .m3-btn {
       position: relative;
@@ -487,7 +509,6 @@
       border-radius: 16px !important;
     }
 
-    /* Pure Flat State Layer Ripple */
     .ripple-effect {
       position: absolute;
       border-radius: 50%;
@@ -500,6 +521,196 @@
 
     @keyframes m3Ripple {
       to { transform: scale(3.8); opacity: 0; }
+    }
+
+    /* -------------------------------------------------------------
+       5b. Empty Material 3 Multi-browse Carousel (Variable Keyline Sizing)
+       ------------------------------------------------------------- */
+    .m3-carousel-viewport {
+      position: relative;
+      width: 100%;
+      height: 196px;
+      touch-action: pan-y;
+      cursor: grab;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    @media (min-width: 640px) {
+      .m3-carousel-viewport {
+        height: 224px;
+      }
+    }
+
+    .m3-carousel-viewport:active {
+      cursor: grabbing;
+    }
+
+    .m3-carousel-track {
+      display: flex;
+      align-items: stretch;
+      height: 100%;
+      width: 100%;
+      will-change: transform;
+    }
+
+    .m3-carousel-card {
+      position: relative;
+      height: 100%;
+      border-radius: 28px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background-color: var(--surface-container);
+      border: 1px solid var(--carousel-card-border);
+      transform: translateZ(0);
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .m3-carousel-card:hover {
+      background-color: var(--surface-container-high);
+    }
+
+    /* Subtle tonal depth differentiation between adjacent empty slots */
+    .m3-carousel-card[data-tone="1"] {
+      background-color: var(--surface-container-high);
+    }
+
+    .m3-carousel-card[data-tone="2"] {
+      background-color: var(--surface-container-low);
+    }
+
+    /* Subtle dot-matrix texture inside carousel cards when Nothing OS mode is active */
+    html[data-nothing="true"] .m3-carousel-card {
+      background-image: radial-gradient(rgba(255, 255, 255, 0.11) 1px, transparent 1px);
+      background-size: 12px 12px;
+    }
+
+    /* Tactile touch ripple indicator */
+    .m3-carousel-touch-dot {
+      position: absolute;
+      width: 44px;
+      height: 44px;
+      border-radius: 9999px;
+      background: radial-gradient(circle, var(--primary) 0%, transparent 72%);
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, -50%) scale(0.6);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      z-index: 15;
+    }
+
+    .m3-carousel-touch-dot.active {
+      opacity: 0.26;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .m3-carousel-dot {
+      height: 6px;
+      width: 6px;
+      border-radius: 9999px;
+      background-color: var(--surface-container-highest);
+      cursor: pointer;
+      transition: width 0.3s var(--spring-smooth), background-color 0.25s ease;
+    }
+
+    .m3-carousel-dot.active {
+      width: 20px;
+      background-color: var(--primary);
+    }
+
+    /* -------------------------------------------------------------
+       5c. Physically Draggable MD3 Expressive Shapes Arena (Bottom)
+       ------------------------------------------------------------- */
+    .md3-shapes-section {
+      width: 100%;
+      position: relative;
+      user-select: none;
+    }
+
+    .md3-shapes-arena {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      overflow: hidden;
+      border-bottom: 1.5px solid var(--md3-baseline);
+      touch-action: none;
+      transition: border-color 0.3s ease;
+    }
+
+    @media (min-width: 640px) {
+      .md3-shapes-arena {
+        height: 268px;
+      }
+    }
+
+    .md3-phys-shape {
+      position: absolute;
+      top: 0;
+      left: 0;
+      cursor: grab;
+      touch-action: none;
+      will-change: transform;
+      transform-origin: center center;
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.12));
+      transition: filter 0.2s ease;
+    }
+
+    .md3-phys-shape:hover {
+      filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.18));
+    }
+
+    .md3-phys-shape.is-dragging {
+      cursor: grabbing;
+      filter: drop-shadow(0 14px 26px rgba(0, 0, 0, 0.26));
+    }
+
+    .md3-phys-shape svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      overflow: visible;
+    }
+
+    .md3-phys-shape path,
+    .md3-phys-shape circle,
+    .md3-phys-shape rect {
+      transition: fill 0.3s ease, stroke 0.3s ease;
+      stroke: var(--md3-shape-stroke);
+      stroke-width: 2.5px;
+      vector-effect: non-scaling-stroke;
+    }
+
+    html[data-nothing="true"] .md3-phys-shape {
+      filter: none;
+    }
+
+    .md3-shapes-reset-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background-color: var(--surface-container);
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0.55;
+      z-index: 12;
+      transition: opacity 0.2s ease, transform 0.35s var(--spring-expressive), background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .md3-shapes-reset-btn:hover {
+      opacity: 1;
+      background-color: var(--surface-container-high);
+      color: var(--text);
+      transform: rotate(-45deg) scale(1.06);
+    }
+
+    .md3-shapes-reset-btn:active {
+      transform: rotate(-180deg) scale(0.92);
     }
 
     /* -------------------------------------------------------------
@@ -589,7 +800,6 @@
       font-weight: 700;
     }
 
-    /* Grouped M3 Settings List */
     .m3-settings-list {
       display: flex;
       flex-direction: column;
@@ -658,7 +868,6 @@
       color: var(--on-primary);
     }
 
-    /* Smooth Animated M3 Accordion for Expanded Settings */
     .settings-accordion {
       display: grid;
       grid-template-rows: 0fr;
@@ -703,7 +912,7 @@
     }
 
     /* -------------------------------------------------------------
-       7. Authentic M3 Bottom Sheet / Dialog for F-Droid + Overscroll Skirt & Secret Nothing MD3 Switch
+       7. Authentic M3 Bottom Sheet / Dialog for F-Droid + Secret Nothing Switch
        ------------------------------------------------------------- */
     .modal-backdrop {
       position: fixed;
@@ -743,7 +952,6 @@
       will-change: transform;
     }
 
-    /* Seamless bottom skirt so dragging upward NEVER reveals a gap at the bottom of the screen */
     .modal-sheet::after {
       content: "";
       position: absolute;
@@ -807,7 +1015,6 @@
       background-color: var(--text);
     }
 
-    /* Secret Nothing Easter Egg Compartment inside the Bottom Sheet */
     .nothing-secret-compartment {
       overflow: hidden;
       max-height: 0;
@@ -822,7 +1029,6 @@
       margin-top: 14px;
     }
 
-    /* Authentic Material Design 3 Switch Row */
     .m3-switch-card {
       width: 100%;
       background-color: var(--surface-container-lowest);
@@ -883,7 +1089,6 @@
       transition: opacity 0.2s ease, transform 0.28s var(--spring-expressive), color 0.2s ease;
     }
 
-    /* Checked State (Authentic MD3 Switch Spec: 24dp thumb with check icon inside) */
     .m3-switch-card[aria-checked="true"] .m3-switch-track {
       background-color: var(--primary);
       border-color: var(--primary);
@@ -902,7 +1107,6 @@
       color: var(--primary);
     }
 
-    /* Pressed Thumb Expansion (MD3 28dp pressed state) */
     .m3-switch-card:active .m3-switch-thumb {
       width: 26px;
       height: 26px;
@@ -932,7 +1136,6 @@
       transform: scale(0.98);
     }
 
-    /* Spring Stagger Reveal */
     .reveal {
       opacity: 0;
       transform: translateY(20px) scale(0.97);
@@ -946,7 +1149,6 @@
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    /* Toast */
     .m3-toast {
       position: fixed;
       bottom: 24px;
@@ -973,7 +1175,6 @@
 
     /* -------------------------------------------------------------
        4c. Pure Material Design 3 Tonal Surfaces (Version Archive)
-       Strictly adhering to MD3: 0 borders, 0 neon glows, pure tonal containers
        ------------------------------------------------------------- */
     #archiveSheet {
       max-width: 520px;
@@ -993,7 +1194,6 @@
       }
     }
 
-    /* Segmented Tab Bar with Sliding Pill Indicator */
     .archive-tabs-container {
       position: relative;
       background-color: var(--surface-container-lowest);
@@ -1064,7 +1264,6 @@
       opacity: 0.25;
     }
 
-    /* Search & Filter Bar: Solid Tonal Container, Zero Borders */
     .archive-search-box {
       display: flex;
       align-items: center;
@@ -1080,7 +1279,6 @@
       background-color: var(--surface-container-low);
     }
 
-    /* Staggered Card Entrance Animation */
     @keyframes archiveCardIn {
       0% {
         opacity: 0;
@@ -1092,7 +1290,6 @@
       }
     }
 
-    /* Pure MD3 Tonal Surface Card: ZERO borders, ZERO neon glows */
     .archive-card {
       position: relative;
       background-color: var(--surface-container-lowest);
@@ -1122,7 +1319,6 @@
       border: none;
     }
 
-    /* Solid Tonal Commit Chip */
     .archive-commit-chip {
       display: inline-flex;
       align-items: center;
@@ -1149,7 +1345,6 @@
       transform: scale(0.95);
     }
 
-    /* MD3 Action Buttons: Solid Tonal, Zero Neon Glows */
     .archive-action-btn {
       width: 36px;
       height: 36px;
@@ -1193,7 +1388,6 @@
       transform: scale(0.94);
     }
 
-    /* Skeleton shimmer */
     @keyframes skeletonShimmer {
       0% { opacity: 0.35; }
       50% { opacity: 0.7; }
@@ -1206,13 +1400,12 @@
 </head>
 <body class="selection:bg-[var(--primary-container)] selection:text-[var(--on-primary-container)]">
 
-  <!-- Fixed Screen-Wide Inverting Dot Matrix Overlay for NOTHING (R) Easter Egg (Strictly below header & modal) -->
+  <!-- Fixed Screen-Wide Inverting Dot Matrix Overlay for NOTHING (R) Easter Egg -->
   <div class="nothing-dots-overlay" aria-hidden="true"></div>
 
   <!-- Real Frosted Glass Top App Bar with Seamless Concave Edge Wrapping -->
   <header class="m3-top-dock">
     <div class="m3-top-dock-inner max-w-3xl mx-auto flex items-center justify-between">
-      <!-- Brand (Original Icon — becomes clean non-pixelated monochrome in Nothing Mode) -->
       <a href="#" class="relative z-10 flex items-center gap-3 pl-1 group">
         <img src="assets/icons/ic_launcher_moltengram.png" 
              alt="MoltenGram Logo" 
@@ -1220,7 +1413,6 @@
         <span class="font-bold text-lg tracking-tight">MoltenGram</span>
       </a>
 
-      <!-- Minimal Actions -->
       <div class="relative z-10 flex items-center gap-2">
         <a href="#settings-catalog" class="m3-icon-btn" title="Поиск по настройкам клиента" aria-label="Поиск по настройкам">
           <span class="material-symbols-rounded text-[20px]">search</span>
@@ -1236,15 +1428,14 @@
       </div>
     </div>
 
-    <!-- Single Continuous Arch Border (No horizontal seam across corners) -->
     <div class="m3-dock-arch-border" aria-hidden="true"></div>
   </header>
 
   <!-- Main Minimalist Centerpiece -->
-  <main class="flex-1 flex flex-col items-center justify-center max-w-2xl w-full mx-auto px-5 py-10 gap-14">
+  <main class="flex-1 flex flex-col items-center justify-center max-w-2xl w-full mx-auto px-5 pt-10 pb-4 gap-12">
 
     <section class="text-center w-full">
-      <!-- Expressive Material 3 12-Sided Scallop Cookie + Original Logo Asset (Monochrome in Easter Egg) -->
+      <!-- Expressive Material 3 12-Sided Scallop Cookie + Original Logo Asset -->
       <div class="reveal mb-7">
         <div class="hero-shape-stage">
           <svg id="m3CookieSvg" class="m3-cookie-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
@@ -1303,6 +1494,16 @@
           <span class="sm:hidden">Канал в Telegram</span>
         </a>
       </div>
+    </section>
+
+    <!-- Empty Material 3 Multi-browse Carousel (Variable Keylines + Spring Physics) -->
+    <section id="m3-empty-carousel-section" class="reveal delay-2 w-full" aria-label="Material 3 Multi-browse Carousel">
+      <div id="m3CarouselViewport" class="m3-carousel-viewport">
+        <div id="m3CarouselTrack" class="m3-carousel-track"></div>
+        <div id="m3CarouselTouchDot" class="m3-carousel-touch-dot"></div>
+      </div>
+      <!-- Minimal MD3 Pagination Dots -->
+      <div id="m3CarouselDots" class="flex items-center justify-center gap-1.5 mt-3"></div>
     </section>
 
     <!-- Minimalist Material Design 3 Real Client Settings Search with Deep Links -->
@@ -1384,6 +1585,19 @@
       </div>
     </section>
 
+    <!-- Bottom Interactive Physics Stage with Brand-Colored MD3 Expressive Shapes -->
+    <section class="md3-shapes-section reveal delay-3" aria-label="Интерактивные фигуры Material Design 3">
+      <div id="md3ShapesArena" class="md3-shapes-arena">
+        <button type="button"
+                id="md3ShapesResetBtn"
+                class="md3-shapes-reset-btn"
+                title="Сложить фигуры заново"
+                aria-label="Сложить фигуры заново">
+          <span class="material-symbols-rounded text-[18px]">refresh</span>
+        </button>
+      </div>
+    </section>
+
   </main>
 
   <!-- Minimal Tonal Footer -->
@@ -1407,12 +1621,10 @@
   <!-- Authentic Android Material 3 Bottom Sheet / Dialog for F-Droid -->
   <div class="modal-backdrop" id="fdroidModal" onclick="if(event.target === this) closeFdroidModal()">
     <div class="modal-sheet" id="fdroidSheet">
-      <!-- Interactive M3 Drag Handle (Swipe down to dismiss, pull UP to reveal secret Nothing Easter Egg) -->
       <div class="m3-drag-zone" id="fdroidDragZone" title="Потяните вниз чтобы свернуть, или вверх — для секрета">
         <div class="m3-drag-handle"></div>
       </div>
 
-      <!-- Header -->
       <div class="flex items-start justify-between gap-4 mb-5">
         <div class="flex items-center gap-3.5">
           <div class="w-12 h-12 rounded-[32%] bg-[var(--primary-container)] text-[var(--on-primary-container)] flex items-center justify-center shrink-0">
@@ -1428,9 +1640,7 @@
         </button>
       </div>
 
-      <!-- Interactive Tonal Copy Cards -->
       <div class="space-y-2.5 mb-6">
-        <!-- Repo URL Card -->
         <div onclick="copyText('https://moltenst4r.github.io/MoltenGram/fdroid/repo', 'Ссылка на репозиторий скопирована')" class="m3-copy-card">
           <div class="min-w-0">
             <div class="text-[11px] font-semibold text-[var(--text-muted)] mb-0.5">Адрес репозитория (URL)</div>
@@ -1441,7 +1651,6 @@
           </div>
         </div>
 
-        <!-- Fingerprint Card -->
         <div onclick="copyFingerprint()" class="m3-copy-card">
           <div class="min-w-0">
             <div class="text-[11px] font-semibold text-[var(--text-muted)] mb-0.5">Отпечаток ключа (SHA-256)</div>
@@ -1453,7 +1662,6 @@
         </div>
       </div>
 
-      <!-- Full-Height Expressive Action Buttons -->
       <div class="flex flex-col gap-2.5">
         <a href="fdroidrepos://moltenst4r.github.io/MoltenGram/fdroid/repo?fingerprint=4B4EFFEE9D4CCBCB75DC3BF2E2A21655F2F35747B2D95FCF836E186FCE9D5030" 
            class="m3-btn m3-btn-filled w-full !h-14 ripple-btn">
@@ -1497,12 +1705,10 @@
   <!-- Material 3 Archive Bottom Sheet / Modal (Релизы, Бета, Canary) -->
   <div class="modal-backdrop" id="archiveModal" onclick="if(event.target === this) closeArchiveModal()">
     <div class="modal-sheet" id="archiveSheet">
-      <!-- M3 Drag Handle -->
       <div class="m3-drag-zone" id="archiveDragZone" title="Потяните вниз чтобы свернуть">
         <div class="m3-drag-handle"></div>
       </div>
 
-      <!-- Header -->
       <div class="flex items-start justify-between gap-4 mb-3.5 shrink-0">
         <div class="flex items-center gap-3">
           <div class="w-11 h-11 rounded-[30%] bg-[var(--primary-container)] text-[var(--on-primary-container)] flex items-center justify-center shrink-0 shadow-sm">
@@ -1518,7 +1724,6 @@
         </button>
       </div>
 
-      <!-- M3 Segmented Tabs (Release, Beta, Canary) with Sliding Pill Indicator -->
       <div class="archive-tabs-container mb-3 shrink-0" id="archiveTabs">
         <div class="archive-tab-indicator" id="archiveTabIndicator"></div>
         <button onclick="switchArchiveTab('release')" id="tabRelease" class="archive-tab-btn active">
@@ -1538,7 +1743,6 @@
         </button>
       </div>
 
-      <!-- Live Search / Filter Input (for fast navigation in large lists) -->
       <div class="archive-search-box mb-3 shrink-0" id="archiveSearchWrapper">
         <span class="material-symbols-rounded text-[18px] text-[var(--text-muted)]">search</span>
         <input type="text" id="archiveSearchInput" placeholder="Поиск по номеру, коммиту или дате..." 
@@ -1548,7 +1752,6 @@
         </button>
       </div>
 
-      <!-- Scrollable List of Builds with Custom Smooth Scrollbar -->
       <div class="overflow-y-auto space-y-2.5 pr-1 flex-1 min-h-0" id="archiveList" style="scrollbar-width: thin; transition: opacity 0.18s ease, transform 0.18s ease;">
         <div class="space-y-2.5 py-2">
           <div class="h-20 rounded-2xl bg-[var(--surface-container)] skeleton-card"></div>
@@ -1557,7 +1760,6 @@
         </div>
       </div>
 
-      <!-- Direct Permanent Download Links Bar -->
       <div class="pt-2 pb-1 flex items-center justify-between gap-2 text-[11px] text-[var(--text-sub)] shrink-0 flex-wrap">
         <span class="flex items-center gap-1 font-semibold text-[var(--text)]">
           <span class="material-symbols-rounded text-[14px] text-[var(--primary)]">link</span>
@@ -1576,7 +1778,6 @@
         </div>
       </div>
 
-      <!-- Footer Info Link -->
       <div class="pt-2.5 mt-1 border-t border-[var(--outline-variant)] flex items-center justify-between text-xs text-[var(--text-muted)] shrink-0">
         <span class="flex items-center gap-1.5">
           <span class="material-symbols-rounded text-[14px] text-[var(--primary)]">verified_user</span>
@@ -1631,11 +1832,15 @@
     function applyTheme(theme) {
       htmlEl.setAttribute('data-theme', theme);
       localStorage.setItem('mg_theme', theme);
-      themeIcon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
-      if (htmlEl.getAttribute('data-nothing') === 'true') {
-        metaThemeColor.setAttribute('content', '#000000');
-      } else {
-        metaThemeColor.setAttribute('content', theme === 'dark' ? '#111411' : '#f7faf4');
+      if (themeIcon) {
+        themeIcon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
+      }
+      if (metaThemeColor) {
+        if (htmlEl.getAttribute('data-nothing') === 'true') {
+          metaThemeColor.setAttribute('content', '#000000');
+        } else {
+          metaThemeColor.setAttribute('content', theme === 'dark' ? '#150D0C' : '#FFF7F5');
+        }
       }
     }
 
@@ -1644,14 +1849,16 @@
       if (enabled) {
         htmlEl.setAttribute('data-nothing', 'true');
         localStorage.setItem('mg_nothing', 'true');
-        metaThemeColor.setAttribute('content', '#000000');
+        if (metaThemeColor) metaThemeColor.setAttribute('content', '#000000');
         if (switchCard) switchCard.setAttribute('aria-checked', 'true');
         if (announce) showToast('Режим Nothing OS включён');
       } else {
         htmlEl.removeAttribute('data-nothing');
         localStorage.setItem('mg_nothing', 'false');
         const currentTheme = htmlEl.getAttribute('data-theme') || 'dark';
-        metaThemeColor.setAttribute('content', currentTheme === 'dark' ? '#111411' : '#f7faf4');
+        if (metaThemeColor) {
+          metaThemeColor.setAttribute('content', currentTheme === 'dark' ? '#150D0C' : '#FFF7F5');
+        }
         if (switchCard) switchCard.setAttribute('aria-checked', 'false');
         if (announce) showToast('Стандартная тема Material 3 возвращена');
       }
@@ -1662,15 +1869,1208 @@
       setNothingMode(!isNothing, true);
     }
 
-    themeToggleBtn.addEventListener('click', () => {
-      if (htmlEl.getAttribute('data-nothing') === 'true') {
-        // Clicking the theme button while in Nothing mode exits Nothing mode cleanly
-        setNothingMode(false, true);
-        return;
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', () => {
+        if (htmlEl.getAttribute('data-nothing') === 'true') {
+          setNothingMode(false, true);
+          return;
+        }
+        const current = htmlEl.getAttribute('data-theme');
+        applyTheme(current === 'dark' ? 'light' : 'dark');
+      });
+    }
+
+    // -------------------------------------------------------------
+    // 1b. Empty Material 3 Multi-browse Carousel (Variable Keylines + Spring Physics)
+    // -------------------------------------------------------------
+    (function initEmptyM3Carousel() {
+      const viewport = document.getElementById('m3CarouselViewport');
+      const track = document.getElementById('m3CarouselTrack');
+      const touchDot = document.getElementById('m3CarouselTouchDot');
+      const dotsWrap = document.getElementById('m3CarouselDots');
+      if (!viewport || !track || !dotsWrap) return;
+
+      const ITEM_COUNT = 6;
+      const state = {
+        progress: 0,
+        targetProgress: 0,
+        velocity: 0,
+        isDragging: false,
+        dragMoved: false,
+        startX: 0,
+        lastX: 0,
+        lastTime: 0,
+        containerWidth: 632,
+        gap: 10
+      };
+
+      function getRawKeylineWidth(d) {
+        if (d <= -1.6 || d >= 2.6) return 0;
+        if (d < -1.0) {
+          return 22 * ((d + 1.6) / 0.6);
+        }
+        if (d < 0.0) {
+          return 22 + (192 - 22) * (d + 1.0);
+        }
+        if (d < 1.0) {
+          return 192 + (118 - 192) * d;
+        }
+        if (d < 2.0) {
+          return 118 + (46 - 118) * (d - 1.0);
+        }
+        return 46 * (1 - (d - 2.0) / 0.6);
       }
-      const current = htmlEl.getAttribute('data-theme');
-      applyTheme(current === 'dark' ? 'light' : 'dark');
-    });
+
+      function snapTo(index) {
+        const maxProgress = ITEM_COUNT - 1;
+        state.velocity = 0;
+        state.targetProgress = Math.max(0, Math.min(maxProgress, index));
+      }
+
+      track.innerHTML = '';
+      dotsWrap.innerHTML = '';
+
+      for (let i = 0; i < ITEM_COUNT; i++) {
+        const card = document.createElement('div');
+        card.className = 'm3-carousel-card';
+        card.dataset.index = String(i);
+        card.dataset.tone = String(i % 3);
+        card.setAttribute('aria-label', `Слайд карусели ${i + 1}`);
+
+        card.addEventListener('click', () => {
+          if (state.dragMoved) return;
+          const activeIdx = Math.round(state.progress);
+          if (i !== activeIdx) {
+            snapTo(i);
+          }
+        });
+
+        track.appendChild(card);
+
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'm3-carousel-dot';
+        dot.setAttribute('aria-label', `Перейти к слайду ${i + 1}`);
+        dot.addEventListener('click', () => snapTo(i));
+        dotsWrap.appendChild(dot);
+      }
+
+      function measureContainer() {
+        const rect = viewport.getBoundingClientRect();
+        if (rect.width > 0) {
+          state.containerWidth = rect.width;
+        }
+      }
+
+      function renderCarousel() {
+        const cards = track.children;
+        const rawWeights = new Array(ITEM_COUNT).fill(0);
+        const endStart = ITEM_COUNT - 2;
+        const endShift = state.progress > endStart ? (state.progress - endStart) * 0.55 : 0;
+
+        let totalRaw = 0;
+        let visibleCount = 0;
+
+        for (let i = 0; i < ITEM_COUNT; i++) {
+          const d = i - state.progress + endShift;
+          let w = getRawKeylineWidth(d);
+
+          if (state.progress > endStart && i === ITEM_COUNT - 3) {
+            const extraPeek = ((state.progress - endStart) / 1.0) * 22;
+            w = Math.max(w, Math.min(24, extraPeek));
+          }
+
+          rawWeights[i] = w;
+          totalRaw += w;
+          if (w > 0.5) visibleCount++;
+        }
+
+        const totalGap = Math.max(0, visibleCount - 1) * state.gap;
+        const availableW = Math.max(120, state.containerWidth - totalGap);
+        const scale = totalRaw > 0 ? availableW / totalRaw : 1;
+
+        let seen = 0;
+        for (let i = 0; i < ITEM_COUNT; i++) {
+          const card = cards[i];
+          const width = rawWeights[i] * scale;
+
+          if (width <= 0.4) {
+            card.style.display = 'none';
+            card.style.width = '0px';
+            card.style.marginRight = '0px';
+            continue;
+          }
+
+          seen++;
+          card.style.display = 'block';
+          card.style.width = `${width.toFixed(2)}px`;
+          card.style.marginRight = seen < visibleCount ? `${state.gap}px` : '0px';
+        }
+
+        const activeIdx = Math.max(0, Math.min(ITEM_COUNT - 1, Math.round(state.progress)));
+        const dots = dotsWrap.children;
+        for (let i = 0; i < dots.length; i++) {
+          dots[i].classList.toggle('active', i === activeIdx);
+        }
+      }
+
+      function updateTouchDot(clientX, clientY, visible) {
+        if (!touchDot) return;
+        if (!visible) {
+          touchDot.classList.remove('active');
+          return;
+        }
+        const rect = viewport.getBoundingClientRect();
+        touchDot.style.left = `${clientX - rect.left}px`;
+        touchDot.style.top = `${clientY - rect.top}px`;
+        touchDot.classList.add('active');
+      }
+
+      viewport.addEventListener('pointerdown', e => {
+        if (e.button !== 0 && e.pointerType === 'mouse') return;
+        state.isDragging = true;
+        state.dragMoved = false;
+        state.velocity = 0;
+        state.startX = e.clientX;
+        state.lastX = e.clientX;
+        state.lastTime = performance.now();
+        viewport.setPointerCapture(e.pointerId);
+        updateTouchDot(e.clientX, e.clientY, true);
+      });
+
+      viewport.addEventListener('pointermove', e => {
+        if (!state.isDragging) return;
+        updateTouchDot(e.clientX, e.clientY, true);
+
+        const now = performance.now();
+        const dx = e.clientX - state.lastX;
+        const dt = Math.max(8, now - state.lastTime);
+
+        if (Math.abs(e.clientX - state.startX) > 6) {
+          state.dragMoved = true;
+        }
+
+        const stepScale = 1 / Math.max(150, state.containerWidth * 0.34);
+        const maxProgress = ITEM_COUNT - 1;
+        let nextProgress = state.progress - dx * stepScale;
+
+        if (nextProgress < 0) {
+          nextProgress *= 0.35;
+        } else if (nextProgress > maxProgress) {
+          nextProgress = maxProgress + (nextProgress - maxProgress) * 0.35;
+        }
+
+        state.progress = nextProgress;
+        state.velocity = (-dx * stepScale) / (dt / 16.67);
+        state.lastX = e.clientX;
+        state.lastTime = now;
+      });
+
+      function endCarouselDrag() {
+        if (!state.isDragging) return;
+        state.isDragging = false;
+        updateTouchDot(0, 0, false);
+
+        const maxProgress = ITEM_COUNT - 1;
+        const projected = state.progress + state.velocity * 4.2;
+        state.targetProgress = Math.max(0, Math.min(maxProgress, Math.round(projected)));
+        state.velocity *= 0.42;
+      }
+
+      viewport.addEventListener('pointerup', endCarouselDrag);
+      viewport.addEventListener('pointercancel', endCarouselDrag);
+
+      let wheelTimer = null;
+      viewport.addEventListener('wheel', e => {
+        const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+        if (Math.abs(delta) < 2) return;
+        e.preventDefault();
+
+        const maxProgress = ITEM_COUNT - 1;
+        state.progress = Math.max(0, Math.min(maxProgress, state.progress + delta * 0.004));
+        state.targetProgress = Math.round(state.progress);
+
+        clearTimeout(wheelTimer);
+        wheelTimer = setTimeout(() => {
+          state.targetProgress = Math.max(0, Math.min(maxProgress, Math.round(state.progress)));
+        }, 90);
+      }, { passive: false });
+
+      function carouselTick() {
+        const maxProgress = ITEM_COUNT - 1;
+        if (!state.isDragging) {
+          if (Math.abs(state.velocity) > 0.0008) {
+            state.progress += state.velocity;
+            state.velocity *= 0.88;
+
+            if (state.progress < 0) {
+              state.progress *= 0.75;
+              state.velocity *= 0.5;
+            } else if (state.progress > maxProgress) {
+              state.progress = maxProgress + (state.progress - maxProgress) * 0.75;
+              state.velocity *= 0.5;
+            }
+            state.targetProgress = Math.max(0, Math.min(maxProgress, Math.round(state.progress)));
+          } else {
+            state.velocity = 0;
+            const diff = state.targetProgress - state.progress;
+            if (Math.abs(diff) > 0.0005) {
+              state.progress += diff * 0.16;
+            } else {
+              state.progress = state.targetProgress;
+            }
+          }
+        }
+        renderCarousel();
+        requestAnimationFrame(carouselTick);
+      }
+
+      window.addEventListener('resize', () => {
+        measureContainer();
+        renderCarousel();
+      });
+
+      measureContainer();
+      renderCarousel();
+      requestAnimationFrame(carouselTick);
+    })();
+
+    // -------------------------------------------------------------
+    // 1c. Physically Draggable MD3 Expressive Shapes Arena (True 2D Rigid-Body Physics)
+    // -------------------------------------------------------------
+    (function initDraggableMd3Shapes() {
+      const arena = document.getElementById('md3ShapesArena');
+      const resetBtn = document.getElementById('md3ShapesResetBtn');
+      if (!arena) return;
+
+      // Helper: generate smooth 4-lobe MD3 clover SVG path
+      function createCloverPath() {
+        const cx = 100, cy = 100, baseR = 75, amp = 21, lobes = 4, steps = 160, phase = Math.PI / 4;
+        let d = '';
+        for (let i = 0; i <= steps; i++) {
+          const theta = (i / steps) * Math.PI * 2;
+          const r = baseR + amp * Math.cos(lobes * (theta - phase));
+          const x = (cx + r * Math.cos(theta)).toFixed(2);
+          const y = (cy + r * Math.sin(theta)).toFixed(2);
+          d += (i === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`);
+        }
+        return d + ' Z';
+      }
+
+      // Helper: generate rounded flat-top MD3 hexagon SVG path
+      function createRoundedHexPath() {
+        const cx = 100, cy = 100, radius = 94, corner = 22;
+        const pts = [];
+        for (let i = 0; i < 6; i++) {
+          const ang = (i * 60) * Math.PI / 180;
+          pts.push({
+            x: cx + radius * Math.cos(ang),
+            y: cy + radius * Math.sin(ang)
+          });
+        }
+        let d = '';
+        for (let i = 0; i < 6; i++) {
+          const prev = pts[(i + 5) % 6];
+          const curr = pts[i];
+          const next = pts[(i + 1) % 6];
+
+          const v1x = prev.x - curr.x, v1y = prev.y - curr.y;
+          const v2x = next.x - curr.x, v2y = next.y - curr.y;
+          const len1 = Math.hypot(v1x, v1y);
+          const len2 = Math.hypot(v2x, v2y);
+
+          const p1x = (curr.x + (v1x / len1) * corner).toFixed(2);
+          const p1y = (curr.y + (v1y / len1) * corner).toFixed(2);
+          const p2x = (curr.x + (v2x / len2) * corner).toFixed(2);
+          const p2y = (curr.y + (v2y / len2) * corner).toFixed(2);
+
+          d += (i === 0 ? `M ${p1x} ${p1y}` : ` L ${p1x} ${p1y}`);
+          d += ` Q ${curr.x.toFixed(2)} ${curr.y.toFixed(2)} ${p2x} ${p2y}`;
+        }
+        return d + ' Z';
+      }
+
+      const cloverPath = createCloverPath();
+      const hexPath = createRoundedHexPath();
+
+      // Exact geometric definitions normalized to radius R (SVG viewBox 0..200 -> R = 100)
+      function buildLocalHexVerts(R) {
+        const coreR = R * 0.76;
+        const verts = [];
+        for (let i = 0; i < 6; i++) {
+          const ang = (i * 60) * Math.PI / 180;
+          verts.push({ x: coreR * Math.cos(ang), y: coreR * Math.sin(ang) });
+        }
+        return verts;
+      }
+
+      function buildLocalSquircleVerts(R) {
+        const h = R * 0.70;
+        return [
+          { x: -h, y: -h },
+          { x:  h, y: -h },
+          { x:  h, y:  h },
+          { x: -h, y:  h }
+        ];
+      }
+
+      function buildLocalCloverCircles(R) {
+        const lobeOffset = R * 0.44;
+        const lobeR = R * 0.52;
+        const circles = [{ ox: 0, oy: 0, r: R * 0.68 }];
+        for (let i = 0; i < 4; i++) {
+          const ang = (Math.PI / 4) + i * (Math.PI / 2);
+          circles.push({
+            ox: lobeOffset * Math.cos(ang),
+            oy: lobeOffset * Math.sin(ang),
+            r: lobeR
+          });
+        }
+        return circles;
+      }
+
+      const SHAPE_DEFS = [
+        {
+          id: 'circle',
+          type: 'multicircle',
+          mass: 1.0,
+          svg: `<svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="94" fill="var(--md3-shape-0)"/></svg>`
+        },
+        {
+          id: 'clover',
+          type: 'multicircle',
+          mass: 1.05,
+          svg: `<svg viewBox="0 0 200 200"><path d="${cloverPath}" fill="var(--md3-shape-1)"/></svg>`
+        },
+        {
+          id: 'hex-left',
+          type: 'polygon',
+          mass: 1.15,
+          svg: `<svg viewBox="0 0 200 200"><path d="${hexPath}" fill="var(--md3-shape-2)"/></svg>`
+        },
+        {
+          id: 'hex-center',
+          type: 'polygon',
+          mass: 1.15,
+          svg: `<svg viewBox="0 0 200 200"><path d="${hexPath}" fill="var(--md3-shape-3)"/></svg>`
+        },
+        {
+          id: 'squircle-right',
+          type: 'polygon',
+          mass: 1.2,
+          svg: `<svg viewBox="0 0 200 200"><rect x="6" y="6" width="188" height="188" rx="48" ry="48" fill="var(--md3-shape-4)"/></svg>`
+        }
+      ];
+
+      // Rigid-body physics constants: grounded, tactile, low-bounce, zero overlap
+      const GRAVITY = 1080;          // px/s^2
+      const RESTITUTION = 0.16;      // Soft, pleasant MD3 bounce (never rockets to space)
+      const FRICTION = 0.42;         // Realistic surface grip & rotational torque
+      const MAX_RELEASE_VEL = 480;   // Clamped max fling velocity (px/s)
+      const LINEAR_DAMP = 0.992;
+      const ANGULAR_DAMP = 0.965;
+
+      let bodies = [];
+      let arenaW = 632;
+      let arenaH = 268;
+      let baseR = 54;
+      let activeDrag = null;
+      let zCounter = 5;
+
+      function measureArena() {
+        const rect = arena.getBoundingClientRect();
+        arenaW = Math.max(280, rect.width || 632);
+        arenaH = Math.max(190, rect.height || 268);
+        baseR = Math.min(58, Math.max(38, arenaW * 0.114));
+      }
+
+      function configureBodyGeometry(body, def, R) {
+        body.R = R;
+        body.el.style.width = `${(R * 2).toFixed(1)}px`;
+        body.el.style.height = `${(R * 2).toFixed(1)}px`;
+        body.mass = def.mass;
+        body.invMass = 1 / def.mass;
+        body.inertia = 0.52 * def.mass * R * R;
+        body.invInertia = 1 / body.inertia;
+
+        if (def.id === 'circle') {
+          body.shapeType = 'multicircle';
+          body.localCircles = [{ ox: 0, oy: 0, r: R * 0.94 }];
+          body.boundR = R * 0.94;
+        } else if (def.id === 'clover') {
+          body.shapeType = 'multicircle';
+          body.localCircles = buildLocalCloverCircles(R);
+          body.boundR = R * 0.96;
+        } else if (def.id === 'hex-left' || def.id === 'hex-center') {
+          body.shapeType = 'polygon';
+          body.localVerts = buildLocalHexVerts(R);
+          body.bevelR = R * 0.18;
+          body.boundR = R * 0.94;
+        } else {
+          body.shapeType = 'polygon';
+          body.localVerts = buildLocalSquircleVerts(R);
+          body.bevelR = R * 0.24;
+          body.boundR = R * 1.18;
+        }
+        updateWorldGeometry(body);
+      }
+
+      function updateWorldGeometry(b) {
+        const c = Math.cos(b.angle);
+        const s = Math.sin(b.angle);
+        if (b.shapeType === 'multicircle') {
+          b.worldCircles = b.localCircles.map(lc => ({
+            x: b.x + lc.ox * c - lc.oy * s,
+            y: b.y + lc.ox * s + lc.oy * c,
+            r: lc.r
+          }));
+        } else {
+          const wv = b.localVerts.map(lv => ({
+            x: b.x + lv.x * c - lv.y * s,
+            y: b.y + lv.x * s + lv.y * c
+          }));
+          b.worldVerts = wv;
+          const normals = [];
+          for (let i = 0; i < wv.length; i++) {
+            const p0 = wv[i];
+            const p1 = wv[(i + 1) % wv.length];
+            const dx = p1.x - p0.x;
+            const dy = p1.y - p0.y;
+            const len = Math.hypot(dx, dy) || 1;
+            normals.push({ x: dy / len, y: -dx / len });
+          }
+          b.worldNormals = normals;
+        }
+      }
+
+      function computeStackedTargets() {
+        measureArena();
+        const cx = arenaW / 2;
+        const hexHalfH = baseR * (0.76 * Math.sin(Math.PI / 3) + 0.18);
+        const sqHalfH = baseR * 0.94;
+        const hexBottomY = arenaH - hexHalfH;
+        const sqBottomY = arenaH - sqHalfH;
+
+        const hexHalfW = baseR * 0.94;
+        const sqHalfW = baseR * 0.94;
+
+        const xHexCenter = cx - baseR * 0.08;
+        const xHexLeft = xHexCenter - hexHalfW * 1.96;
+        const xSqRight = xHexCenter + hexHalfW + sqHalfW - baseR * 0.04;
+
+        const xCircle = (xHexLeft + xHexCenter) * 0.5;
+        const yCircle = hexBottomY - hexHalfH - baseR * 0.86;
+
+        const xClover = (xHexCenter + xSqRight) * 0.5;
+        const yClover = Math.min(hexBottomY - hexHalfH, sqBottomY - sqHalfH) - baseR * 0.84;
+
+        return [
+          { x: xCircle,    y: yCircle,    angle: 0 },
+          { x: xClover,    y: yClover,    angle: 0 },
+          { x: xHexLeft,   y: hexBottomY, angle: 0 },
+          { x: xHexCenter, y: hexBottomY, angle: 0 },
+          { x: xSqRight,   y: sqBottomY,  angle: 0 }
+        ];
+      }
+
+      function createBodies() {
+        arena.querySelectorAll('.md3-phys-shape').forEach(el => el.remove());
+        const targets = computeStackedTargets();
+
+        bodies = SHAPE_DEFS.map((def, idx) => {
+          const el = document.createElement('div');
+          el.className = 'md3-phys-shape';
+          el.innerHTML = def.svg;
+          el.style.zIndex = String(idx + 1);
+          arena.appendChild(el);
+
+          const body = {
+            idx,
+            def,
+            el,
+            x: targets[idx].x,
+            y: targets[idx].y,
+            vx: 0,
+            vy: 0,
+            angle: 0,
+            omega: 0,
+            isDragged: false,
+            dragTargetX: targets[idx].x,
+            dragTargetY: targets[idx].y
+          };
+
+          configureBodyGeometry(body, def, baseR);
+          attachShapePointerEvents(body);
+          return body;
+        });
+
+        renderBodies();
+      }
+
+      function attachShapePointerEvents(body) {
+        let grabOffsetX = 0;
+        let grabOffsetY = 0;
+        let lastMoveTime = 0;
+        let smoothVx = 0;
+        let smoothVy = 0;
+
+        body.el.addEventListener('pointerdown', e => {
+          if (e.button !== 0 && e.pointerType === 'mouse') return;
+          e.preventDefault();
+          e.stopPropagation();
+
+          body.el.setPointerCapture(e.pointerId);
+          body.isDragged = true;
+          body.vx = 0;
+          body.vy = 0;
+          body.omega = 0;
+          body.el.classList.add('is-dragging');
+          body.el.style.zIndex = String(++zCounter);
+
+          const rect = arena.getBoundingClientRect();
+          const px = e.clientX - rect.left;
+          const py = e.clientY - rect.top;
+
+          grabOffsetX = body.x - px;
+          grabOffsetY = body.y - py;
+          body.dragTargetX = body.x;
+          body.dragTargetY = body.y;
+          lastMoveTime = performance.now();
+          smoothVx = 0;
+          smoothVy = 0;
+          activeDrag = body;
+        });
+
+        body.el.addEventListener('pointermove', e => {
+          if (!body.isDragged) return;
+          const rect = arena.getBoundingClientRect();
+          const px = e.clientX - rect.left;
+          const py = e.clientY - rect.top;
+
+          const pad = body.R * 0.85;
+          const nextX = Math.max(pad, Math.min(arenaW - pad, px + grabOffsetX));
+          const nextY = Math.max(pad, Math.min(arenaH - pad, py + grabOffsetY));
+
+          const now = performance.now();
+          const dt = Math.max(0.008, (now - lastMoveTime) / 1000);
+          const instVx = (nextX - body.dragTargetX) / dt;
+          const instVy = (nextY - body.dragTargetY) / dt;
+
+          smoothVx = smoothVx * 0.65 + instVx * 0.35;
+          smoothVy = smoothVy * 0.65 + instVy * 0.35;
+
+          body.dragTargetX = nextX;
+          body.dragTargetY = nextY;
+          lastMoveTime = now;
+        });
+
+        function releaseDrag() {
+          if (!body.isDragged) return;
+          body.isDragged = false;
+          body.el.classList.remove('is-dragging');
+          if (activeDrag === body) activeDrag = null;
+
+          const speed = Math.hypot(smoothVx, smoothVy);
+          if (speed > MAX_RELEASE_VEL) {
+            const scale = MAX_RELEASE_VEL / speed;
+            smoothVx *= scale;
+            smoothVy *= scale;
+          }
+
+          body.vx = smoothVx * 0.62;
+          body.vy = smoothVy * 0.62;
+          body.omega = Math.max(-2.5, Math.min(2.5, body.vx * 0.0035));
+        }
+
+        body.el.addEventListener('pointerup', releaseDrag);
+        body.el.addEventListener('pointercancel', releaseDrag);
+      }
+
+      // -----------------------------------------------------------
+      // Exact Geometric Contact Generators (Circle, Clover, Rounded Polygons)
+      // -----------------------------------------------------------
+      function closestPointOnSegment(px, py, ax, ay, bx, by) {
+        const abx = bx - ax;
+        const aby = by - ay;
+        const lenSq = abx * abx + aby * aby;
+        if (lenSq < 1e-8) return { x: ax, y: ay };
+        const t = Math.max(0, Math.min(1, ((px - ax) * abx + (py - ay) * aby) / lenSq));
+        return { x: ax + t * abx, y: ay + t * aby };
+      }
+
+      function collideCircleWithPolygon(cx, cy, cr, polyB) {
+        const verts = polyB.worldVerts;
+        const normals = polyB.worldNormals;
+        const bevel = polyB.bevelR;
+        const totalR = cr + bevel;
+
+        let maxSignedDist = -Infinity;
+        let bestFaceIdx = 0;
+        for (let i = 0; i < verts.length; i++) {
+          const sd = (cx - verts[i].x) * normals[i].x + (cy - verts[i].y) * normals[i].y;
+          if (sd > maxSignedDist) {
+            maxSignedDist = sd;
+            bestFaceIdx = i;
+          }
+        }
+
+        if (maxSignedDist <= 0) {
+          const n = normals[bestFaceIdx];
+          const pen = totalR - maxSignedDist;
+          return {
+            nx: -n.x,
+            ny: -n.y,
+            pen,
+            px: cx - n.x * (cr - pen * 0.5),
+            py: cy - n.y * (cr - pen * 0.5)
+          };
+        }
+
+        let minDistSq = Infinity;
+        let qx = 0, qy = 0;
+        for (let i = 0; i < verts.length; i++) {
+          const p0 = verts[i];
+          const p1 = verts[(i + 1) % verts.length];
+          const q = closestPointOnSegment(cx, cy, p0.x, p0.y, p1.x, p1.y);
+          const dx = cx - q.x;
+          const dy = cy - q.y;
+          const dSq = dx * dx + dy * dy;
+          if (dSq < minDistSq) {
+            minDistSq = dSq;
+            qx = q.x;
+            qy = q.y;
+          }
+        }
+
+        if (minDistSq >= totalR * totalR) return null;
+
+        const dist = Math.sqrt(minDistSq);
+        let nx, ny;
+        if (dist > 1e-5) {
+          nx = (qx - cx) / dist;
+          ny = (qy - cy) / dist;
+        } else {
+          const fn = normals[bestFaceIdx];
+          nx = -fn.x;
+          ny = -fn.y;
+        }
+        const pen = totalR - dist;
+        return {
+          nx,
+          ny,
+          pen,
+          px: cx + nx * (cr - pen * 0.5),
+          py: cy + ny * (cr - pen * 0.5)
+        };
+      }
+
+      function projectPolygon(verts, ax, ay) {
+        let min = Infinity, max = -Infinity;
+        for (let i = 0; i < verts.length; i++) {
+          const d = verts[i].x * ax + verts[i].y * ay;
+          if (d < min) min = d;
+          if (d > max) max = d;
+        }
+        return { min, max };
+      }
+
+      function clipSegmentToLine(pts, nx, ny, offset) {
+        const out = [];
+        if (pts.length < 2) return out;
+        const d0 = pts[0].x * nx + pts[0].y * ny - offset;
+        const d1 = pts[1].x * nx + pts[1].y * ny - offset;
+        if (d0 <= 0) out.push(pts[0]);
+        if (d1 <= 0) out.push(pts[1]);
+        if (d0 * d1 < 0) {
+          const t = d0 / (d0 - d1);
+          out.push({
+            x: pts[0].x + t * (pts[1].x - pts[0].x),
+            y: pts[0].y + t * (pts[1].y - pts[0].y)
+          });
+        }
+        return out;
+      }
+
+      function collidePolygonWithPolygon(polyA, polyB) {
+        const vertsA = polyA.worldVerts;
+        const vertsB = polyB.worldVerts;
+        const normalsA = polyA.worldNormals;
+        const normalsB = polyB.worldNormals;
+        const totalBevel = polyA.bevelR + polyB.bevelR;
+
+        let bestSep = -Infinity;
+        let bestAxis = null;
+        let refIsA = true;
+        let refEdgeIdx = 0;
+
+        for (let i = 0; i < normalsA.length; i++) {
+          const ax = normalsA[i].x;
+          const ay = normalsA[i].y;
+          const pA = projectPolygon(vertsA, ax, ay);
+          const pB = projectPolygon(vertsB, ax, ay);
+          const sep = pB.min - pA.max;
+          if (sep > totalBevel) return [];
+          if (sep > bestSep) {
+            bestSep = sep;
+            bestAxis = { x: ax, y: ay };
+            refIsA = true;
+            refEdgeIdx = i;
+          }
+        }
+
+        for (let i = 0; i < normalsB.length; i++) {
+          const ax = -normalsB[i].x;
+          const ay = -normalsB[i].y;
+          const pA = projectPolygon(vertsA, ax, ay);
+          const pB = projectPolygon(vertsB, ax, ay);
+          const sep = pB.min - pA.max;
+          if (sep > totalBevel) return [];
+          if (sep > bestSep) {
+            bestSep = sep;
+            bestAxis = { x: ax, y: ay };
+            refIsA = false;
+            refEdgeIdx = i;
+          }
+        }
+
+        let minVertDistSq = Infinity;
+        let closestVA = null, closestVB = null;
+        for (let i = 0; i < vertsA.length; i++) {
+          for (let j = 0; j < vertsB.length; j++) {
+            const dx = vertsB[j].x - vertsA[i].x;
+            const dy = vertsB[j].y - vertsA[i].y;
+            const dSq = dx * dx + dy * dy;
+            if (dSq < minVertDistSq) {
+              minVertDistSq = dSq;
+              closestVA = vertsA[i];
+              closestVB = vertsB[j];
+            }
+          }
+        }
+        if (minVertDistSq > 1e-6) {
+          const d = Math.sqrt(minVertDistSq);
+          const ax = (closestVB.x - closestVA.x) / d;
+          const ay = (closestVB.y - closestVA.y) / d;
+          const pA = projectPolygon(vertsA, ax, ay);
+          const pB = projectPolygon(vertsB, ax, ay);
+          const sep = pB.min - pA.max;
+          if (sep > totalBevel) return [];
+          if (sep > bestSep + 0.25) {
+            const pen = totalBevel - sep;
+            return [{
+              nx: ax,
+              ny: ay,
+              pen,
+              px: closestVA.x + ax * (polyA.bevelR - pen * 0.5),
+              py: closestVA.y + ay * (polyA.bevelR - pen * 0.5)
+            }];
+          }
+        }
+
+        const pen = totalBevel - bestSep;
+        if (pen <= 0 || !bestAxis) return [];
+
+        const refPoly = refIsA ? polyA : polyB;
+        const incPoly = refIsA ? polyB : polyA;
+        const refVerts = refPoly.worldVerts;
+        const incVerts = incPoly.worldVerts;
+        const incNormals = incPoly.worldNormals;
+
+        const refNormal = refIsA
+          ? { x: bestAxis.x, y: bestAxis.y }
+          : { x: -bestAxis.x, y: -bestAxis.y };
+
+        const v1 = refVerts[refEdgeIdx];
+        const v2 = refVerts[(refEdgeIdx + 1) % refVerts.length];
+
+        let incIdx = 0;
+        let minDot = Infinity;
+        for (let i = 0; i < incNormals.length; i++) {
+          const dot = incNormals[i].x * refNormal.x + incNormals[i].y * refNormal.y;
+          if (dot < minDot) {
+            minDot = dot;
+            incIdx = i;
+          }
+        }
+
+        let clipPts = [
+          incVerts[incIdx],
+          incVerts[(incIdx + 1) % incVerts.length]
+        ];
+
+        const edgeDx = v2.x - v1.x;
+        const edgeDy = v2.y - v1.y;
+        const edgeLen = Math.hypot(edgeDx, edgeDy) || 1;
+        const tx = edgeDx / edgeLen;
+        const ty = edgeDy / edgeLen;
+
+        const sidePad = Math.min(polyA.bevelR, polyB.bevelR) * 0.45;
+        clipPts = clipSegmentToLine(clipPts, -tx, -ty, -(v1.x * tx + v1.y * ty) + sidePad);
+        clipPts = clipSegmentToLine(clipPts,  tx,  ty,  (v2.x * tx + v2.y * ty) + sidePad);
+
+        const refFaceOffset = v1.x * refNormal.x + v1.y * refNormal.y;
+        const contacts = [];
+
+        for (let i = 0; i < clipPts.length; i++) {
+          const cp = clipPts[i];
+          const sepPt = (cp.x * refNormal.x + cp.y * refNormal.y) - refFaceOffset;
+          const ptPen = totalBevel - sepPt;
+          if (ptPen > 0) {
+            const surfOffset = incPoly.bevelR - ptPen * 0.5;
+            contacts.push({
+              nx: bestAxis.x,
+              ny: bestAxis.y,
+              pen: ptPen,
+              px: cp.x - refNormal.x * surfOffset,
+              py: cp.y - refNormal.y * surfOffset
+            });
+          }
+        }
+
+        if (contacts.length === 0) {
+          contacts.push({
+            nx: bestAxis.x,
+            ny: bestAxis.y,
+            pen,
+            px: (polyA.x + polyB.x) * 0.5,
+            py: (polyA.y + polyB.y) * 0.5
+          });
+        }
+
+        return contacts;
+      }
+
+      function generatePairContacts(a, b) {
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
+        const maxR = a.boundR + b.boundR;
+        if (dx * dx + dy * dy > maxR * maxR) return [];
+
+        if (a.shapeType === 'multicircle' && b.shapeType === 'multicircle') {
+          const contacts = [];
+          for (let i = 0; i < a.worldCircles.length; i++) {
+            const ca = a.worldCircles[i];
+            for (let j = 0; j < b.worldCircles.length; j++) {
+              const cb = b.worldCircles[j];
+              const cdx = cb.x - ca.x;
+              const cdy = cb.y - ca.y;
+              const rSum = ca.r + cb.r;
+              const dSq = cdx * cdx + cdy * cdy;
+              if (dSq < rSum * rSum && dSq > 1e-8) {
+                const dist = Math.sqrt(dSq);
+                const nx = cdx / dist;
+                const ny = cdy / dist;
+                const pen = rSum - dist;
+                contacts.push({
+                  nx,
+                  ny,
+                  pen,
+                  px: ca.x + nx * (ca.r - pen * 0.5),
+                  py: ca.y + ny * (ca.r - pen * 0.5)
+                });
+              }
+            }
+          }
+          return contacts;
+        }
+
+        if (a.shapeType === 'multicircle' && b.shapeType === 'polygon') {
+          const contacts = [];
+          for (let i = 0; i < a.worldCircles.length; i++) {
+            const ca = a.worldCircles[i];
+            const c = collideCircleWithPolygon(ca.x, ca.y, ca.r, b);
+            if (c) contacts.push(c);
+          }
+          return contacts;
+        }
+
+        if (a.shapeType === 'polygon' && b.shapeType === 'multicircle') {
+          const contacts = [];
+          for (let j = 0; j < b.worldCircles.length; j++) {
+            const cb = b.worldCircles[j];
+            const c = collideCircleWithPolygon(cb.x, cb.y, cb.r, a);
+            if (c) {
+              contacts.push({
+                nx: -c.nx,
+                ny: -c.ny,
+                pen: c.pen,
+                px: c.px,
+                py: c.py
+              });
+            }
+          }
+          return contacts;
+        }
+
+        return collidePolygonWithPolygon(a, b);
+      }
+
+      function generateBoundaryContacts(b) {
+        const contacts = [];
+        if (b.shapeType === 'multicircle') {
+          for (let i = 0; i < b.worldCircles.length; i++) {
+            const c = b.worldCircles[i];
+            if (c.x - c.r < 0) {
+              contacts.push({ nx: -1, ny: 0, pen: c.r - c.x, px: 0, py: c.y });
+            }
+            if (c.x + c.r > arenaW) {
+              contacts.push({ nx: 1, ny: 0, pen: c.x + c.r - arenaW, px: arenaW, py: c.y });
+            }
+            if (c.y - c.r < 0) {
+              contacts.push({ nx: 0, ny: -1, pen: c.r - c.y, px: c.x, py: 0 });
+            }
+            if (c.y + c.r > arenaH) {
+              contacts.push({ nx: 0, ny: 1, pen: c.y + c.r - arenaH, px: c.x, py: arenaH });
+            }
+          }
+        } else {
+          const r = b.bevelR;
+          for (let i = 0; i < b.worldVerts.length; i++) {
+            const v = b.worldVerts[i];
+            if (v.x - r < 0) {
+              contacts.push({ nx: -1, ny: 0, pen: r - v.x, px: 0, py: v.y });
+            }
+            if (v.x + r > arenaW) {
+              contacts.push({ nx: 1, ny: 0, pen: v.x + r - arenaW, px: arenaW, py: v.y });
+            }
+            if (v.y - r < 0) {
+              contacts.push({ nx: 0, ny: -1, pen: r - v.y, px: v.x, py: 0 });
+            }
+            if (v.y + r > arenaH) {
+              contacts.push({ nx: 0, ny: 1, pen: v.y + r - arenaH, px: v.x, py: arenaH });
+            }
+          }
+        }
+        return contacts;
+      }
+
+      function solveContactImpulse(a, b, c) {
+        const invMa = a.isDragged ? a.invMass * 0.08 : a.invMass;
+        const invIa = a.isDragged ? a.invInertia * 0.04 : a.invInertia;
+        const invMb = b ? (b.isDragged ? b.invMass * 0.08 : b.invMass) : 0;
+        const invIb = b ? (b.isDragged ? b.invInertia * 0.04 : b.invInertia) : 0;
+
+        const totalInvMass = invMa + invMb;
+        if (totalInvMass <= 0) return;
+
+        const rax = c.px - a.x;
+        const ray = c.py - a.y;
+        const rbx = b ? c.px - b.x : 0;
+        const rby = b ? c.py - b.y : 0;
+
+        const vax = a.vx - a.omega * ray;
+        const vay = a.vy + a.omega * rax;
+        const vbx = b ? b.vx - b.omega * rby : 0;
+        const vby = b ? b.vy + b.omega * rbx : 0;
+
+        const rvx = vbx - vax;
+        const rvy = vby - vay;
+
+        const velAlongNormal = rvx * c.nx + rvy * c.ny;
+        if (velAlongNormal > 0) return;
+
+        const raCrossN = rax * c.ny - ray * c.nx;
+        const rbCrossN = rbx * c.ny - rby * c.nx;
+        const kNormal = invMa + invMb + raCrossN * raCrossN * invIa + rbCrossN * rbCrossN * invIb;
+
+        const e = velAlongNormal < -65 ? RESTITUTION : 0;
+        let jn = -(1 + e) * velAlongNormal / (kNormal || 1);
+        if (jn < 0) jn = 0;
+
+        const impX = jn * c.nx;
+        const impY = jn * c.ny;
+
+        a.vx -= impX * invMa;
+        a.vy -= impY * invMa;
+        a.omega -= (rax * impY - ray * impX) * invIa;
+
+        if (b) {
+          b.vx += impX * invMb;
+          b.vy += impY * invMb;
+          b.omega += (rbx * impY - rby * impX) * invIb;
+        }
+
+        const vax2 = a.vx - a.omega * ray;
+        const vay2 = a.vy + a.omega * rax;
+        const vbx2 = b ? b.vx - b.omega * rby : 0;
+        const vby2 = b ? b.vy + b.omega * rbx : 0;
+        const rvx2 = vbx2 - vax2;
+        const rvy2 = vby2 - vay2;
+
+        const tx = -c.ny;
+        const ty = c.nx;
+        const velAlongTangent = rvx2 * tx + rvy2 * ty;
+
+        const raCrossT = rax * ty - ray * tx;
+        const rbCrossT = rbx * ty - rby * tx;
+        const kTangent = invMa + invMb + raCrossT * raCrossT * invIa + rbCrossT * rbCrossT * invIb;
+
+        let jt = -velAlongTangent / (kTangent || 1);
+        const maxFriction = jn * FRICTION;
+        jt = Math.max(-maxFriction, Math.min(maxFriction, jt));
+
+        const fImpX = jt * tx;
+        const fImpY = jt * ty;
+
+        a.vx -= fImpX * invMa;
+        a.vy -= fImpY * invMa;
+        a.omega -= (rax * fImpY - ray * fImpX) * invIa;
+
+        if (b) {
+          b.vx += fImpX * invMb;
+          b.vy += fImpY * invMb;
+          b.omega += (rbx * fImpY - rby * fImpX) * invIb;
+        }
+      }
+
+      function solveContactPosition(a, b, c) {
+        const slop = 0.25;
+        const correctionMag = Math.max(0, c.pen - slop) * 0.45;
+        if (correctionMag <= 0) return;
+
+        const invMa = a.isDragged ? a.invMass * 0.08 : a.invMass;
+        const invMb = b ? (b.isDragged ? b.invMass * 0.08 : b.invMass) : 0;
+        const totalInvMass = invMa + invMb;
+        if (totalInvMass <= 0) return;
+
+        const corrX = (correctionMag / totalInvMass) * c.nx;
+        const corrY = (correctionMag / totalInvMass) * c.ny;
+
+        a.x -= corrX * invMa;
+        a.y -= corrY * invMa;
+        updateWorldGeometry(a);
+
+        if (b) {
+          b.x += corrX * invMb;
+          b.y += corrY * invMb;
+          updateWorldGeometry(b);
+        }
+      }
+
+      function stepPhysics(dt) {
+        const subSteps = 8;
+        const subDt = dt / subSteps;
+
+        for (let step = 0; step < subSteps; step++) {
+          for (let i = 0; i < bodies.length; i++) {
+            const b = bodies[i];
+            if (b.isDragged) {
+              const dx = b.dragTargetX - b.x;
+              const dy = b.dragTargetY - b.y;
+              const stiffness = 36;
+              let vx = dx * stiffness;
+              let vy = dy * stiffness;
+              const maxDragSpeed = 1350;
+              const spd = Math.hypot(vx, vy);
+              if (spd > maxDragSpeed) {
+                vx = (vx / spd) * maxDragSpeed;
+                vy = (vy / spd) * maxDragSpeed;
+              }
+              b.vx = vx;
+              b.vy = vy;
+              b.omega *= 0.82;
+            } else {
+              b.vy += GRAVITY * subDt;
+            }
+
+            b.x += b.vx * subDt;
+            b.y += b.vy * subDt;
+            b.angle += b.omega * subDt;
+            updateWorldGeometry(b);
+          }
+
+          for (let iter = 0; iter < 6; iter++) {
+            for (let i = 0; i < bodies.length; i++) {
+              for (let j = i + 1; j < bodies.length; j++) {
+                const contacts = generatePairContacts(bodies[i], bodies[j]);
+                for (let k = 0; k < contacts.length; k++) {
+                  solveContactImpulse(bodies[i], bodies[j], contacts[k]);
+                  solveContactPosition(bodies[i], bodies[j], contacts[k]);
+                }
+              }
+            }
+
+            for (let i = 0; i < bodies.length; i++) {
+              const bContacts = generateBoundaryContacts(bodies[i]);
+              for (let k = 0; k < bContacts.length; k++) {
+                solveContactImpulse(bodies[i], null, bContacts[k]);
+                solveContactPosition(bodies[i], null, bContacts[k]);
+              }
+            }
+          }
+        }
+
+        for (let i = 0; i < bodies.length; i++) {
+          const b = bodies[i];
+          if (b.isDragged) continue;
+          b.vx *= LINEAR_DAMP;
+          b.vy *= LINEAR_DAMP;
+          b.omega *= ANGULAR_DAMP;
+          if (Math.hypot(b.vx, b.vy) < 2.5 && Math.abs(b.omega) < 0.04) {
+            b.vx = 0;
+            b.vy = 0;
+            b.omega = 0;
+          }
+        }
+      }
+
+      function renderBodies() {
+        for (let i = 0; i < bodies.length; i++) {
+          const b = bodies[i];
+          const tx = (b.x - b.R).toFixed(2);
+          const ty = (b.y - b.R).toFixed(2);
+          const deg = ((b.angle * 180) / Math.PI).toFixed(2);
+          b.el.style.transform = `translate3d(${tx}px, ${ty}px, 0) rotate(${deg}deg)`;
+        }
+      }
+
+      function resetShapesFormation() {
+        const targets = computeStackedTargets();
+        bodies.forEach((b, i) => {
+          configureBodyGeometry(b, SHAPE_DEFS[i], baseR);
+          b.x = targets[i].x;
+          b.y = targets[i].y - 10;
+          b.vx = 0;
+          b.vy = 0;
+          b.angle = 0;
+          b.omega = 0;
+          updateWorldGeometry(b);
+        });
+      }
+
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+          resetShapesFormation();
+        });
+      }
+
+      let lastFrameTime = performance.now();
+      function physicsLoop(now) {
+        const rawDt = (now - lastFrameTime) / 1000;
+        lastFrameTime = now;
+        const dt = Math.min(0.032, Math.max(0.004, rawDt));
+
+        stepPhysics(dt);
+        renderBodies();
+        requestAnimationFrame(physicsLoop);
+      }
+
+      window.addEventListener('resize', () => {
+        const prevW = arenaW;
+        measureArena();
+        if (Math.abs(arenaW - prevW) > 8) {
+          bodies.forEach((b, i) => {
+            configureBodyGeometry(b, SHAPE_DEFS[i], baseR);
+            b.x = Math.max(b.R * 0.9, Math.min(arenaW - b.R * 0.9, b.x));
+            b.y = Math.max(b.R * 0.9, Math.min(arenaH - b.R * 0.9, b.y));
+            updateWorldGeometry(b);
+          });
+        }
+      });
+
+      createBodies();
+      requestAnimationFrame(physicsLoop);
+    })();
 
     // -------------------------------------------------------------
     // 2. Material 3 State Layer Ripple
@@ -1716,7 +3116,6 @@
       if (e.key === 'Escape') closeFdroidModal();
     });
 
-    // Interactive Drag-Down to collapse OR Pull-Up to unlock the secret Nothing MD3 Switch
     (function initBottomSheetDrag() {
       let isDragging = false;
       let startY = 0;
@@ -1738,7 +3137,6 @@
         if (rawDelta > 0) {
           currentDeltaY = rawDelta;
         } else {
-          // Smooth rubber-band upward pull (clamped to -64px so it feels taut and never breaks layout)
           currentDeltaY = -Math.min(64, Math.pow(Math.abs(rawDelta), 0.78) * 2.2);
           if (rawDelta < -32 && !fdroidSheet.classList.contains('secret-unlocked')) {
             fdroidSheet.classList.add('secret-unlocked');
@@ -1755,9 +3153,8 @@
         isDragging = false;
         fdroidSheet.classList.remove('dragging');
         const elapsed = Math.max(1, performance.now() - startTime);
-        const velocity = currentDeltaY / elapsed; // px/ms
+        const velocity = currentDeltaY / elapsed;
 
-        // Tap on the drag handle (minimal movement) or drag down past threshold / flick down
         if (Math.abs(currentDeltaY) < 6 && elapsed < 260) {
           closeFdroidModal();
           return;
@@ -2075,14 +3472,12 @@
       const expandWrap = document.getElementById('settingsExpandWrap');
       const expandBtn = document.getElementById('settingsExpandBtn');
       const expandText = document.getElementById('settingsExpandText');
-      const expandIcon = document.getElementById('settingsExpandIcon');
 
       const DEFAULT_COLLAPSED_LIMIT = 8;
       let activeCategory = 'all';
       let searchQuery = '';
       let isExpanded = false;
 
-      // Populate chip counts
       const counts = { all: CLIENT_SETTINGS.length };
       CLIENT_SETTINGS.forEach(s => {
         counts[s.cat] = (counts[s.cat] || 0) + 1;
@@ -2312,7 +3707,6 @@
         window.addEventListener('pointerup', onUp);
       });
 
-      // Live search input listener
       const searchInput = document.getElementById('archiveSearchInput');
       if (searchInput) {
         searchInput.addEventListener('input', () => {
