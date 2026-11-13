@@ -140,7 +140,7 @@
       --md3-shape-4: #F2725A;
       --md3-shape-stroke: transparent;
       --md3-baseline: rgba(254, 138, 115, 0.26);
-      --carousel-card-border: transparent;
+      --carousel-card-border: rgba(254, 138, 115, 0.08);
     }
 
     [data-theme="light"] {
@@ -176,7 +176,7 @@
       --md3-shape-4: #992916;
       --md3-shape-stroke: transparent;
       --md3-baseline: rgba(200, 70, 48, 0.22);
-      --carousel-card-border: transparent;
+      --carousel-card-border: rgba(200, 70, 48, 0.08);
     }
 
     /* -------------------------------------------------------------
@@ -217,7 +217,7 @@
       --md3-shape-4: #444444;
       --md3-shape-stroke: rgba(255, 255, 255, 0.36);
       --md3-baseline: rgba(255, 255, 255, 0.42);
-      --carousel-card-border: rgba(255, 255, 255, 0.15);
+      --carousel-card-border: rgba(255, 255, 255, 0.16);
     }
 
     html[data-nothing="true"] body,
@@ -524,7 +524,7 @@
     }
 
     /* -------------------------------------------------------------
-       5b. Empty Material 3 Multi-browse Carousel (Variable Keyline Sizing)
+       5b. Material 3 Multi-browse Carousel (App Icons Showcase)
        ------------------------------------------------------------- */
     .m3-carousel-viewport {
       position: relative;
@@ -566,23 +566,51 @@
       transition: background-color 0.25s ease, border-color 0.25s ease;
     }
 
-    .m3-carousel-card:hover {
-      background-color: var(--surface-container-high);
+    .m3-carousel-image {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      height: 100%;
+      width: 248px;
+      max-width: none;
+      object-fit: cover;
+      pointer-events: none;
+      will-change: transform;
+      transition: filter 0.35s ease;
     }
 
-    /* Subtle tonal depth differentiation between adjacent empty slots */
-    .m3-carousel-card[data-tone="1"] {
-      background-color: var(--surface-container-high);
+    html[data-nothing="true"] .m3-carousel-image {
+      filter: grayscale(100%) contrast(1.12);
     }
 
-    .m3-carousel-card[data-tone="2"] {
-      background-color: var(--surface-container-low);
+    .m3-carousel-scrim {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.0) 48%,
+        rgba(0, 0, 0, 0.26) 74%,
+        rgba(0, 0, 0, 0.68) 100%
+      );
+      pointer-events: none;
     }
 
-    /* Subtle dot-matrix texture inside carousel cards when Nothing OS mode is active */
-    html[data-nothing="true"] .m3-carousel-card {
-      background-image: radial-gradient(rgba(255, 255, 255, 0.11) 1px, transparent 1px);
-      background-size: 12px 12px;
+    .m3-carousel-label {
+      position: absolute;
+      left: 15px;
+      right: 12px;
+      bottom: 14px;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      pointer-events: none;
+      will-change: opacity, transform;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.38);
     }
 
     /* Tactile touch ripple indicator */
@@ -605,8 +633,8 @@
     }
 
     .m3-carousel-dot {
-      height: 6px;
-      width: 6px;
+      height: 5px;
+      width: 5px;
       border-radius: 9999px;
       background-color: var(--surface-container-highest);
       cursor: pointer;
@@ -614,7 +642,7 @@
     }
 
     .m3-carousel-dot.active {
-      width: 20px;
+      width: 18px;
       background-color: var(--primary);
     }
 
@@ -1496,8 +1524,8 @@
       </div>
     </section>
 
-    <!-- Empty Material 3 Multi-browse Carousel (Variable Keylines + Spring Physics) -->
-    <section id="m3-empty-carousel-section" class="reveal delay-2 w-full" aria-label="Material 3 Multi-browse Carousel">
+    <!-- Material 3 Multi-browse Carousel (App Icons from icons/appicons/) -->
+    <section id="m3-appicons-carousel-section" class="reveal delay-2 w-full" aria-label="Иконки приложения MoltenGram">
       <div id="m3CarouselViewport" class="m3-carousel-viewport">
         <div id="m3CarouselTrack" class="m3-carousel-track"></div>
         <div id="m3CarouselTouchDot" class="m3-carousel-touch-dot"></div>
@@ -1881,16 +1909,34 @@
     }
 
     // -------------------------------------------------------------
-    // 1b. Empty Material 3 Multi-browse Carousel (Variable Keylines + Spring Physics)
+    // 1b. Material 3 Multi-browse Carousel (App Icons from icons/appicons/)
     // -------------------------------------------------------------
-    (function initEmptyM3Carousel() {
+    (function initAppIconsM3Carousel() {
       const viewport = document.getElementById('m3CarouselViewport');
       const track = document.getElementById('m3CarouselTrack');
       const touchDot = document.getElementById('m3CarouselTouchDot');
       const dotsWrap = document.getElementById('m3CarouselDots');
       if (!viewport || !track || !dotsWrap) return;
 
-      const ITEM_COUNT = 6;
+      const APP_ICONS = [
+        { file: 'mainicon.png',      title: 'MoltenGram' },
+        { file: 'coralicon.png',     title: 'Coral' },
+        { file: 'magmaicon.png',     title: 'Magma' },
+        { file: 'burnicon.png',      title: 'Burn' },
+        { file: 'nothingOsicon.png', title: 'Nothing OS' },
+        { file: 'googleicon.png',    title: 'Google' },
+        { file: 'exteraicon.png',    title: 'exteraGram' },
+        { file: 'anotherchance.png', title: 'Another Chance' },
+        { file: 'coffeicon.png',     title: 'Coffee' },
+        { file: 'cinemaicon.png',    title: 'Cinema' },
+        { file: 'candyicon.jpg',     title: 'Candy' },
+        { file: 'beericon.png',      title: 'Beer' },
+        { file: 'glicericon2.png',   title: 'Glicer' }
+      ];
+
+      const RAW_GITHUB_BASE = 'https://raw.githubusercontent.com/XtraDamage/moltenstar/main/icons/appicons/';
+      const ITEM_COUNT = APP_ICONS.length;
+
       const state = {
         progress: 0,
         targetProgress: 0,
@@ -1930,18 +1976,43 @@
       track.innerHTML = '';
       dotsWrap.innerHTML = '';
 
-      for (let i = 0; i < ITEM_COUNT; i++) {
+      APP_ICONS.forEach((item, i) => {
         const card = document.createElement('div');
         card.className = 'm3-carousel-card';
         card.dataset.index = String(i);
-        card.dataset.tone = String(i % 3);
-        card.setAttribute('aria-label', `Слайд карусели ${i + 1}`);
+        card.setAttribute('aria-label', `Иконка ${item.title}`);
+
+        const img = document.createElement('img');
+        img.className = 'm3-carousel-image';
+        img.src = `icons/appicons/${item.file}`;
+        img.alt = item.title;
+        img.draggable = false;
+        img.loading = i < 4 ? 'eager' : 'lazy';
+        img.onerror = function() {
+          if (!this.dataset.fallbackTried) {
+            this.dataset.fallbackTried = '1';
+            this.src = `${RAW_GITHUB_BASE}${item.file}`;
+          }
+        };
+
+        const scrim = document.createElement('div');
+        scrim.className = 'm3-carousel-scrim';
+
+        const label = document.createElement('div');
+        label.className = 'm3-carousel-label';
+        label.textContent = item.title;
+
+        card.appendChild(img);
+        card.appendChild(scrim);
+        card.appendChild(label);
 
         card.addEventListener('click', () => {
           if (state.dragMoved) return;
           const activeIdx = Math.round(state.progress);
           if (i !== activeIdx) {
             snapTo(i);
+          } else {
+            showToast(`Иконка «${item.title}»`);
           }
         });
 
@@ -1950,10 +2021,10 @@
         const dot = document.createElement('button');
         dot.type = 'button';
         dot.className = 'm3-carousel-dot';
-        dot.setAttribute('aria-label', `Перейти к слайду ${i + 1}`);
+        dot.setAttribute('aria-label', `Перейти к иконке ${item.title}`);
         dot.addEventListener('click', () => snapTo(i));
         dotsWrap.appendChild(dot);
-      }
+      });
 
       function measureContainer() {
         const rect = viewport.getBoundingClientRect();
@@ -1992,6 +2063,8 @@
         let seen = 0;
         for (let i = 0; i < ITEM_COUNT; i++) {
           const card = cards[i];
+          const img = card.children[0];
+          const label = card.children[2];
           const width = rawWeights[i] * scale;
 
           if (width <= 0.4) {
@@ -2005,6 +2078,16 @@
           card.style.display = 'block';
           card.style.width = `${width.toFixed(2)}px`;
           card.style.marginRight = seen < visibleCount ? `${state.gap}px` : '0px';
+
+          // Smoothly reveal caption only when card is wide enough
+          const textAlpha = Math.max(0, Math.min(1, (width - 78) / 36));
+          label.style.opacity = textAlpha.toFixed(3);
+          label.style.transform = `translateY(${((1 - textAlpha) * 6).toFixed(1)}px)`;
+
+          // Subtle parallax shift of icon inside rounded mask
+          const d = i - state.progress;
+          const parallaxX = Math.max(-22, Math.min(22, d * -14));
+          img.style.transform = `translate3d(calc(-50% + ${parallaxX.toFixed(1)}px), 0, 0)`;
         }
 
         const activeIdx = Math.max(0, Math.min(ITEM_COUNT - 1, Math.round(state.progress)));
@@ -2143,7 +2226,6 @@
       const resetBtn = document.getElementById('md3ShapesResetBtn');
       if (!arena) return;
 
-      // Helper: generate smooth 4-lobe MD3 clover SVG path
       function createCloverPath() {
         const cx = 100, cy = 100, baseR = 75, amp = 21, lobes = 4, steps = 160, phase = Math.PI / 4;
         let d = '';
@@ -2157,7 +2239,6 @@
         return d + ' Z';
       }
 
-      // Helper: generate rounded flat-top MD3 hexagon SVG path
       function createRoundedHexPath() {
         const cx = 100, cy = 100, radius = 94, corner = 22;
         const pts = [];
@@ -2193,7 +2274,6 @@
       const cloverPath = createCloverPath();
       const hexPath = createRoundedHexPath();
 
-      // Exact geometric definitions normalized to radius R (SVG viewBox 0..200 -> R = 100)
       function buildLocalHexVerts(R) {
         const coreR = R * 0.76;
         const verts = [];
@@ -2262,11 +2342,10 @@
         }
       ];
 
-      // Rigid-body physics constants: grounded, tactile, low-bounce, zero overlap
-      const GRAVITY = 1080;          // px/s^2
-      const RESTITUTION = 0.16;      // Soft, pleasant MD3 bounce (never rockets to space)
-      const FRICTION = 0.42;         // Realistic surface grip & rotational torque
-      const MAX_RELEASE_VEL = 480;   // Clamped max fling velocity (px/s)
+      const GRAVITY = 1080;
+      const RESTITUTION = 0.16;
+      const FRICTION = 0.42;
+      const MAX_RELEASE_VEL = 480;
       const LINEAR_DAMP = 0.992;
       const ANGULAR_DAMP = 0.965;
 
@@ -2486,9 +2565,6 @@
         body.el.addEventListener('pointercancel', releaseDrag);
       }
 
-      // -----------------------------------------------------------
-      // Exact Geometric Contact Generators (Circle, Clover, Rounded Polygons)
-      // -----------------------------------------------------------
       function closestPointOnSegment(px, py, ax, ay, bx, by) {
         const abx = bx - ax;
         const aby = by - ay;
