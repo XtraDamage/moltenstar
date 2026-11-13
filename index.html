@@ -1950,7 +1950,6 @@
         'toxicicon.png': 'Toxic'
       };
 
-      // Complete verified list of all 21 icons in icons/appicons/
       const ALL_REPO_ICONS = [
         { file: 'mainicon.png' },
         { file: 'coralicon.png' },
@@ -2301,7 +2300,6 @@
         requestAnimationFrame(carouselTick);
       }
 
-      // Also sync any future icons added to icons/appicons/ via GitHub API
       async function syncFutureRepoIcons() {
         try {
           const res = await fetch(CONTENTS_API_URL);
@@ -3828,7 +3826,7 @@
     })();
 
     // -------------------------------------------------------------
-    // 4b. Material Design 3 Version Archive (Release / Beta / Canary)
+    // 4b. Shared GitHub Releases Fetcher & Material Design 3 Version Archive
     // -------------------------------------------------------------
     const archiveModal = document.getElementById('archiveModal');
     const archiveSheet = document.getElementById('archiveSheet');
@@ -3836,6 +3834,22 @@
     let archiveCurrentTab = 'release';
     let archiveLoaded = false;
     let archiveData = { release: [], beta: [], canary: [] };
+    let sharedReleasesPromise = null;
+
+    function getGithubReleases() {
+      if (!sharedReleasesPromise) {
+        sharedReleasesPromise = fetch('https://api.github.com/repos/MoltenSt4r/MoltenGram/releases?per_page=40')
+          .then(res => {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.json();
+          })
+          .catch(err => {
+            sharedReleasesPromise = null;
+            throw err;
+          });
+      }
+      return sharedReleasesPromise;
+    }
 
     function openArchiveModal() {
       archiveSheet.style.transform = '';
@@ -3972,9 +3986,7 @@
     async function fetchArchiveReleases() {
       const listEl = document.getElementById('archiveList');
       try {
-        const res = await fetch('https://api.github.com/repos/MoltenSt4r/MoltenGram/releases?per_page=40');
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const raw = await res.json();
+        const raw = await getGithubReleases();
 
         archiveData = { release: [], beta: [], canary: [] };
 
@@ -4003,6 +4015,7 @@
             });
           } else if (tag.includes('beta') || r.prerelease) {
             const apks = (r.assets || []).filter(a => a.name && a.name.endsWith('.apk'));
+            apks.sort((a, b) => new Date(b.updated_at || 0) - new Date(a.updated_at || 0));
             const mainApk = apks[0];
             archiveData.beta.push({
               version: r.tag_name,
@@ -4018,6 +4031,7 @@
             });
           } else {
             const apks = (r.assets || []).filter(a => a.name && a.name.endsWith('.apk'));
+            apks.sort((a, b) => new Date(b.updated_at || 0) - new Date(a.updated_at || 0));
             const mainApk = apks[0];
             archiveData.release.push({
               version: r.tag_name,
@@ -4193,25 +4207,104 @@
     }
 
     // -------------------------------------------------------------
-    // 5. Auto-fetch Latest APK & Version Tag from GitHub Releases
+    // 5. Auto-fetch the Most Recent APK FILE across ALL Channels (Release, Beta, Canary)
     // -------------------------------------------------------------
-    (async function resolveLatestApk() {
+    (async function resolveLatestApkFile() {
       try {
-        const res = await fetch('https://api.github.com/repos/MoltenSt4r/MoltenGram/releases');
-        if (!res.ok) return;
-        const releases = await res.json();
-        for (const rel of releases) {
-          const apk = (rel.assets || []).find(a => a.name && a.name.endsWith('.apk'));
-          if (apk && apk.browser_download_url) {
-            const mainBtn = document.getElementById('mainApkBtn');
-            if (mainBtn) mainBtn.href = apk.browser_download_url;
-            if (rel.tag_name) {
-              document.getElementById('versionBadge').textContent = rel.tag_name;
-              document.getElementById('apkBtnVersion').textContent = rel.tag_name.replace(/^v/, '');
+        const releases = await getGithubReleases();
+        const allApkFiles = [];
+
+        releases.forEach(rel => {
+          const tag = (rel.tag_name || '').trim();
+          const tagLower = tag.toLowerCase();
+
+          (rel.assets || []).forEach(apk => {
+            if (!apk.name || !apk.name.toLowerCase().endsWith('.apk') || !apk.browser_download_url) return;
+
+            const timestamp = new Date(
+              apk.updated_at || apk.created_at || rel.published_at || rel.created_at || 0
+            ).getTime();
+
+            const canaryMatch = apk.name.match(/v?(\d+\.\d+\.\d+)(?:-(?:([a-f0-9]{7})\.)?(\d+))?/i);
+            const buildNum = canaryMatch && canaryMatch[3] ? parseInt(canaryMatch[3], 10) : 0;
+
+            let archPriority = 1;
+            const lowerName = apk.name.toLowerCase();
+            if (lowerName.includes('universal') || (!lowerName.includes('armeabi') && !lowerName.includes('x86'))) {
+              archPriority = 3;
+            } else if (lowerName.includes('arm64')) {
+              archPriority = 2;
             }
-            break;
+
+            allApkFiles.push({
+              name: apk.name,
+              url: apk.browser_download_url,
+              size: apk.size || 0,
+              timestamp,
+              buildNum,
+              archPriority,
+              tag,
+              tagLower,
+              canaryMatch
+            });
+          });
+        });
+
+        if (allApkFiles.length === 0) return;
+
+        // Sort strictly by latest APK asset timestamp across all releases (stable, beta, canary)
+        allApkFiles.sort((a, b) => {
+          const timeDiff = b.timestamp - a.timestamp;
+          if (Math.abs(timeDiff) > 60000) return timeDiff;
+          if (b.buildNum !== a.buildNum) return b.buildNum - a.buildNum;
+          if (b.archPriority !== a.archPriority) return b.archPriority - a.archPriority;
+          return timeDiff;
+        });
+
+        const latest = allApkFiles[0];
+        const mainBtn = document.getElementById('mainApkBtn');
+        const versionBadge = document.getElementById('versionBadge');
+        const apkBtnVersion = document.getElementById('apkBtnVersion');
+
+        if (mainBtn) {
+          mainBtn.href = latest.url;
+          const sizeStr = latest.size ? ` (${(latest.size / (1024 * 1024)).toFixed(1)} МБ)` : '';
+          mainBtn.title = `Скачать последний файл: ${latest.name}${sizeStr}`;
+        }
+
+        let badgeLabel = latest.tag || 'v12.10.6';
+        let btnLabel = (latest.tag || '12.10.6').replace(/^v/i, '');
+
+        if (latest.tagLower === 'canary') {
+          const m = latest.canaryMatch;
+          if (m && m[3]) {
+            badgeLabel = m[1] ? `v${m[1]} • Canary #${m[3]}` : `Canary #${m[3]}`;
+            btnLabel = `Canary #${m[3]}`;
+          } else if (m && m[2]) {
+            badgeLabel = `Canary (${m[2]})`;
+            btnLabel = m[2];
+          } else if (m && m[1]) {
+            badgeLabel = `v${m[1]} • Canary`;
+            btnLabel = `${m[1]}-canary`;
+          } else {
+            badgeLabel = 'Canary';
+            btnLabel = 'canary';
+          }
+        } else {
+          // Check if the APK filename specifies a newer version/beta tag than the release tag itself
+          const fileVerMatch = latest.name.match(/v?(\d+\.\d+\.\d+(?:-(?:beta|alpha|rc)[.-]?\d*)?)/i);
+          if (fileVerMatch && fileVerMatch[1]) {
+            const extractedVer = fileVerMatch[1];
+            const cleanTag = latest.tag.replace(/^v/i, '');
+            if (cleanTag && extractedVer.toLowerCase().startsWith(cleanTag.toLowerCase()) && extractedVer.length > cleanTag.length) {
+              badgeLabel = `v${extractedVer}`;
+              btnLabel = extractedVer;
+            }
           }
         }
+
+        if (versionBadge) versionBadge.textContent = badgeLabel;
+        if (apkBtnVersion) apkBtnVersion.textContent = btnLabel;
       } catch (e) {
         // Fallback silently to default link
       }
