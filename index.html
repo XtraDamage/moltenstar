@@ -613,7 +613,6 @@
       text-shadow: 0 1px 3px rgba(0, 0, 0, 0.38);
     }
 
-    /* Tactile touch ripple indicator */
     .m3-carousel-touch-dot {
       position: absolute;
       width: 44px;
@@ -1524,7 +1523,7 @@
       </div>
     </section>
 
-    <!-- Material 3 Multi-browse Carousel (Auto-loads ALL icons from icons/appicons/) -->
+    <!-- Material 3 Multi-browse Carousel (All 21 icons from icons/appicons/) -->
     <section id="m3-appicons-carousel-section" class="reveal delay-2 w-full" aria-label="Иконки приложения MoltenGram">
       <div id="m3CarouselViewport" class="m3-carousel-viewport">
         <div id="m3CarouselTrack" class="m3-carousel-track"></div>
@@ -1909,7 +1908,7 @@
     }
 
     // -------------------------------------------------------------
-    // 1b. Material 3 Multi-browse Carousel (Auto-fetches ALL icons in icons/appicons/)
+    // 1b. Material 3 Multi-browse Carousel (All 21 icons from icons/appicons/)
     // -------------------------------------------------------------
     (function initAppIconsM3Carousel() {
       const viewport = document.getElementById('m3CarouselViewport');
@@ -1923,7 +1922,7 @@
       const ICONS_DIR = 'icons/appicons';
       const RAW_GITHUB_BASE = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${ICONS_DIR}/`;
       const CONTENTS_API_URL = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${ICONS_DIR}`;
-      const CACHE_KEY = 'mg_appicons_list_v1';
+      const CACHE_KEY = 'mg_appicons_list_v2';
       const IMAGE_EXT_REGEX = /\.(png|jpe?g|webp|gif|svg)$/i;
 
       const TITLE_OVERRIDES = {
@@ -1940,8 +1939,45 @@
         'cinemaicon.png': 'Cinema',
         'candyicon.jpg': 'Candy',
         'beericon.png': 'Beer',
-        'glicericon2.png': 'Glicer'
+        'glicericon2.png': 'Glicer',
+        'onixicon.png': 'Onix',
+        'protonicon.png': 'Proton',
+        'sadicon.png': 'Sad',
+        'shizoicon.png': 'Shizo',
+        'staricon.png': 'Star',
+        'stilllifeicon.jpg': 'Still Life',
+        'sunriceicon.png': 'Sunrise',
+        'toxicicon.png': 'Toxic'
       };
+
+      // Complete verified list of all 21 icons in icons/appicons/
+      const ALL_REPO_ICONS = [
+        { file: 'mainicon.png' },
+        { file: 'coralicon.png' },
+        { file: 'magmaicon.png' },
+        { file: 'burnicon.png' },
+        { file: 'staricon.png' },
+        { file: 'nothingOsicon.png' },
+        { file: 'googleicon.png' },
+        { file: 'exteraicon.png' },
+        { file: 'protonicon.png' },
+        { file: 'onixicon.png' },
+        { file: 'toxicicon.png' },
+        { file: 'sunriceicon.png' },
+        { file: 'stilllifeicon.jpg' },
+        { file: 'anotherchance.png' },
+        { file: 'cinemaicon.png' },
+        { file: 'coffeicon.png' },
+        { file: 'candyicon.jpg' },
+        { file: 'beericon.png' },
+        { file: 'glicericon2.png' },
+        { file: 'shizoicon.png' },
+        { file: 'sadicon.png' }
+      ];
+
+      const ORDER_INDEX = new Map(
+        ALL_REPO_ICONS.map((entry, idx) => [entry.file.toLowerCase(), idx])
+      );
 
       function formatIconTitle(filename) {
         const lower = filename.toLowerCase();
@@ -1961,9 +1997,9 @@
       function normalizeIconEntries(files) {
         const imageFiles = files.filter(f => IMAGE_EXT_REGEX.test(f.file));
         imageFiles.sort((a, b) => {
-          const aMain = a.file.toLowerCase().startsWith('mainicon') ? 0 : 1;
-          const bMain = b.file.toLowerCase().startsWith('mainicon') ? 0 : 1;
-          if (aMain !== bMain) return aMain - bMain;
+          const idxA = ORDER_INDEX.has(a.file.toLowerCase()) ? ORDER_INDEX.get(a.file.toLowerCase()) : 999;
+          const idxB = ORDER_INDEX.has(b.file.toLowerCase()) ? ORDER_INDEX.get(b.file.toLowerCase()) : 999;
+          if (idxA !== idxB) return idxA - idxB;
           return a.file.localeCompare(b.file);
         });
         return imageFiles.map(f => ({
@@ -1973,32 +2009,16 @@
         }));
       }
 
-      const INITIAL_FILES = [
-        { file: 'mainicon.png' },
-        { file: 'anotherchance.png' },
-        { file: 'beericon.png' },
-        { file: 'burnicon.png' },
-        { file: 'candyicon.jpg' },
-        { file: 'cinemaicon.png' },
-        { file: 'coffeicon.png' },
-        { file: 'coralicon.png' },
-        { file: 'exteraicon.png' },
-        { file: 'glicericon2.png' },
-        { file: 'googleicon.png' },
-        { file: 'magmaicon.png' },
-        { file: 'nothingOsicon.png' }
-      ];
-
       let appIcons = [];
       try {
         const cached = JSON.parse(sessionStorage.getItem(CACHE_KEY) || 'null');
-        if (Array.isArray(cached) && cached.length > 0) {
+        if (Array.isArray(cached) && cached.length >= ALL_REPO_ICONS.length) {
           appIcons = normalizeIconEntries(cached);
         }
       } catch (e) {}
 
       if (appIcons.length === 0) {
-        appIcons = normalizeIconEntries(INITIAL_FILES);
+        appIcons = normalizeIconEntries(ALL_REPO_ICONS);
       }
 
       const state = {
@@ -2052,7 +2072,7 @@
           img.src = `${ICONS_DIR}/${encodeURIComponent(item.file)}`;
           img.alt = item.title;
           img.draggable = false;
-          img.loading = i < 5 ? 'eager' : 'lazy';
+          img.loading = i < 6 ? 'eager' : 'lazy';
           img.onerror = function() {
             if (!this.dataset.fallbackTried) {
               this.dataset.fallbackTried = '1';
@@ -2281,8 +2301,8 @@
         requestAnimationFrame(carouselTick);
       }
 
-      // Dynamically load ALL image files from icons/appicons/ via GitHub API
-      async function syncAllRepoIcons() {
+      // Also sync any future icons added to icons/appicons/ via GitHub API
+      async function syncFutureRepoIcons() {
         try {
           const res = await fetch(CONTENTS_API_URL);
           if (!res.ok) return;
@@ -2309,9 +2329,7 @@
             appIcons = normalized;
             buildCarouselDom();
           }
-        } catch (e) {
-          // Silently keep fallback icons if offline or rate-limited
-        }
+        } catch (e) {}
       }
 
       window.addEventListener('resize', () => {
@@ -2322,7 +2340,7 @@
       measureContainer();
       buildCarouselDom();
       requestAnimationFrame(carouselTick);
-      syncAllRepoIcons();
+      syncFutureRepoIcons();
     })();
 
     // -------------------------------------------------------------
