@@ -642,7 +642,7 @@
     }
 
     .m3-carousel-dot.active {
-      width: 18px;
+      width: 16px;
       background-color: var(--primary);
     }
 
@@ -1524,14 +1524,14 @@
       </div>
     </section>
 
-    <!-- Material 3 Multi-browse Carousel (App Icons from icons/appicons/) -->
+    <!-- Material 3 Multi-browse Carousel (Auto-loads ALL icons from icons/appicons/) -->
     <section id="m3-appicons-carousel-section" class="reveal delay-2 w-full" aria-label="Иконки приложения MoltenGram">
       <div id="m3CarouselViewport" class="m3-carousel-viewport">
         <div id="m3CarouselTrack" class="m3-carousel-track"></div>
         <div id="m3CarouselTouchDot" class="m3-carousel-touch-dot"></div>
       </div>
       <!-- Minimal MD3 Pagination Dots -->
-      <div id="m3CarouselDots" class="flex items-center justify-center gap-1.5 mt-3"></div>
+      <div id="m3CarouselDots" class="flex flex-wrap items-center justify-center gap-1.5 mt-3 px-2"></div>
     </section>
 
     <!-- Minimalist Material Design 3 Real Client Settings Search with Deep Links -->
@@ -1909,7 +1909,7 @@
     }
 
     // -------------------------------------------------------------
-    // 1b. Material 3 Multi-browse Carousel (App Icons from icons/appicons/)
+    // 1b. Material 3 Multi-browse Carousel (Auto-fetches ALL icons in icons/appicons/)
     // -------------------------------------------------------------
     (function initAppIconsM3Carousel() {
       const viewport = document.getElementById('m3CarouselViewport');
@@ -1918,24 +1918,88 @@
       const dotsWrap = document.getElementById('m3CarouselDots');
       if (!viewport || !track || !dotsWrap) return;
 
-      const APP_ICONS = [
-        { file: 'mainicon.png',      title: 'MoltenGram' },
-        { file: 'coralicon.png',     title: 'Coral' },
-        { file: 'magmaicon.png',     title: 'Magma' },
-        { file: 'burnicon.png',      title: 'Burn' },
-        { file: 'nothingOsicon.png', title: 'Nothing OS' },
-        { file: 'googleicon.png',    title: 'Google' },
-        { file: 'exteraicon.png',    title: 'exteraGram' },
-        { file: 'anotherchance.png', title: 'Another Chance' },
-        { file: 'coffeicon.png',     title: 'Coffee' },
-        { file: 'cinemaicon.png',    title: 'Cinema' },
-        { file: 'candyicon.jpg',     title: 'Candy' },
-        { file: 'beericon.png',      title: 'Beer' },
-        { file: 'glicericon2.png',   title: 'Glicer' }
+      const REPO_OWNER = 'XtraDamage';
+      const REPO_NAME = 'moltenstar';
+      const ICONS_DIR = 'icons/appicons';
+      const RAW_GITHUB_BASE = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${ICONS_DIR}/`;
+      const CONTENTS_API_URL = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${ICONS_DIR}`;
+      const CACHE_KEY = 'mg_appicons_list_v1';
+      const IMAGE_EXT_REGEX = /\.(png|jpe?g|webp|gif|svg)$/i;
+
+      const TITLE_OVERRIDES = {
+        'mainicon.png': 'MoltenGram',
+        'coralicon.png': 'Coral',
+        'magmaicon.png': 'Magma',
+        'burnicon.png': 'Burn',
+        'nothingosicon.png': 'Nothing OS',
+        'googleicon.png': 'Google',
+        'exteraicon.png': 'exteraGram',
+        'anotherchance.png': 'Another Chance',
+        'coffeicon.png': 'Coffee',
+        'coffeeicon.png': 'Coffee',
+        'cinemaicon.png': 'Cinema',
+        'candyicon.jpg': 'Candy',
+        'beericon.png': 'Beer',
+        'glicericon2.png': 'Glicer'
+      };
+
+      function formatIconTitle(filename) {
+        const lower = filename.toLowerCase();
+        if (TITLE_OVERRIDES[lower]) return TITLE_OVERRIDES[lower];
+
+        let stem = filename.replace(/\.[^.]+$/, '');
+        stem = stem.replace(/[_-]?icon\d*$/i, '').replace(/icon$/i, '');
+        stem = stem.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/[_-]+/g, ' ').trim();
+        if (!stem) stem = filename.replace(/\.[^.]+$/, '');
+
+        return stem
+          .split(/\s+/)
+          .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(' ');
+      }
+
+      function normalizeIconEntries(files) {
+        const imageFiles = files.filter(f => IMAGE_EXT_REGEX.test(f.file));
+        imageFiles.sort((a, b) => {
+          const aMain = a.file.toLowerCase().startsWith('mainicon') ? 0 : 1;
+          const bMain = b.file.toLowerCase().startsWith('mainicon') ? 0 : 1;
+          if (aMain !== bMain) return aMain - bMain;
+          return a.file.localeCompare(b.file);
+        });
+        return imageFiles.map(f => ({
+          file: f.file,
+          title: formatIconTitle(f.file),
+          rawUrl: f.rawUrl || `${RAW_GITHUB_BASE}${encodeURIComponent(f.file)}`
+        }));
+      }
+
+      const INITIAL_FILES = [
+        { file: 'mainicon.png' },
+        { file: 'anotherchance.png' },
+        { file: 'beericon.png' },
+        { file: 'burnicon.png' },
+        { file: 'candyicon.jpg' },
+        { file: 'cinemaicon.png' },
+        { file: 'coffeicon.png' },
+        { file: 'coralicon.png' },
+        { file: 'exteraicon.png' },
+        { file: 'glicericon2.png' },
+        { file: 'googleicon.png' },
+        { file: 'magmaicon.png' },
+        { file: 'nothingOsicon.png' }
       ];
 
-      const RAW_GITHUB_BASE = 'https://raw.githubusercontent.com/XtraDamage/moltenstar/main/icons/appicons/';
-      const ITEM_COUNT = APP_ICONS.length;
+      let appIcons = [];
+      try {
+        const cached = JSON.parse(sessionStorage.getItem(CACHE_KEY) || 'null');
+        if (Array.isArray(cached) && cached.length > 0) {
+          appIcons = normalizeIconEntries(cached);
+        }
+      } catch (e) {}
+
+      if (appIcons.length === 0) {
+        appIcons = normalizeIconEntries(INITIAL_FILES);
+      }
 
       const state = {
         progress: 0,
@@ -1968,63 +2032,70 @@
       }
 
       function snapTo(index) {
-        const maxProgress = ITEM_COUNT - 1;
+        const maxProgress = Math.max(0, appIcons.length - 1);
         state.velocity = 0;
         state.targetProgress = Math.max(0, Math.min(maxProgress, index));
       }
 
-      track.innerHTML = '';
-      dotsWrap.innerHTML = '';
+      function buildCarouselDom() {
+        track.innerHTML = '';
+        dotsWrap.innerHTML = '';
 
-      APP_ICONS.forEach((item, i) => {
-        const card = document.createElement('div');
-        card.className = 'm3-carousel-card';
-        card.dataset.index = String(i);
-        card.setAttribute('aria-label', `Иконка ${item.title}`);
+        appIcons.forEach((item, i) => {
+          const card = document.createElement('div');
+          card.className = 'm3-carousel-card';
+          card.dataset.index = String(i);
+          card.setAttribute('aria-label', `Иконка ${item.title}`);
 
-        const img = document.createElement('img');
-        img.className = 'm3-carousel-image';
-        img.src = `icons/appicons/${item.file}`;
-        img.alt = item.title;
-        img.draggable = false;
-        img.loading = i < 4 ? 'eager' : 'lazy';
-        img.onerror = function() {
-          if (!this.dataset.fallbackTried) {
-            this.dataset.fallbackTried = '1';
-            this.src = `${RAW_GITHUB_BASE}${item.file}`;
-          }
-        };
+          const img = document.createElement('img');
+          img.className = 'm3-carousel-image';
+          img.src = `${ICONS_DIR}/${encodeURIComponent(item.file)}`;
+          img.alt = item.title;
+          img.draggable = false;
+          img.loading = i < 5 ? 'eager' : 'lazy';
+          img.onerror = function() {
+            if (!this.dataset.fallbackTried) {
+              this.dataset.fallbackTried = '1';
+              this.src = item.rawUrl;
+            }
+          };
 
-        const scrim = document.createElement('div');
-        scrim.className = 'm3-carousel-scrim';
+          const scrim = document.createElement('div');
+          scrim.className = 'm3-carousel-scrim';
 
-        const label = document.createElement('div');
-        label.className = 'm3-carousel-label';
-        label.textContent = item.title;
+          const label = document.createElement('div');
+          label.className = 'm3-carousel-label';
+          label.textContent = item.title;
 
-        card.appendChild(img);
-        card.appendChild(scrim);
-        card.appendChild(label);
+          card.appendChild(img);
+          card.appendChild(scrim);
+          card.appendChild(label);
 
-        card.addEventListener('click', () => {
-          if (state.dragMoved) return;
-          const activeIdx = Math.round(state.progress);
-          if (i !== activeIdx) {
-            snapTo(i);
-          } else {
-            showToast(`Иконка «${item.title}»`);
-          }
+          card.addEventListener('click', () => {
+            if (state.dragMoved) return;
+            const activeIdx = Math.round(state.progress);
+            if (i !== activeIdx) {
+              snapTo(i);
+            } else {
+              showToast(`Иконка «${item.title}»`);
+            }
+          });
+
+          track.appendChild(card);
+
+          const dot = document.createElement('button');
+          dot.type = 'button';
+          dot.className = 'm3-carousel-dot';
+          dot.setAttribute('aria-label', `Перейти к иконке ${item.title}`);
+          dot.addEventListener('click', () => snapTo(i));
+          dotsWrap.appendChild(dot);
         });
 
-        track.appendChild(card);
-
-        const dot = document.createElement('button');
-        dot.type = 'button';
-        dot.className = 'm3-carousel-dot';
-        dot.setAttribute('aria-label', `Перейти к иконке ${item.title}`);
-        dot.addEventListener('click', () => snapTo(i));
-        dotsWrap.appendChild(dot);
-      });
+        const maxProgress = Math.max(0, appIcons.length - 1);
+        state.progress = Math.max(0, Math.min(maxProgress, state.progress));
+        state.targetProgress = Math.max(0, Math.min(maxProgress, state.targetProgress));
+        renderCarousel();
+      }
 
       function measureContainer() {
         const rect = viewport.getBoundingClientRect();
@@ -2034,19 +2105,22 @@
       }
 
       function renderCarousel() {
+        const count = appIcons.length;
+        if (count === 0) return;
+
         const cards = track.children;
-        const rawWeights = new Array(ITEM_COUNT).fill(0);
-        const endStart = ITEM_COUNT - 2;
+        const rawWeights = new Array(count).fill(0);
+        const endStart = Math.max(0, count - 2);
         const endShift = state.progress > endStart ? (state.progress - endStart) * 0.55 : 0;
 
         let totalRaw = 0;
         let visibleCount = 0;
 
-        for (let i = 0; i < ITEM_COUNT; i++) {
+        for (let i = 0; i < count; i++) {
           const d = i - state.progress + endShift;
           let w = getRawKeylineWidth(d);
 
-          if (state.progress > endStart && i === ITEM_COUNT - 3) {
+          if (state.progress > endStart && i === count - 3) {
             const extraPeek = ((state.progress - endStart) / 1.0) * 22;
             w = Math.max(w, Math.min(24, extraPeek));
           }
@@ -2061,8 +2135,9 @@
         const scale = totalRaw > 0 ? availableW / totalRaw : 1;
 
         let seen = 0;
-        for (let i = 0; i < ITEM_COUNT; i++) {
+        for (let i = 0; i < count; i++) {
           const card = cards[i];
+          if (!card) continue;
           const img = card.children[0];
           const label = card.children[2];
           const width = rawWeights[i] * scale;
@@ -2079,18 +2154,16 @@
           card.style.width = `${width.toFixed(2)}px`;
           card.style.marginRight = seen < visibleCount ? `${state.gap}px` : '0px';
 
-          // Smoothly reveal caption only when card is wide enough
           const textAlpha = Math.max(0, Math.min(1, (width - 78) / 36));
           label.style.opacity = textAlpha.toFixed(3);
           label.style.transform = `translateY(${((1 - textAlpha) * 6).toFixed(1)}px)`;
 
-          // Subtle parallax shift of icon inside rounded mask
           const d = i - state.progress;
           const parallaxX = Math.max(-22, Math.min(22, d * -14));
           img.style.transform = `translate3d(calc(-50% + ${parallaxX.toFixed(1)}px), 0, 0)`;
         }
 
-        const activeIdx = Math.max(0, Math.min(ITEM_COUNT - 1, Math.round(state.progress)));
+        const activeIdx = Math.max(0, Math.min(count - 1, Math.round(state.progress)));
         const dots = dotsWrap.children;
         for (let i = 0; i < dots.length; i++) {
           dots[i].classList.toggle('active', i === activeIdx);
@@ -2134,7 +2207,7 @@
         }
 
         const stepScale = 1 / Math.max(150, state.containerWidth * 0.34);
-        const maxProgress = ITEM_COUNT - 1;
+        const maxProgress = Math.max(0, appIcons.length - 1);
         let nextProgress = state.progress - dx * stepScale;
 
         if (nextProgress < 0) {
@@ -2154,7 +2227,7 @@
         state.isDragging = false;
         updateTouchDot(0, 0, false);
 
-        const maxProgress = ITEM_COUNT - 1;
+        const maxProgress = Math.max(0, appIcons.length - 1);
         const projected = state.progress + state.velocity * 4.2;
         state.targetProgress = Math.max(0, Math.min(maxProgress, Math.round(projected)));
         state.velocity *= 0.42;
@@ -2169,7 +2242,7 @@
         if (Math.abs(delta) < 2) return;
         e.preventDefault();
 
-        const maxProgress = ITEM_COUNT - 1;
+        const maxProgress = Math.max(0, appIcons.length - 1);
         state.progress = Math.max(0, Math.min(maxProgress, state.progress + delta * 0.004));
         state.targetProgress = Math.round(state.progress);
 
@@ -2180,7 +2253,7 @@
       }, { passive: false });
 
       function carouselTick() {
-        const maxProgress = ITEM_COUNT - 1;
+        const maxProgress = Math.max(0, appIcons.length - 1);
         if (!state.isDragging) {
           if (Math.abs(state.velocity) > 0.0008) {
             state.progress += state.velocity;
@@ -2208,14 +2281,48 @@
         requestAnimationFrame(carouselTick);
       }
 
+      // Dynamically load ALL image files from icons/appicons/ via GitHub API
+      async function syncAllRepoIcons() {
+        try {
+          const res = await fetch(CONTENTS_API_URL);
+          if (!res.ok) return;
+          const entries = await res.json();
+          if (!Array.isArray(entries)) return;
+
+          const discovered = entries
+            .filter(item => item && item.type === 'file' && IMAGE_EXT_REGEX.test(item.name))
+            .map(item => ({
+              file: item.name,
+              rawUrl: item.download_url || `${RAW_GITHUB_BASE}${encodeURIComponent(item.name)}`
+            }));
+
+          if (discovered.length === 0) return;
+
+          const normalized = normalizeIconEntries(discovered);
+          try {
+            sessionStorage.setItem(CACHE_KEY, JSON.stringify(discovered));
+          } catch (e) {}
+
+          const currentSig = appIcons.map(x => x.file).join('|');
+          const nextSig = normalized.map(x => x.file).join('|');
+          if (currentSig !== nextSig) {
+            appIcons = normalized;
+            buildCarouselDom();
+          }
+        } catch (e) {
+          // Silently keep fallback icons if offline or rate-limited
+        }
+      }
+
       window.addEventListener('resize', () => {
         measureContainer();
         renderCarousel();
       });
 
       measureContainer();
-      renderCarousel();
+      buildCarouselDom();
       requestAnimationFrame(carouselTick);
+      syncAllRepoIcons();
     })();
 
     // -------------------------------------------------------------
