@@ -1423,12 +1423,57 @@
     .skeleton-card {
       animation: skeletonShimmer 1.4s ease-in-out infinite;
     }
+
+    /* -------------------------------------------------------------
+       Nothing OS Dot Matrix Physics Canvas (Inverts overlapped text/UI)
+       ------------------------------------------------------------- */
+    #dotMatrixPhysicsCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 45;
+      pointer-events: none;
+      mix-blend-mode: difference;
+    }
+
+    /* Enhanced MD3 Expressive Reveal & Search Pulse */
+    .reveal {
+      animation: md3RevealUp 0.65s var(--spring-expressive) both;
+    }
+    .delay-1 { animation-delay: 0.06s; }
+    .delay-2 { animation-delay: 0.12s; }
+    .delay-3 { animation-delay: 0.18s; }
+
+    @keyframes md3RevealUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.97);
+        filter: blur(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+      }
+    }
+
+    .m3-search-bar.search-pulse {
+      animation: searchBarPulse 0.75s var(--spring-expressive);
+    }
+
+    @keyframes searchBarPulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 138, 101, 0.45); }
+      45% { transform: scale(1.018); box-shadow: 0 0 0 8px rgba(255, 138, 101, 0.18); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 138, 101, 0); }
+    }
   </style>
 </head>
 <body class="selection:bg-[var(--primary-container)] selection:text-[var(--on-primary-container)]">
 
   <!-- Fixed Screen-Wide Inverting Dot Matrix Overlay for NOTHING (R) Easter Egg -->
   <div class="nothing-dots-overlay" aria-hidden="true"></div>
+  <canvas id="dotMatrixPhysicsCanvas" aria-hidden="true"></canvas>
 
   <!-- Real Frosted Glass Top App Bar with Seamless Concave Edge Wrapping -->
   <header class="m3-top-dock">
@@ -1441,7 +1486,7 @@
       </a>
 
       <div class="relative z-10 flex items-center gap-2">
-        <a href="#settings-catalog" class="m3-icon-btn" title="Поиск по настройкам клиента" aria-label="Поиск по настройкам">
+        <a href="#settings-catalog" id="headerSearchBtn" class="m3-icon-btn" title="Поиск по настройкам клиента" aria-label="Поиск по настройкам">
           <span class="material-symbols-rounded text-[20px]">search</span>
         </a>
 
@@ -1922,7 +1967,9 @@
       const ICONS_DIR = 'icons/appicons';
       const RAW_GITHUB_BASE = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${ICONS_DIR}/`;
       const CONTENTS_API_URL = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${ICONS_DIR}`;
-      const CACHE_KEY = 'mg_appicons_list_v2';
+      const CACHE_KEY = 'mg_appicons_list_v3';
+      const APP_REPO_ICONS_API = 'https://api.github.com/repos/MoltenSt4r/MoltenGram/contents/TMessagesProj/src/main/res/mipmap-xxxhdpi?ref=main';
+      const APP_REPO_RAW_BASE = 'https://raw.githubusercontent.com/MoltenSt4r/MoltenGram/main/TMessagesProj/src/main/res/mipmap-xxxhdpi/';
       const IMAGE_EXT_REGEX = /\.(png|jpe?g|webp|gif|svg)$/i;
 
       const TITLE_OVERRIDES = {
@@ -2302,18 +2349,47 @@
 
       async function syncFutureRepoIcons() {
         try {
-          const res = await fetch(CONTENTS_API_URL);
-          if (!res.ok) return;
-          const entries = await res.json();
-          if (!Array.isArray(entries)) return;
+          const [siteRes, appRes] = await Promise.allSettled([
+            fetch(CONTENTS_API_URL),
+            fetch(APP_REPO_ICONS_API)
+          ]);
 
-          const discovered = entries
-            .filter(item => item && item.type === 'file' && IMAGE_EXT_REGEX.test(item.name))
-            .map(item => ({
-              file: item.name,
-              rawUrl: item.download_url || `${RAW_GITHUB_BASE}${encodeURIComponent(item.name)}`
-            }));
+          const merged = new Map();
+          const addEntry = (file, rawUrl) => {
+            const stemKey = file
+              .toLowerCase()
+              .replace(/^ic_launcher_moltengram_?/, '')
+              .replace(/icon\d*\.[^.]+$/, '')
+              .replace(/\.[^.]+$/, '')
+              .replace(/[^a-z0-9]/g, '') || 'moltengram';
+            if (!merged.has(stemKey)) {
+              merged.set(stemKey, { file, rawUrl });
+            }
+          };
 
+          if (siteRes.status === 'fulfilled' && siteRes.value.ok) {
+            const entries = await siteRes.value.json();
+            if (Array.isArray(entries)) {
+              entries
+                .filter(item => item && item.type === 'file' && IMAGE_EXT_REGEX.test(item.name))
+                .forEach(item => addEntry(item.name, item.download_url || `${RAW_GITHUB_BASE}${encodeURIComponent(item.name)}`));
+            }
+          }
+
+          if (appRes.status === 'fulfilled' && appRes.value.ok) {
+            const appEntries = await appRes.value.json();
+            if (Array.isArray(appEntries)) {
+              appEntries
+                .filter(item => item && item.type === 'file' && /^ic_launcher_moltengram.*\.png$/i.test(item.name) && !/_round\.png$|_foreground\.png$|_background\.png$/i.test(item.name))
+                .forEach(item => {
+                  const shortName = item.name.replace(/^ic_launcher_moltengram_?/i, '').replace(/\.png$/i, '');
+                  const displayFile = shortName ? `${shortName}icon.png` : 'mainicon.png';
+                  addEntry(displayFile, item.download_url || `${APP_REPO_RAW_BASE}${encodeURIComponent(item.name)}`);
+                });
+            }
+          }
+
+          const discovered = Array.from(merged.values());
           if (discovered.length === 0) return;
 
           const normalized = normalizeIconEntries(discovered);
@@ -4325,6 +4401,283 @@
         openArchiveModal();
         switchArchiveTab('release');
       }
+    })();
+
+    // -------------------------------------------------------------
+    // 7. Immediate Search Focus on Header Search Click
+    // -------------------------------------------------------------
+    (function setupInstantSearchTrigger() {
+      const headerSearchBtn = document.getElementById('headerSearchBtn');
+      const searchBar = document.querySelector('#settings-catalog .m3-search-bar');
+      const catalogEl = document.getElementById('settings-catalog');
+      const inputEl = document.getElementById('settingsSearchInput');
+      if (!headerSearchBtn || !inputEl || !catalogEl) return;
+
+      headerSearchBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const top = catalogEl.getBoundingClientRect().top + window.scrollY - 82;
+        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+        inputEl.focus({ preventScroll: true });
+        if (searchBar) {
+          searchBar.classList.remove('search-pulse');
+          void searchBar.offsetWidth;
+          searchBar.classList.add('search-pulse');
+        }
+      });
+    })();
+
+    // -------------------------------------------------------------
+    // 8. Nothing OS Dot Matrix Interactive Physics Shapes
+    //    - Fixed screen-wide dot matrix grid (LED pixel aesthetic)
+    //    - Pure white dots + mix-blend-mode: difference inverts text/UI underneath
+    //    - NO top ceiling clamp: throw/toss shapes freely above viewport!
+    // -------------------------------------------------------------
+    (function initDotMatrixPhysics() {
+      const canvas = document.getElementById('dotMatrixPhysicsCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      const DOT_PITCH = 10;
+      const DOT_RADIUS = 3.5;
+      const GRAVITY = 0.42;
+      const RESTITUTION = 0.72;
+      const FRICTION = 0.992;
+      const FLOOR_PAD = 6;
+
+      let W = window.innerWidth;
+      let H = window.innerHeight;
+      let dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      function resize() {
+        W = window.innerWidth;
+        H = window.innerHeight;
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.floor(W * dpr);
+        canvas.height = Math.floor(H * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      const SHAPE_TYPES = ['circle', 'pill', 'triangle', 'diamond', 'cookie'];
+      const shapes = [];
+      const count = W < 640 ? 4 : 5;
+      for (let i = 0; i < count; i++) {
+        const r = W < 640 ? 28 + (i % 3) * 6 : 34 + (i % 3) * 8;
+        shapes.push({
+          type: SHAPE_TYPES[i % SHAPE_TYPES.length],
+          x: (W / (count + 1)) * (i + 1),
+          y: -80 - i * 95,
+          vx: (Math.random() - 0.5) * 3,
+          vy: 0,
+          angle: Math.random() * Math.PI * 2,
+          va: (Math.random() - 0.5) * 0.04,
+          r,
+          dragging: false
+        });
+      }
+
+      function isInsideShape(s, px, py) {
+        const dx = px - s.x;
+        const dy = py - s.y;
+        const r = s.r;
+        if (dx * dx + dy * dy > r * r * 1.25) return false;
+
+        const cos = Math.cos(-s.angle);
+        const sin = Math.sin(-s.angle);
+        const lx = dx * cos - dy * sin;
+        const ly = dx * sin + dy * cos;
+
+        switch (s.type) {
+          case 'circle':
+            return lx * lx + ly * ly <= r * r;
+          case 'pill': {
+            const halfW = r * 0.85;
+            const halfH = r * 0.48;
+            const cr = halfH;
+            const qx = Math.max(Math.abs(lx) - (halfW - cr), 0);
+            const qy = Math.max(Math.abs(ly) - (halfH - cr), 0);
+            return qx * qx + qy * qy <= cr * cr;
+          }
+          case 'diamond':
+            return (Math.abs(lx) + Math.abs(ly)) <= r * 1.08;
+          case 'triangle': {
+            const k = Math.sqrt(3);
+            const tr = r * 0.82;
+            let x = Math.abs(lx) - tr;
+            let y = ly + tr / k;
+            if (x + k * y > 0) {
+              const nx = (x - k * y) / 2;
+              const ny = (-k * x - y) / 2;
+              x = nx; y = ny;
+            }
+            x -= Math.max(-2 * tr, Math.min(0, x));
+            return Math.hypot(x, y) * -Math.sign(y) <= 0 || (y <= tr / k && y >= -tr / (2 * k) && Math.abs(lx) <= (tr / k - y) * 0.58 + tr * 0.35);
+          }
+          case 'cookie': {
+            const dist = Math.hypot(lx, ly);
+            const theta = Math.atan2(ly, lx);
+            const wave = r * (0.86 + 0.14 * Math.cos(8 * theta));
+            return dist <= wave;
+          }
+          default:
+            return lx * lx + ly * ly <= r * r;
+        }
+      }
+
+      let activeShape = null;
+      let dragOffsetX = 0;
+      let dragOffsetY = 0;
+      let lastPtrX = 0;
+      let lastPtrY = 0;
+      let lastPtrT = 0;
+      let throwVx = 0;
+      let throwVy = 0;
+
+      function findShapeAt(x, y) {
+        for (let i = shapes.length - 1; i >= 0; i--) {
+          const s = shapes[i];
+          if (Math.hypot(x - s.x, y - s.y) <= s.r * 1.15) return s;
+        }
+        return null;
+      }
+
+      window.addEventListener('pointerdown', (e) => {
+        const hit = findShapeAt(e.clientX, e.clientY);
+        if (!hit) return;
+        activeShape = hit;
+        activeShape.dragging = true;
+        dragOffsetX = hit.x - e.clientX;
+        dragOffsetY = hit.y - e.clientY;
+        lastPtrX = e.clientX;
+        lastPtrY = e.clientY;
+        lastPtrT = performance.now();
+        throwVx = 0;
+        throwVy = 0;
+        hit.vx = 0;
+        hit.vy = 0;
+      }, { passive: true });
+
+      window.addEventListener('pointermove', (e) => {
+        if (!activeShape) return;
+        const now = performance.now();
+        const dt = Math.max(8, now - lastPtrT);
+        throwVx = ((e.clientX - lastPtrX) / dt) * 16;
+        throwVy = ((e.clientY - lastPtrY) / dt) * 16;
+        activeShape.x = e.clientX + dragOffsetX;
+        activeShape.y = e.clientY + dragOffsetY;
+        lastPtrX = e.clientX;
+        lastPtrY = e.clientY;
+        lastPtrT = now;
+      }, { passive: true });
+
+      function releaseShape() {
+        if (!activeShape) return;
+        activeShape.dragging = false;
+        activeShape.vx = Math.max(-36, Math.min(36, throwVx));
+        activeShape.vy = Math.max(-44, Math.min(36, throwVy));
+        activeShape.va = activeShape.vx * 0.008;
+        activeShape = null;
+      }
+      window.addEventListener('pointerup', releaseShape, { passive: true });
+      window.addEventListener('pointercancel', releaseShape, { passive: true });
+
+      function step() {
+        for (let i = 0; i < shapes.length; i++) {
+          const s = shapes[i];
+          if (s.dragging) continue;
+
+          s.vy += GRAVITY;
+          s.vx *= FRICTION;
+          s.x += s.vx;
+          s.y += s.vy;
+          s.angle += s.va;
+          s.va *= 0.995;
+
+          if (s.x - s.r < 0) {
+            s.x = s.r;
+            s.vx = Math.abs(s.vx) * RESTITUTION;
+            s.va = -s.vy * 0.006;
+          } else if (s.x + s.r > W) {
+            s.x = W - s.r;
+            s.vx = -Math.abs(s.vx) * RESTITUTION;
+            s.va = s.vy * 0.006;
+          }
+
+          const floorY = H - FLOOR_PAD - s.r;
+          if (s.y > floorY) {
+            s.y = floorY;
+            if (Math.abs(s.vy) > 1.2) {
+              s.vy = -s.vy * RESTITUTION;
+            } else {
+              s.vy = 0;
+              s.vx *= 0.94;
+              s.va *= 0.9;
+            }
+          }
+        }
+
+        for (let i = 0; i < shapes.length; i++) {
+          for (let j = i + 1; j < shapes.length; j++) {
+            const a = shapes[i];
+            const b = shapes[j];
+            const dx = b.x - a.x;
+            const dy = b.y - a.y;
+            const dist = Math.hypot(dx, dy);
+            const minDist = a.r + b.r;
+            if (dist > 0 && dist < minDist) {
+              const nx = dx / dist;
+              const ny = dy / dist;
+              const overlap = (minDist - dist) * 0.5;
+              if (!a.dragging) { a.x -= nx * overlap; a.y -= ny * overlap; }
+              if (!b.dragging) { b.x += nx * overlap; b.y += ny * overlap; }
+
+              const dvx = a.vx - b.vx;
+              const dvy = a.vy - b.vy;
+              const impact = dvx * nx + dvy * ny;
+              if (impact > 0) {
+                const impulse = impact * 0.85;
+                if (!a.dragging) { a.vx -= impulse * nx; a.vy -= impulse * ny; }
+                if (!b.dragging) { b.vx += impulse * nx; b.vy += impulse * ny; }
+              }
+            }
+          }
+        }
+      }
+
+      function renderDotMatrix() {
+        ctx.clearRect(0, 0, W, H);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+
+        for (let i = 0; i < shapes.length; i++) {
+          const s = shapes[i];
+          if (s.y - s.r > H || s.y + s.r < 0) continue;
+
+          const minGx = Math.max(0, Math.floor((s.x - s.r * 1.15) / DOT_PITCH) * DOT_PITCH);
+          const maxGx = Math.min(W, Math.ceil((s.x + s.r * 1.15) / DOT_PITCH) * DOT_PITCH);
+          const minGy = Math.max(0, Math.floor((s.y - s.r * 1.15) / DOT_PITCH) * DOT_PITCH);
+          const maxGy = Math.min(H, Math.ceil((s.y + s.r * 1.15) / DOT_PITCH) * DOT_PITCH);
+
+          for (let gy = minGy; gy <= maxGy; gy += DOT_PITCH) {
+            for (let gx = minGx; gx <= maxGx; gx += DOT_PITCH) {
+              if (isInsideShape(s, gx, gy)) {
+                ctx.moveTo(gx + DOT_RADIUS, gy);
+                ctx.arc(gx, gy, DOT_RADIUS, 0, Math.PI * 2);
+              }
+            }
+          }
+        }
+        ctx.fill();
+      }
+
+      function loop() {
+        step();
+        renderDotMatrix();
+        requestAnimationFrame(loop);
+      }
+      requestAnimationFrame(loop);
     })();
   </script>
 </body>
