@@ -679,7 +679,13 @@
       touch-action: none;
       will-change: transform;
       transform-origin: center center;
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.12));
+      transition: filter 0.2s ease, opacity 0.25s ease;
+    }
+
+    html[data-nothing="true"] .md3-phys-shape {
       opacity: 0;
+      filter: none;
     }
 
     .md3-phys-shape:hover {
@@ -1432,9 +1438,14 @@
       inset: 0;
       width: 100vw;
       height: 100vh;
-      z-index: 45;
+      z-index: 46;
       pointer-events: none;
       mix-blend-mode: difference;
+      display: none;
+    }
+
+    html[data-nothing="true"] #dotMatrixPhysicsCanvas {
+      display: block;
     }
 
     /* Enhanced MD3 Expressive Reveal & Search Pulse */
@@ -3340,6 +3351,10 @@
 
       function renderBodiesDotMatrix() {
         if (!dotCanvas || !dotCtx) return;
+        if (document.documentElement.getAttribute('data-nothing') !== 'true') {
+          dotCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+          return;
+        }
         const W = window.innerWidth;
         const H = window.innerHeight;
         const rect = arena.getBoundingClientRect();
@@ -3385,6 +3400,10 @@
       }
 
       window.addEventListener('scroll', renderBodiesDotMatrix, { passive: true });
+      new MutationObserver(renderBodiesDotMatrix).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-nothing']
+      });
 
       function resetShapesFormation() {
         const targets = computeStackedTargets();
