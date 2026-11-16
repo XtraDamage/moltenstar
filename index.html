@@ -179,6 +179,133 @@
       --carousel-card-border: rgba(200, 70, 48, 0.08);
     }
 
+    /* Channel Themes: Beta (Blue) & Canary (Yellow) */
+    html[data-channel="beta"][data-theme="dark"] {
+      --bg: #0D141F;
+      --surface-container-lowest: #090E17;
+      --surface-container-low: #121B29;
+      --surface-container: #172334;
+      --surface-container-high: #1E2E44;
+      --surface-container-highest: #273B56;
+      --primary: #7CC4FF;
+      --on-primary: #072038;
+      --primary-container: #0D4B80;
+      --on-primary-container: #D4EAFF;
+      --secondary-container: #1B344D;
+      --on-secondary-container: #D4EAFF;
+      --text: #ECF4FF;
+      --text-sub: #BDD1EB;
+      --text-muted: #849BB8;
+      --glass-top: rgba(18, 27, 41, 0.80);
+      --glass-bottom: rgba(13, 20, 31, 0.65);
+      --glass-border: rgba(124, 196, 255, 0.14);
+      --glass-shadow: 0 8px 32px 0 rgba(13, 75, 128, 0.28);
+      --md3-shape-0: #7CC4FF;
+      --md3-shape-1: #AEDBFF;
+      --md3-shape-2: #4A9BE8;
+      --md3-shape-3: #144A82;
+      --md3-shape-4: #62B2F5;
+      --md3-baseline: rgba(124, 196, 255, 0.26);
+      --carousel-card-border: rgba(124, 196, 255, 0.10);
+    }
+
+    html[data-channel="beta"][data-theme="light"] {
+      --bg: #F4F9FF;
+      --surface-container-lowest: #ffffff;
+      --surface-container-low: #EBF3FF;
+      --surface-container: #E0ECFF;
+      --surface-container-high: #D1E3FF;
+      --surface-container-highest: #C2DAFF;
+      --primary: #1B6EC2;
+      --on-primary: #ffffff;
+      --primary-container: #D4E8FF;
+      --on-primary-container: #06284D;
+      --secondary-container: #D4E8FF;
+      --on-secondary-container: #0B2D52;
+      --text: #0E1B2B;
+      --text-sub: #344B66;
+      --text-muted: #687F9C;
+      --glass-top: rgba(244, 249, 255, 0.85);
+      --glass-bottom: rgba(224, 236, 255, 0.72);
+      --glass-border: rgba(27, 110, 194, 0.10);
+      --glass-shadow: 0 8px 28px 0 rgba(27, 110, 194, 0.10);
+      --md3-shape-0: #1B6EC2;
+      --md3-shape-1: #7CC4FF;
+      --md3-shape-2: #3A89D9;
+      --md3-shape-3: #A9D4FF;
+      --md3-shape-4: #124B87;
+      --md3-baseline: rgba(27, 110, 194, 0.22);
+      --carousel-card-border: rgba(27, 110, 194, 0.10);
+    }
+
+    html[data-channel="canary"][data-theme="dark"] {
+      --bg: #1B170B;
+      --surface-container-lowest: #141108;
+      --surface-container-low: #241F10;
+      --surface-container: #2E2714;
+      --surface-container-high: #3A3119;
+      --surface-container-highest: #473C1F;
+      --primary: #FFD54F;
+      --on-primary: #332600;
+      --primary-container: #6E5300;
+      --on-primary-container: #FFF0B8;
+      --secondary-container: #45360B;
+      --on-secondary-container: #FFF0B8;
+      --text: #FFF8E6;
+      --text-sub: #E5D9B5;
+      --text-muted: #ABA07C;
+      --glass-top: rgba(36, 31, 16, 0.80);
+      --glass-bottom: rgba(27, 23, 11, 0.65);
+      --glass-border: rgba(255, 213, 79, 0.14);
+      --glass-shadow: 0 8px 32px 0 rgba(110, 83, 0, 0.28);
+      --md3-shape-0: #FFD54F;
+      --md3-shape-1: #FFE58F;
+      --md3-shape-2: #E5B526;
+      --md3-shape-3: #705400;
+      --md3-shape-4: #F5C73D;
+      --md3-baseline: rgba(255, 213, 79, 0.26);
+      --carousel-card-border: rgba(255, 213, 79, 0.10);
+    }
+
+    html[data-channel="canary"][data-theme="light"] {
+      --bg: #FFFDF2;
+      --surface-container-lowest: #ffffff;
+      --surface-container-low: #FFF9E0;
+      --surface-container: #FFF3C7;
+      --surface-container-high: #FFECAA;
+      --surface-container-highest: #FFE58F;
+      --primary: #9E7400;
+      --on-primary: #ffffff;
+      --primary-container: #FFE89E;
+      --on-primary-container: #2E2000;
+      --secondary-container: #FFE89E;
+      --on-secondary-container: #382800;
+      --text: #241C05;
+      --text-sub: #57481C;
+      --text-muted: #8C7B48;
+      --glass-top: rgba(255, 253, 242, 0.86);
+      --glass-bottom: rgba(255, 243, 199, 0.72);
+      --glass-border: rgba(158, 116, 0, 0.10);
+      --glass-shadow: 0 8px 28px 0 rgba(158, 116, 0, 0.10);
+      --md3-shape-0: #9E7400;
+      --md3-shape-1: #FFD54F;
+      --md3-shape-2: #C99608;
+      --md3-shape-3: #FFE28A;
+      --md3-shape-4: #6B4E00;
+      --md3-baseline: rgba(158, 116, 0, 0.22);
+      --carousel-card-border: rgba(158, 116, 0, 0.10);
+    }
+
+    html[data-channel="beta"]:not([data-nothing="true"]) .monochrome-target-logo,
+    html[data-channel="beta"]:not([data-nothing="true"]) .m3-carousel-image {
+      filter: sepia(1) hue-rotate(175deg) saturate(2.2) brightness(1.02);
+    }
+
+    html[data-channel="canary"]:not([data-nothing="true"]) .monochrome-target-logo,
+    html[data-channel="canary"]:not([data-nothing="true"]) .m3-carousel-image {
+      filter: sepia(1) hue-rotate(12deg) saturate(2.4) brightness(1.05);
+    }
+
     /* -------------------------------------------------------------
        1b. NOTHING (R) Easter Egg Mode (Monochrome + Real NDot + Smooth Monochrome Original Icon)
        ------------------------------------------------------------- */
@@ -1558,8 +1685,8 @@
            href="/download/release" 
            class="m3-btn m3-btn-filled w-full sm:w-auto ripple-btn">
           <span class="material-symbols-rounded text-[24px]">download</span>
-          <span>Скачать APK</span>
-          <span id="apkBtnVersion" class="text-xs px-2.5 py-0.5 rounded-full bg-[var(--primary-container)] text-[var(--on-primary-container)] font-bold">12.10.6</span>
+          <span id="mainApkBtnLabel">Скачать APK</span>
+          <span id="apkBtnVersion" class="text-xs px-2.5 py-0.5 rounded-full bg-[var(--primary-container)] text-[var(--on-primary-container)] font-bold">13.2.1</span>
         </a>
 
         <button onclick="openArchiveModal()" class="m3-btn m3-btn-tonal w-full sm:w-auto ripple-btn">
@@ -4410,8 +4537,37 @@
     }
 
     // -------------------------------------------------------------
-    // 5. Auto-fetch the Most Recent APK FILE across ALL Channels (Release, Beta, Canary)
+    // 5. Channel Detection (/ , /beta , /canary) & Auto-fetch Latest APK per Channel
     // -------------------------------------------------------------
+    const activeChannel = (() => {
+      const p = (window.location.pathname || '').toLowerCase();
+      const q = new URLSearchParams(window.location.search).get('channel');
+      if (q === 'beta' || p.startsWith('/beta')) return 'beta';
+      if (q === 'canary' || p.startsWith('/canary')) return 'canary';
+      return 'release';
+    })();
+    document.documentElement.setAttribute('data-channel', activeChannel);
+
+    (function applyChannelUiDefaults() {
+      const mainBtn = document.getElementById('mainApkBtn');
+      const mainLabel = document.getElementById('mainApkBtnLabel');
+      const versionBadge = document.getElementById('versionBadge');
+      if (activeChannel === 'beta') {
+        document.title = 'MoltenGram Beta • Telegram с Material Design 3';
+        if (mainBtn) mainBtn.href = '/download/beta';
+        if (mainLabel) mainLabel.textContent = 'Скачать Beta APK';
+        if (versionBadge) versionBadge.textContent = 'Beta';
+      } else if (activeChannel === 'canary') {
+        document.title = 'MoltenGram Canary • Telegram с Material Design 3';
+        if (mainBtn) mainBtn.href = '/download/canary';
+        if (mainLabel) mainLabel.textContent = 'Скачать Canary APK';
+        if (versionBadge) versionBadge.textContent = 'Canary';
+      } else {
+        if (mainBtn) mainBtn.href = '/download/release';
+        if (mainLabel) mainLabel.textContent = 'Скачать APK';
+      }
+    })();
+
     (async function resolveLatestApkFile() {
       try {
         const releases = await getGithubReleases();
@@ -4420,6 +4576,9 @@
         releases.forEach(rel => {
           const tag = (rel.tag_name || '').trim();
           const tagLower = tag.toLowerCase();
+          if (activeChannel === 'canary' && tagLower !== 'canary') return;
+          if (activeChannel === 'beta' && (!rel.prerelease || tagLower === 'canary')) return;
+          if (activeChannel === 'release' && (rel.prerelease || tagLower === 'canary')) return;
 
           (rel.assets || []).forEach(apk => {
             if (!apk.name || !apk.name.toLowerCase().endsWith('.apk') || !apk.browser_download_url) return;
