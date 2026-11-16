@@ -1978,7 +1978,7 @@
       const ICONS_DIR = 'icons/appicons';
       const RAW_GITHUB_BASE = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${ICONS_DIR}/`;
       const CONTENTS_API_URL = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${ICONS_DIR}`;
-      const CACHE_KEY = 'mg_appicons_list_v4';
+      const CACHE_KEY = 'mg_appicons_list_v5';
       const APP_REPO_ICONS_API = 'https://api.github.com/repos/MoltenSt4r/MoltenGram/contents/TMessagesProj/src/main/res/mipmap-xxxhdpi?ref=main';
       const APP_REPO_RAW_BASE = 'https://raw.githubusercontent.com/MoltenSt4r/MoltenGram/main/TMessagesProj/src/main/res/mipmap-xxxhdpi/';
       const IMAGE_EXT_REGEX = /\.(png|jpe?g|webp|gif|svg)$/i;
@@ -2062,7 +2062,8 @@
         return imageFiles.map(f => ({
           file: f.file,
           title: formatIconTitle(f.file),
-          rawUrl: f.rawUrl || `${RAW_GITHUB_BASE}${encodeURIComponent(f.file)}`
+          rawUrl: f.rawUrl || `${RAW_GITHUB_BASE}${encodeURIComponent(f.file)}`,
+          preferRaw: Boolean(f.preferRaw)
         }));
       }
 
@@ -2126,7 +2127,7 @@
 
           const img = document.createElement('img');
           img.className = 'm3-carousel-image';
-          img.src = `${ICONS_DIR}/${encodeURIComponent(item.file)}`;
+          img.src = item.preferRaw ? item.rawUrl : `${ICONS_DIR}/${encodeURIComponent(item.file)}`;
           img.alt = item.title;
           img.draggable = false;
           img.loading = i < 6 ? 'eager' : 'lazy';
@@ -2346,62 +2347,75 @@
 
       async function syncFutureRepoIcons() {
         try {
-          const [siteRes, appRes] = await Promise.allSettled([
-            fetch(CONTENTS_API_URL),
-            fetch(APP_REPO_ICONS_API)
-          ]);
-
-          const ALIAS_MAP = {
-            main: 'moltengram',
-            classic: 'moltengram',
-            burn: 'burning',
-            coffe: 'coffee',
-            extera: 'exteragram',
-            nothingos: 'dotted',
-            nothing: 'dotted',
-            onix: 'onyx',
-            sunrice: 'sunrise',
-            glicer2: 'glacier',
-            glicer: 'glacier',
-            shizo: 'schizophrenia'
-          };
-          const merged = new Map();
-          const addEntry = (file, rawUrl) => {
-            const rawKey = file
-              .toLowerCase()
-              .replace(/^ic_launcher_moltengram_?/, '')
-              .replace(/icon\d*\.[^.]+$/, '')
-              .replace(/\.[^.]+$/, '')
-              .replace(/[^a-z0-9]/g, '') || 'moltengram';
-            const stemKey = ALIAS_MAP[rawKey] || rawKey;
-            if (!merged.has(stemKey)) {
-              merged.set(stemKey, { file, rawUrl });
+          let discovered = [];
+          try {
+            const apiRes = await fetch('/api/icons');
+            if (apiRes.ok) {
+              const data = await apiRes.json();
+              if (data && Array.isArray(data.icons) && data.icons.length > 0) {
+                discovered = data.icons;
+              }
             }
-          };
+          } catch (_) {}
 
-          if (siteRes.status === 'fulfilled' && siteRes.value.ok) {
-            const entries = await siteRes.value.json();
-            if (Array.isArray(entries)) {
-              entries
-                .filter(item => item && item.type === 'file' && IMAGE_EXT_REGEX.test(item.name))
-                .forEach(item => addEntry(item.name, item.download_url || `${RAW_GITHUB_BASE}${encodeURIComponent(item.name)}`));
+          if (discovered.length === 0) {
+            const [siteRes, appRes] = await Promise.allSettled([
+              fetch(CONTENTS_API_URL),
+              fetch(APP_REPO_ICONS_API)
+            ]);
+
+            const ALIAS_MAP = {
+              main: 'moltengram',
+              classic: 'moltengram',
+              burn: 'burning',
+              coffe: 'coffee',
+              extera: 'exteragram',
+              nothingos: 'dotted',
+              nothing: 'dotted',
+              onix: 'onyx',
+              sunrice: 'sunrise',
+              glicer2: 'glacier',
+              glicer: 'glacier',
+              shizo: 'schizophrenia'
+            };
+            const merged = new Map();
+            const addEntry = (file, rawUrl, preferRaw) => {
+              const rawKey = file
+                .toLowerCase()
+                .replace(/^ic_launcher_moltengram_?/, '')
+                .replace(/icon\d*\.[^.]+$/, '')
+                .replace(/\.[^.]+$/, '')
+                .replace(/[^a-z0-9]/g, '') || 'moltengram';
+              const stemKey = ALIAS_MAP[rawKey] || rawKey;
+              if (!merged.has(stemKey)) {
+                merged.set(stemKey, { file, rawUrl, preferRaw: Boolean(preferRaw) });
+              }
+            };
+
+            if (siteRes.status === 'fulfilled' && siteRes.value.ok) {
+              const entries = await siteRes.value.json();
+              if (Array.isArray(entries)) {
+                entries
+                  .filter(item => item && item.type === 'file' && IMAGE_EXT_REGEX.test(item.name))
+                  .forEach(item => addEntry(item.name, item.download_url || `${RAW_GITHUB_BASE}${encodeURIComponent(item.name)}`, false));
+              }
             }
+
+            if (appRes.status === 'fulfilled' && appRes.value.ok) {
+              const appEntries = await appRes.value.json();
+              if (Array.isArray(appEntries)) {
+                appEntries
+                  .filter(item => item && item.type === 'file' && /^ic_launcher_moltengram.*\.png$/i.test(item.name) && !/_round\.png$|_foreground\.png$|_background\.png$/i.test(item.name))
+                  .forEach(item => {
+                    const shortName = item.name.replace(/^ic_launcher_moltengram_?/i, '').replace(/\.png$/i, '');
+                    const displayFile = shortName ? `${shortName}icon.png` : 'mainicon.png';
+                    addEntry(displayFile, item.download_url || `${APP_REPO_RAW_BASE}${encodeURIComponent(item.name)}`, true);
+                  });
+              }
+            }
+
+            discovered = Array.from(merged.values());
           }
-
-          if (appRes.status === 'fulfilled' && appRes.value.ok) {
-            const appEntries = await appRes.value.json();
-            if (Array.isArray(appEntries)) {
-              appEntries
-                .filter(item => item && item.type === 'file' && /^ic_launcher_moltengram.*\.png$/i.test(item.name) && !/_round\.png$|_foreground\.png$|_background\.png$/i.test(item.name))
-                .forEach(item => {
-                  const shortName = item.name.replace(/^ic_launcher_moltengram_?/i, '').replace(/\.png$/i, '');
-                  const displayFile = shortName ? `${shortName}icon.png` : 'mainicon.png';
-                  addEntry(displayFile, item.download_url || `${APP_REPO_RAW_BASE}${encodeURIComponent(item.name)}`);
-                });
-            }
-          }
-
-          const discovered = Array.from(merged.values());
           if (discovered.length === 0) return;
 
           const normalized = normalizeIconEntries(discovered);
@@ -3360,9 +3374,14 @@
         const W = window.innerWidth;
         const H = window.innerHeight;
         const rect = arena.getBoundingClientRect();
+        if (arena.clientHeight > 0 && Math.abs(arena.clientHeight - arenaH) > 1) {
+          arenaH = arena.clientHeight;
+        }
         dotCtx.clearRect(0, 0, W, H);
         dotCtx.fillStyle = '#FFFFFF';
         dotCtx.beginPath();
+
+        const floorClampY = Math.min(H, Math.floor((rect.bottom - DOT_RADIUS) / DOT_PITCH) * DOT_PITCH);
 
         for (let i = 0; i < bodies.length; i++) {
           const b = bodies[i];
@@ -3374,7 +3393,7 @@
           const minGx = Math.max(0, Math.floor((vx - r) / DOT_PITCH) * DOT_PITCH);
           const maxGx = Math.min(W, Math.ceil((vx + r) / DOT_PITCH) * DOT_PITCH);
           const minGy = Math.max(0, Math.floor((vy - r) / DOT_PITCH) * DOT_PITCH);
-          const maxGy = Math.min(H, Math.ceil((vy + r) / DOT_PITCH) * DOT_PITCH);
+          const maxGy = Math.min(floorClampY, Math.ceil((vy + r) / DOT_PITCH) * DOT_PITCH);
 
           for (let gy = minGy; gy <= maxGy; gy += DOT_PITCH) {
             const ay = gy - rect.top;
