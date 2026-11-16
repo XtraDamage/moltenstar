@@ -4552,6 +4552,14 @@
       const mainBtn = document.getElementById('mainApkBtn');
       const mainLabel = document.getElementById('mainApkBtnLabel');
       const versionBadge = document.getElementById('versionBadge');
+      const ghBranchUrl = activeChannel === 'beta'
+        ? 'https://github.com/MoltenSt4r/MoltenGram/tree/beta'
+        : activeChannel === 'canary'
+          ? 'https://github.com/MoltenSt4r/MoltenGram/tree/canary'
+          : 'https://github.com/MoltenSt4r/MoltenGram';
+      document.querySelectorAll('a[href="https://github.com/MoltenSt4r/MoltenGram"]').forEach((a) => {
+        a.href = ghBranchUrl;
+      });
       if (activeChannel === 'beta') {
         document.title = 'MoltenGram Beta • Telegram с Material Design 3';
         if (mainBtn) mainBtn.href = '/download/beta';
