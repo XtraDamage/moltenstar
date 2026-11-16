@@ -2568,8 +2568,9 @@
 
       function measureArena() {
         const rect = arena.getBoundingClientRect();
-        arenaW = Math.max(280, rect.width || 632);
-        arenaH = Math.max(190, rect.height || 268);
+        const fallbackH = window.innerWidth >= 640 ? 268 : 220;
+        arenaW = Math.max(280, arena.clientWidth || rect.width || 632);
+        arenaH = arena.clientHeight > 0 ? arena.clientHeight : (rect.height > 0 ? rect.height : fallbackH);
         baseR = Math.min(58, Math.max(38, arenaW * 0.114));
       }
 
@@ -3296,8 +3297,8 @@
 
       const dotCanvas = document.getElementById('dotMatrixPhysicsCanvas');
       const dotCtx = dotCanvas ? dotCanvas.getContext('2d') : null;
-      const DOT_PITCH = 9;
-      const DOT_RADIUS = 3.2;
+      const DOT_PITCH = 7;
+      const DOT_RADIUS = 2.4;
 
       function syncDotCanvasSize() {
         if (!dotCanvas || !dotCtx) return;
