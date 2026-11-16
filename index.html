@@ -1978,7 +1978,7 @@
       const ICONS_DIR = 'icons/appicons';
       const RAW_GITHUB_BASE = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${ICONS_DIR}/`;
       const CONTENTS_API_URL = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${ICONS_DIR}`;
-      const CACHE_KEY = 'mg_appicons_list_v3';
+      const CACHE_KEY = 'mg_appicons_list_v4';
       const APP_REPO_ICONS_API = 'https://api.github.com/repos/MoltenSt4r/MoltenGram/contents/TMessagesProj/src/main/res/mipmap-xxxhdpi?ref=main';
       const APP_REPO_RAW_BASE = 'https://raw.githubusercontent.com/MoltenSt4r/MoltenGram/main/TMessagesProj/src/main/res/mipmap-xxxhdpi/';
       const IMAGE_EXT_REGEX = /\.(png|jpe?g|webp|gif|svg)$/i;
@@ -2137,16 +2137,7 @@
             }
           };
 
-          const scrim = document.createElement('div');
-          scrim.className = 'm3-carousel-scrim';
-
-          const label = document.createElement('div');
-          label.className = 'm3-carousel-label';
-          label.textContent = item.title;
-
           card.appendChild(img);
-          card.appendChild(scrim);
-          card.appendChild(label);
 
           card.addEventListener('click', () => {
             if (state.dragMoved) return;
@@ -2365,14 +2356,29 @@
             fetch(APP_REPO_ICONS_API)
           ]);
 
+          const ALIAS_MAP = {
+            main: 'moltengram',
+            classic: 'moltengram',
+            burn: 'burning',
+            coffe: 'coffee',
+            extera: 'exteragram',
+            nothingos: 'dotted',
+            nothing: 'dotted',
+            onix: 'onyx',
+            sunrice: 'sunrise',
+            glicer2: 'glacier',
+            glicer: 'glacier',
+            shizo: 'schizophrenia'
+          };
           const merged = new Map();
           const addEntry = (file, rawUrl) => {
-            const stemKey = file
+            const rawKey = file
               .toLowerCase()
               .replace(/^ic_launcher_moltengram_?/, '')
               .replace(/icon\d*\.[^.]+$/, '')
               .replace(/\.[^.]+$/, '')
               .replace(/[^a-z0-9]/g, '') || 'moltengram';
+            const stemKey = ALIAS_MAP[rawKey] || rawKey;
             if (!merged.has(stemKey)) {
               merged.set(stemKey, { file, rawUrl });
             }
