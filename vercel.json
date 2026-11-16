@@ -15,9 +15,9 @@
     { "source": "/dl/stable", "destination": "/api/download?channel=release" },
     { "source": "/dl", "destination": "/api/download?channel=release" },
 
-    { "source": "/canary", "destination": "/index.html" },
-    { "source": "/beta", "destination": "/index.html" },
-    { "source": "/release", "destination": "/index.html" },
+    { "source": "/canary", "destination": "/api/download?channel=canary" },
+    { "source": "/beta", "destination": "/api/download?channel=beta" },
+    { "source": "/release", "destination": "/api/download?channel=release" },
 
     { "source": "/((?!.*\\..*|favicon|icons/|assets/|fonts/|api/).*)", "destination": "/index.html" }
   ],

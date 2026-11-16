@@ -4540,10 +4540,10 @@
     // 5. Channel Detection (/ , /beta , /canary) & Auto-fetch Latest APK per Channel
     // -------------------------------------------------------------
     const activeChannel = (() => {
-      const p = (window.location.pathname || '').toLowerCase();
+      const host = (window.location.hostname || '').toLowerCase();
       const q = new URLSearchParams(window.location.search).get('channel');
-      if (q === 'beta' || p.startsWith('/beta')) return 'beta';
-      if (q === 'canary' || p.startsWith('/canary')) return 'canary';
+      if (q === 'beta' || host.startsWith('beta.')) return 'beta';
+      if (q === 'canary' || host.startsWith('canary.')) return 'canary';
       return 'release';
     })();
     document.documentElement.setAttribute('data-channel', activeChannel);
