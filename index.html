@@ -651,6 +651,7 @@
     .md3-shapes-section {
       width: 100%;
       position: relative;
+      z-index: 46;
       user-select: none;
     }
 
@@ -658,7 +659,7 @@
       position: relative;
       width: 100%;
       height: 220px;
-      overflow: hidden;
+      overflow: visible;
       border-bottom: 1.5px solid var(--md3-baseline);
       touch-action: none;
       transition: border-color 0.3s ease;
@@ -678,8 +679,7 @@
       touch-action: none;
       will-change: transform;
       transform-origin: center center;
-      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.12));
-      transition: filter 0.2s ease;
+      opacity: 0;
     }
 
     .md3-phys-shape:hover {
@@ -2542,9 +2542,9 @@
       ];
 
       const GRAVITY = 1080;
-      const RESTITUTION = 0.16;
+      const RESTITUTION = 0.22;
       const FRICTION = 0.42;
-      const MAX_RELEASE_VEL = 480;
+      const MAX_RELEASE_VEL = 1350;
       const LINEAR_DAMP = 0.992;
       const ANGULAR_DAMP = 0.965;
 
@@ -2727,7 +2727,7 @@
 
           const pad = body.R * 0.85;
           const nextX = Math.max(pad, Math.min(arenaW - pad, px + grabOffsetX));
-          const nextY = Math.max(pad, Math.min(arenaH - pad, py + grabOffsetY));
+          const nextY = Math.min(arenaH - pad, py + grabOffsetY);
 
           const now = performance.now();
           const dt = Math.max(0.008, (now - lastMoveTime) / 1000);
@@ -2755,8 +2755,8 @@
             smoothVy *= scale;
           }
 
-          body.vx = smoothVx * 0.62;
-          body.vy = smoothVy * 0.62;
+          body.vx = smoothVx * 0.88;
+          body.vy = smoothVy * 0.88;
           body.omega = Math.max(-2.5, Math.min(2.5, body.vx * 0.0035));
         }
 
@@ -3091,9 +3091,6 @@
             if (c.x + c.r > arenaW) {
               contacts.push({ nx: 1, ny: 0, pen: c.x + c.r - arenaW, px: arenaW, py: c.y });
             }
-            if (c.y - c.r < 0) {
-              contacts.push({ nx: 0, ny: -1, pen: c.r - c.y, px: c.x, py: 0 });
-            }
             if (c.y + c.r > arenaH) {
               contacts.push({ nx: 0, ny: 1, pen: c.y + c.r - arenaH, px: c.x, py: arenaH });
             }
@@ -3107,9 +3104,6 @@
             }
             if (v.x + r > arenaW) {
               contacts.push({ nx: 1, ny: 0, pen: v.x + r - arenaW, px: arenaW, py: v.y });
-            }
-            if (v.y - r < 0) {
-              contacts.push({ nx: 0, ny: -1, pen: r - v.y, px: v.x, py: 0 });
             }
             if (v.y + r > arenaH) {
               contacts.push({ nx: 0, ny: 1, pen: v.y + r - arenaH, px: v.x, py: arenaH });
@@ -3289,6 +3283,96 @@
         }
       }
 
+      const dotCanvas = document.getElementById('dotMatrixPhysicsCanvas');
+      const dotCtx = dotCanvas ? dotCanvas.getContext('2d') : null;
+      const DOT_PITCH = 9;
+      const DOT_RADIUS = 3.2;
+
+      function syncDotCanvasSize() {
+        if (!dotCanvas || !dotCtx) return;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        if (dotCanvas.width !== Math.floor(w * dpr) || dotCanvas.height !== Math.floor(h * dpr)) {
+          dotCanvas.width = Math.floor(w * dpr);
+          dotCanvas.height = Math.floor(h * dpr);
+        }
+        dotCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      syncDotCanvasSize();
+      window.addEventListener('resize', syncDotCanvasSize);
+
+      function pointInRoundedPolygon(px, py, verts, bevelR) {
+        let hasPos = false;
+        let hasNeg = false;
+        let minEdgeDistSq = Infinity;
+        for (let i = 0; i < verts.length; i++) {
+          const a = verts[i];
+          const b = verts[(i + 1) % verts.length];
+          const ex = b.x - a.x;
+          const ey = b.y - a.y;
+          const cross = ex * (py - a.y) - ey * (px - a.x);
+          if (cross > 0) hasPos = true;
+          else if (cross < 0) hasNeg = true;
+          const lenSq = ex * ex + ey * ey || 1;
+          const t = Math.max(0, Math.min(1, ((px - a.x) * ex + (py - a.y) * ey) / lenSq));
+          const cx = a.x + t * ex;
+          const cy = a.y + t * ey;
+          const dSq = (px - cx) * (px - cx) + (py - cy) * (py - cy);
+          if (dSq < minEdgeDistSq) minEdgeDistSq = dSq;
+        }
+        if (!(hasPos && hasNeg)) return true;
+        return minEdgeDistSq <= bevelR * bevelR;
+      }
+
+      function isPointInBody(b, ax, ay) {
+        if (b.shapeType === 'multicircle') {
+          for (let i = 0; i < b.worldCircles.length; i++) {
+            const c = b.worldCircles[i];
+            const dx = ax - c.x;
+            const dy = ay - c.y;
+            if (dx * dx + dy * dy <= c.r * c.r) return true;
+          }
+          return false;
+        }
+        return pointInRoundedPolygon(ax, ay, b.worldVerts, b.bevelR);
+      }
+
+      function renderBodiesDotMatrix() {
+        if (!dotCanvas || !dotCtx) return;
+        const W = window.innerWidth;
+        const H = window.innerHeight;
+        const rect = arena.getBoundingClientRect();
+        dotCtx.clearRect(0, 0, W, H);
+        dotCtx.fillStyle = '#FFFFFF';
+        dotCtx.beginPath();
+
+        for (let i = 0; i < bodies.length; i++) {
+          const b = bodies[i];
+          const vx = rect.left + b.x;
+          const vy = rect.top + b.y;
+          const r = b.boundR + 4;
+          if (vy + r < 0 || vy - r > H || vx + r < 0 || vx - r > W) continue;
+
+          const minGx = Math.max(0, Math.floor((vx - r) / DOT_PITCH) * DOT_PITCH);
+          const maxGx = Math.min(W, Math.ceil((vx + r) / DOT_PITCH) * DOT_PITCH);
+          const minGy = Math.max(0, Math.floor((vy - r) / DOT_PITCH) * DOT_PITCH);
+          const maxGy = Math.min(H, Math.ceil((vy + r) / DOT_PITCH) * DOT_PITCH);
+
+          for (let gy = minGy; gy <= maxGy; gy += DOT_PITCH) {
+            const ay = gy - rect.top;
+            for (let gx = minGx; gx <= maxGx; gx += DOT_PITCH) {
+              const ax = gx - rect.left;
+              if (isPointInBody(b, ax, ay)) {
+                dotCtx.moveTo(gx + DOT_RADIUS, gy);
+                dotCtx.arc(gx, gy, DOT_RADIUS, 0, Math.PI * 2);
+              }
+            }
+          }
+        }
+        dotCtx.fill();
+      }
+
       function renderBodies() {
         for (let i = 0; i < bodies.length; i++) {
           const b = bodies[i];
@@ -3297,7 +3381,10 @@
           const deg = ((b.angle * 180) / Math.PI).toFixed(2);
           b.el.style.transform = `translate3d(${tx}px, ${ty}px, 0) rotate(${deg}deg)`;
         }
+        renderBodiesDotMatrix();
       }
+
+      window.addEventListener('scroll', renderBodiesDotMatrix, { passive: true });
 
       function resetShapesFormation() {
         const targets = computeStackedTargets();
@@ -4427,258 +4514,6 @@
     })();
 
     // -------------------------------------------------------------
-    // 8. Nothing OS Dot Matrix Interactive Physics Shapes
-    //    - Fixed screen-wide dot matrix grid (LED pixel aesthetic)
-    //    - Pure white dots + mix-blend-mode: difference inverts text/UI underneath
-    //    - NO top ceiling clamp: throw/toss shapes freely above viewport!
-    // -------------------------------------------------------------
-    (function initDotMatrixPhysics() {
-      const canvas = document.getElementById('dotMatrixPhysicsCanvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-
-      const DOT_PITCH = 10;
-      const DOT_RADIUS = 3.5;
-      const GRAVITY = 0.42;
-      const RESTITUTION = 0.72;
-      const FRICTION = 0.992;
-      const FLOOR_PAD = 6;
-
-      let W = window.innerWidth;
-      let H = window.innerHeight;
-      let dpr = Math.min(window.devicePixelRatio || 1, 2);
-
-      function resize() {
-        W = window.innerWidth;
-        H = window.innerHeight;
-        dpr = Math.min(window.devicePixelRatio || 1, 2);
-        canvas.width = Math.floor(W * dpr);
-        canvas.height = Math.floor(H * dpr);
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      }
-      resize();
-      window.addEventListener('resize', resize);
-
-      const SHAPE_TYPES = ['circle', 'pill', 'triangle', 'diamond', 'cookie'];
-      const shapes = [];
-      const count = W < 640 ? 4 : 5;
-      for (let i = 0; i < count; i++) {
-        const r = W < 640 ? 28 + (i % 3) * 6 : 34 + (i % 3) * 8;
-        shapes.push({
-          type: SHAPE_TYPES[i % SHAPE_TYPES.length],
-          x: (W / (count + 1)) * (i + 1),
-          y: -80 - i * 95,
-          vx: (Math.random() - 0.5) * 3,
-          vy: 0,
-          angle: Math.random() * Math.PI * 2,
-          va: (Math.random() - 0.5) * 0.04,
-          r,
-          dragging: false
-        });
-      }
-
-      function isInsideShape(s, px, py) {
-        const dx = px - s.x;
-        const dy = py - s.y;
-        const r = s.r;
-        if (dx * dx + dy * dy > r * r * 1.25) return false;
-
-        const cos = Math.cos(-s.angle);
-        const sin = Math.sin(-s.angle);
-        const lx = dx * cos - dy * sin;
-        const ly = dx * sin + dy * cos;
-
-        switch (s.type) {
-          case 'circle':
-            return lx * lx + ly * ly <= r * r;
-          case 'pill': {
-            const halfW = r * 0.85;
-            const halfH = r * 0.48;
-            const cr = halfH;
-            const qx = Math.max(Math.abs(lx) - (halfW - cr), 0);
-            const qy = Math.max(Math.abs(ly) - (halfH - cr), 0);
-            return qx * qx + qy * qy <= cr * cr;
-          }
-          case 'diamond':
-            return (Math.abs(lx) + Math.abs(ly)) <= r * 1.08;
-          case 'triangle': {
-            const k = Math.sqrt(3);
-            const tr = r * 0.82;
-            let x = Math.abs(lx) - tr;
-            let y = ly + tr / k;
-            if (x + k * y > 0) {
-              const nx = (x - k * y) / 2;
-              const ny = (-k * x - y) / 2;
-              x = nx; y = ny;
-            }
-            x -= Math.max(-2 * tr, Math.min(0, x));
-            return Math.hypot(x, y) * -Math.sign(y) <= 0 || (y <= tr / k && y >= -tr / (2 * k) && Math.abs(lx) <= (tr / k - y) * 0.58 + tr * 0.35);
-          }
-          case 'cookie': {
-            const dist = Math.hypot(lx, ly);
-            const theta = Math.atan2(ly, lx);
-            const wave = r * (0.86 + 0.14 * Math.cos(8 * theta));
-            return dist <= wave;
-          }
-          default:
-            return lx * lx + ly * ly <= r * r;
-        }
-      }
-
-      let activeShape = null;
-      let dragOffsetX = 0;
-      let dragOffsetY = 0;
-      let lastPtrX = 0;
-      let lastPtrY = 0;
-      let lastPtrT = 0;
-      let throwVx = 0;
-      let throwVy = 0;
-
-      function findShapeAt(x, y) {
-        for (let i = shapes.length - 1; i >= 0; i--) {
-          const s = shapes[i];
-          if (Math.hypot(x - s.x, y - s.y) <= s.r * 1.15) return s;
-        }
-        return null;
-      }
-
-      window.addEventListener('pointerdown', (e) => {
-        const hit = findShapeAt(e.clientX, e.clientY);
-        if (!hit) return;
-        activeShape = hit;
-        activeShape.dragging = true;
-        dragOffsetX = hit.x - e.clientX;
-        dragOffsetY = hit.y - e.clientY;
-        lastPtrX = e.clientX;
-        lastPtrY = e.clientY;
-        lastPtrT = performance.now();
-        throwVx = 0;
-        throwVy = 0;
-        hit.vx = 0;
-        hit.vy = 0;
-      }, { passive: true });
-
-      window.addEventListener('pointermove', (e) => {
-        if (!activeShape) return;
-        const now = performance.now();
-        const dt = Math.max(8, now - lastPtrT);
-        throwVx = ((e.clientX - lastPtrX) / dt) * 16;
-        throwVy = ((e.clientY - lastPtrY) / dt) * 16;
-        activeShape.x = e.clientX + dragOffsetX;
-        activeShape.y = e.clientY + dragOffsetY;
-        lastPtrX = e.clientX;
-        lastPtrY = e.clientY;
-        lastPtrT = now;
-      }, { passive: true });
-
-      function releaseShape() {
-        if (!activeShape) return;
-        activeShape.dragging = false;
-        activeShape.vx = Math.max(-36, Math.min(36, throwVx));
-        activeShape.vy = Math.max(-44, Math.min(36, throwVy));
-        activeShape.va = activeShape.vx * 0.008;
-        activeShape = null;
-      }
-      window.addEventListener('pointerup', releaseShape, { passive: true });
-      window.addEventListener('pointercancel', releaseShape, { passive: true });
-
-      function step() {
-        for (let i = 0; i < shapes.length; i++) {
-          const s = shapes[i];
-          if (s.dragging) continue;
-
-          s.vy += GRAVITY;
-          s.vx *= FRICTION;
-          s.x += s.vx;
-          s.y += s.vy;
-          s.angle += s.va;
-          s.va *= 0.995;
-
-          if (s.x - s.r < 0) {
-            s.x = s.r;
-            s.vx = Math.abs(s.vx) * RESTITUTION;
-            s.va = -s.vy * 0.006;
-          } else if (s.x + s.r > W) {
-            s.x = W - s.r;
-            s.vx = -Math.abs(s.vx) * RESTITUTION;
-            s.va = s.vy * 0.006;
-          }
-
-          const floorY = H - FLOOR_PAD - s.r;
-          if (s.y > floorY) {
-            s.y = floorY;
-            if (Math.abs(s.vy) > 1.2) {
-              s.vy = -s.vy * RESTITUTION;
-            } else {
-              s.vy = 0;
-              s.vx *= 0.94;
-              s.va *= 0.9;
-            }
-          }
-        }
-
-        for (let i = 0; i < shapes.length; i++) {
-          for (let j = i + 1; j < shapes.length; j++) {
-            const a = shapes[i];
-            const b = shapes[j];
-            const dx = b.x - a.x;
-            const dy = b.y - a.y;
-            const dist = Math.hypot(dx, dy);
-            const minDist = a.r + b.r;
-            if (dist > 0 && dist < minDist) {
-              const nx = dx / dist;
-              const ny = dy / dist;
-              const overlap = (minDist - dist) * 0.5;
-              if (!a.dragging) { a.x -= nx * overlap; a.y -= ny * overlap; }
-              if (!b.dragging) { b.x += nx * overlap; b.y += ny * overlap; }
-
-              const dvx = a.vx - b.vx;
-              const dvy = a.vy - b.vy;
-              const impact = dvx * nx + dvy * ny;
-              if (impact > 0) {
-                const impulse = impact * 0.85;
-                if (!a.dragging) { a.vx -= impulse * nx; a.vy -= impulse * ny; }
-                if (!b.dragging) { b.vx += impulse * nx; b.vy += impulse * ny; }
-              }
-            }
-          }
-        }
-      }
-
-      function renderDotMatrix() {
-        ctx.clearRect(0, 0, W, H);
-        ctx.fillStyle = '#FFFFFF';
-        ctx.beginPath();
-
-        for (let i = 0; i < shapes.length; i++) {
-          const s = shapes[i];
-          if (s.y - s.r > H || s.y + s.r < 0) continue;
-
-          const minGx = Math.max(0, Math.floor((s.x - s.r * 1.15) / DOT_PITCH) * DOT_PITCH);
-          const maxGx = Math.min(W, Math.ceil((s.x + s.r * 1.15) / DOT_PITCH) * DOT_PITCH);
-          const minGy = Math.max(0, Math.floor((s.y - s.r * 1.15) / DOT_PITCH) * DOT_PITCH);
-          const maxGy = Math.min(H, Math.ceil((s.y + s.r * 1.15) / DOT_PITCH) * DOT_PITCH);
-
-          for (let gy = minGy; gy <= maxGy; gy += DOT_PITCH) {
-            for (let gx = minGx; gx <= maxGx; gx += DOT_PITCH) {
-              if (isInsideShape(s, gx, gy)) {
-                ctx.moveTo(gx + DOT_RADIUS, gy);
-                ctx.arc(gx, gy, DOT_RADIUS, 0, Math.PI * 2);
-              }
-            }
-          }
-        }
-        ctx.fill();
-      }
-
-      function loop() {
-        step();
-        renderDotMatrix();
-        requestAnimationFrame(loop);
-      }
-      requestAnimationFrame(loop);
-    })();
   </script>
 </body>
 </html>
