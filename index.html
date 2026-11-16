@@ -2207,7 +2207,6 @@
           const card = cards[i];
           if (!card) continue;
           const img = card.children[0];
-          const label = card.children[2];
           const width = rawWeights[i] * scale;
 
           if (width <= 0.4) {
@@ -2221,10 +2220,6 @@
           card.style.display = 'block';
           card.style.width = `${width.toFixed(2)}px`;
           card.style.marginRight = seen < visibleCount ? `${state.gap}px` : '0px';
-
-          const textAlpha = Math.max(0, Math.min(1, (width - 78) / 36));
-          label.style.opacity = textAlpha.toFixed(3);
-          label.style.transform = `translateY(${((1 - textAlpha) * 6).toFixed(1)}px)`;
 
           const d = i - state.progress;
           const parallaxX = Math.max(-22, Math.min(22, d * -14));
