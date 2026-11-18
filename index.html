@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#150D0C" id="theme-color-meta">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   
-  <title>MoltenGram</title>
+  <title>MoltenGram • Telegram с Material Design 3</title>
   <meta name="description" content="Скачать MoltenGram (moltenstar) — минималистичный и быстрый Android-клиент Telegram с нативным Material 3 Expressive и без трекеров.">
   <meta name="keywords" content="MoltenGram, moltenstar, moltenstar.space, Скачать MoltenGram, Telegram Android, Material Design 3, Exteraless, exteraGram, F-Droid">
   <meta name="author" content="MoltenGram Team (moltenstar)">
@@ -127,6 +127,11 @@
       --text-sub: #DFC6C0;
       --text-muted: #A88E88;
 
+      /* High-contrast dark ink over lifted dark-mode fluted glass */
+      --hero-title: #170503;
+      --hero-accent: #691003;
+      --hero-sub: #240A07;
+
       --glass-top: rgba(38, 24, 22, 0.75);
       --glass-bottom: rgba(30, 18, 17, 0.60);
       --glass-border: rgba(254, 138, 115, 0.12);
@@ -163,6 +168,10 @@
       --text-sub: #5C3E39;
       --text-muted: #94716B;
 
+      --hero-title: #220B08;
+      --hero-accent: #A82814;
+      --hero-sub: #47211B;
+
       --glass-top: rgba(255, 247, 245, 0.85);
       --glass-bottom: rgba(255, 232, 227, 0.70);
       --glass-border: rgba(200, 70, 48, 0.08);
@@ -196,6 +205,9 @@
       --text: #ECF4FF;
       --text-sub: #BDD1EB;
       --text-muted: #849BB8;
+      --hero-title: #051120;
+      --hero-accent: #073366;
+      --hero-sub: #0B1E36;
       --glass-top: rgba(18, 27, 41, 0.80);
       --glass-bottom: rgba(13, 20, 31, 0.65);
       --glass-border: rgba(124, 196, 255, 0.14);
@@ -225,6 +237,9 @@
       --text: #0E1B2B;
       --text-sub: #344B66;
       --text-muted: #687F9C;
+      --hero-title: #0B192B;
+      --hero-accent: #12569E;
+      --hero-sub: #223B59;
       --glass-top: rgba(244, 249, 255, 0.85);
       --glass-bottom: rgba(224, 236, 255, 0.72);
       --glass-border: rgba(27, 110, 194, 0.10);
@@ -254,6 +269,9 @@
       --text: #FFF8E6;
       --text-sub: #E5D9B5;
       --text-muted: #ABA07C;
+      --hero-title: #1A1302;
+      --hero-accent: #4F3800;
+      --hero-sub: #291F05;
       --glass-top: rgba(36, 31, 16, 0.80);
       --glass-bottom: rgba(27, 23, 11, 0.65);
       --glass-border: rgba(255, 213, 79, 0.14);
@@ -283,6 +301,9 @@
       --text: #241C05;
       --text-sub: #57481C;
       --text-muted: #8C7B48;
+      --hero-title: #241B04;
+      --hero-accent: #7A5800;
+      --hero-sub: #47380D;
       --glass-top: rgba(255, 253, 242, 0.86);
       --glass-bottom: rgba(255, 243, 199, 0.72);
       --glass-border: rgba(158, 116, 0, 0.10);
@@ -330,6 +351,10 @@
       --text: #ffffff;
       --text-sub: #b8b8b8;
       --text-muted: #737373;
+
+      --hero-title: #000000;
+      --hero-accent: #141414;
+      --hero-sub: #0f0f0f;
 
       --glass-top: rgba(14, 14, 14, 0.92);
       --glass-bottom: rgba(10, 10, 10, 0.88);
@@ -393,7 +418,7 @@
     }
 
     /* -------------------------------------------------------------
-       1d. Real-Time Live WebGL Wallpaper Canvas (Fixed Site Palette)
+       1d. Real-Time Live WebGL Wallpaper Canvas with Reeded Fluted Glass
        ------------------------------------------------------------- */
     #nimbusWallpaperCanvas {
       position: fixed;
@@ -403,21 +428,6 @@
       z-index: 0;
       pointer-events: none;
       display: block;
-    }
-
-    /* True Pixel-Level Glyph Mask (background-clip: text) with Smooth Multi-Stop Gradation */
-    [data-adaptive-text].adaptive-mask-ready {
-      background-repeat: no-repeat;
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent !important;
-      -webkit-text-fill-color: transparent;
-      transition: none !important;
-    }
-
-    [data-adaptive-text].adaptive-mask-ready::selection {
-      -webkit-text-fill-color: var(--on-primary-container);
-      background-color: var(--primary-container);
     }
 
     /* -------------------------------------------------------------
@@ -1637,7 +1647,7 @@
 </head>
 <body class="selection:bg-[var(--primary-container)] selection:text-[var(--on-primary-container)]">
 
-  <!-- Real-Time Morphing WebGL Wallpaper (Fixed Site Colors, Live Shapes & Motion) -->
+  <!-- Real-Time Morphing WebGL Wallpaper with Reeded Fluted Glass -->
   <canvas id="nimbusWallpaperCanvas" aria-hidden="true"></canvas>
 
   <!-- Fixed Screen-Wide Inverting Dot Matrix Overlay for NOTHING (R) Easter Egg -->
@@ -1700,14 +1710,13 @@
         <span>0% трекеров</span>
       </div>
 
-      <!-- Concise Headline -->
-      <h1 class="reveal delay-1 text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.08] mb-4">
-        <span data-adaptive-text="title">Telegram в стиле</span> <br class="hidden sm:inline">
-        <span class="text-[var(--primary)]" data-adaptive-text="accent">Material 3 Expressive</span>
+      <!-- Concise Dark Readable Headline & Subtitle -->
+      <h1 class="reveal delay-1 text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.08] mb-4 text-[var(--hero-title)]">
+        <span>Telegram в стиле</span> <br class="hidden sm:inline">
+        <span class="text-[var(--hero-accent)]">Material 3 Expressive</span>
       </h1>
 
-      <p class="reveal delay-2 text-base sm:text-lg text-[var(--text-sub)] max-w-md mx-auto mb-9 font-normal"
-         data-adaptive-text="sub">
+      <p class="reveal delay-2 text-base sm:text-lg text-[var(--hero-sub)] max-w-md mx-auto mb-9 font-semibold">
         Быстрый, чистый и открытый клиент без аналитики и лишнего шума.
       </p>
 
@@ -1750,12 +1759,12 @@
 
     <!-- Minimalist Material Design 3 Real Client Settings Search with Deep Links -->
     <section id="settings-catalog" class="reveal delay-3 w-full">
-      <div class="flex items-center justify-between px-1 mb-3">
+      <div class="flex items-center justify-between px-4 py-2.5 mb-3 rounded-2xl bg-[var(--surface-container-low)]/90 backdrop-blur-md">
         <div class="flex items-center gap-2">
           <span class="material-symbols-rounded text-[20px] text-[var(--primary)]">tune</span>
-          <h2 class="font-bold text-base tracking-tight" data-adaptive-text="title">Настройки клиента</h2>
+          <h2 class="font-bold text-base tracking-tight text-[var(--text)]">Настройки клиента</h2>
         </div>
-        <span id="settingsCounterLabel" class="text-xs text-[var(--text-muted)] font-medium" data-adaptive-text="muted"></span>
+        <span id="settingsCounterLabel" class="text-xs text-[var(--text-muted)] font-medium"></span>
       </div>
 
       <!-- M3 Search Bar -->
@@ -2039,7 +2048,7 @@
     <span class="relative z-10" id="toastMessage">Скопировано в буфер обмена</span>
   </div>
 
-  <!-- WebGL Vertex & Fragment Shaders for Real-Time Morphing Nimbus Wallpaper -->
+  <!-- Vertex Shader -->
   <script id="nimbus-vertex-shader" type="x-shader/x-vertex">
     attribute vec2 a_position;
     void main() {
@@ -2047,6 +2056,7 @@
     }
   </script>
 
+  <!-- Pass 1 Fragment Shader: Live Morphing Gradient Wallpaper -->
   <script id="nimbus-fragment-shader" type="x-shader/x-fragment">
     precision highp float;
 
@@ -2150,11 +2160,6 @@
       return d;
     }
 
-    float sdBox(vec2 p, vec2 b) {
-      vec2 d = abs(p) - b;
-      return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0);
-    }
-
     float sdRoundBox(vec2 p, vec2 b, vec4 r) {
       r.xy = (p.x > 0.0) ? r.xy : r.zw;
       r.x  = (p.y > 0.0) ? r.x  : r.y;
@@ -2203,43 +2208,12 @@
       return d * inside - r * 0.14;
     }
 
-    float sdMd3Ghost(vec2 p, float r) {
-      float w = r * 0.78;
-      float h = r * 0.84;
-      float xNorm = clamp(p.x / w, -1.0, 1.0);
-      float skirtWave = 0.5 + 0.5 * cos(xNorm * 6.2831853);
-      float bottomY = -h * (0.76 + 0.18 * skirtWave);
-      float topY = h * 0.92;
-      float midY = 0.5 * (topY + bottomY);
-      float halfH = 0.5 * (topY - bottomY);
-      float topR = min(w, halfH);
-      float botR = min(w * 0.22, halfH);
-      return sdRoundBox(vec2(p.x, p.y - midY), vec2(w, halfH), vec4(topR, botR, topR, botR));
-    }
-
-    float sdMd3Semicircle(vec2 p, float r) {
-      float w = r * 0.92;
-      float h = r * 0.54;
-      float rBot = r * 0.16;
-      float dBox = sdRoundBox(p, vec2(w, h), vec4(rBot));
-      float dArc = length(p - vec2(0.0, h - w)) - w;
-      return max(dBox, dArc);
-    }
-
     float sdMd3Fan(vec2 p, float r) {
       float s = r * 0.82;
       float rSmall = s * 0.22;
       float dBox = sdRoundBox(p, vec2(s), vec4(rSmall));
       float dArc = length(p - vec2(-s + rSmall)) - (2.0 * s - rSmall);
       return max(dBox, dArc);
-    }
-
-    float sdMd3Bun(vec2 p, float r) {
-      float w = r * 0.84;
-      float h = r * 0.44;
-      float dTop = sdRoundBox(p - vec2(0.0, h * 0.92), vec2(w, h * 0.94), vec4(h * 0.94));
-      float dBot = sdRoundBox(p + vec2(0.0, h * 0.92), vec2(w, h * 0.94), vec4(h * 0.94));
-      return min(dTop, dBot);
     }
 
     float sdMd3Heart(vec2 p, float radius) {
@@ -2259,33 +2233,22 @@
 
     float evalMd3Shape(int id, vec2 p, float r) {
       float a = atan(p.y, p.x + 1e-6);
-      if (id == 3)  return length(p) - r * 0.90;
       if (id == 4)  return sdRoundBox(p, vec2(r * 0.82), vec4(r * 0.36));
-      if (id == 5)  return sdRoundBox(vec2(p.x - p.y * 0.21, p.y), vec2(r * 0.76, r * 0.78), vec4(r * 0.24));
       if (id == 6)  return sdRoundBox(p, vec2(r * 0.80, r * 0.88), vec4(r * 0.80, r * 0.20, r * 0.80, r * 0.20));
-      if (id == 7)  return sdMd3Semicircle(p, r);
-      if (id == 8)  return sdEllipseApprox(p, vec2(r * 0.62, r * 0.98));
-      if (id == 9)  return sdRoundBox(p, vec2(r * 0.64, r * 0.98), vec4(r * 0.64));
       if (id == 10) return sdRegularNgon(p, r * 1.04, 3.0, r * 0.22);
       if (id == 11) return sdMd3Arrow(p, r);
       if (id == 12) return sdMd3Fan(p, r);
       if (id == 13) return sdRegularNgon(vec2(p.x * 1.28, p.y), r * 0.96, 4.0, r * 0.20) * 0.85;
       if (id == 14) return sdRegularNgon(vec2(p.y, p.x * 0.66), r * 0.62, 6.0, r * 0.18);
-      if (id == 15) return sdRegularNgon(p, r * 0.94, 5.0, r * 0.20);
       if (id == 16) return sdRegularNgon(p, r * 0.94, 6.0, r * 0.20);
       if (id == 17) return sdStarN(p, r * 0.92, r * 0.68, 8.0, r * 0.08);
       if (id == 18) return sdStarN(p, r * 0.94, r * 0.56, 8.0, r * 0.09);
       if (id == 19) return length(p) - r * (0.80 + 0.185 * cos(4.0 * (a - 0.785398)));
       if (id == 20) return length(p) - r * (0.84 + 0.125 * cos(6.0 * (a - 1.570796)));
-      if (id == 21) return length(p) - r * (0.85 + 0.105 * cos(7.0 * (a + 1.570796)));
       if (id == 22) return length(p) - r * (0.86 + 0.090 * cos(9.0 * (a + 1.570796)));
       if (id == 23) return length(p) - r * (0.87 + 0.088 * cos(12.0 * a));
       if (id == 24) return length(p) - r * (0.70 + 0.25 * pow(max(abs(cos(2.0 * (a - 0.785398))), 0.0001), 0.82));
       if (id == 25) return length(p) - r * (0.78 + 0.16 * pow(max(abs(cos(4.0 * (a - 0.392699))), 0.0001), 0.82));
-      if (id == 26) return sdStarN(p, r * 0.95, r * 0.63, 12.0, r * 0.015);
-      if (id == 27) return sdStarN(p, r * 0.92, r * 0.65, 10.0, r * 0.07);
-      if (id == 28) return sdStarN(p, r * 0.97, r * 0.36, 16.0, r * 0.01);
-      if (id == 29) return length(p) - r * (0.40 + 0.54 * pow(max(0.5 + 0.5 * cos(16.0 * a), 0.0001), 0.65));
       if (id == 30) return length(p) - r * (0.68 + 0.24 * cos(8.0 * a));
       if (id == 31) {
         vec2 qp = vec2(p.x / 1.06, p.y / 0.80);
@@ -2298,8 +2261,6 @@
         float bump = 0.14 * abs(cos(4.0 * a));
         return length(p) - r * (base + bump);
       }
-      if (id == 33) return sdMd3Ghost(p, r);
-      if (id == 36) return sdMd3Bun(p, r);
       return sdMd3Heart(p, r);
     }
 
@@ -2400,46 +2361,180 @@
 
       float wideSigma = mix(sharpSigma * 5.0, softSigma * 1.55, pow(tDiff, 0.85));
       float wideGlow = 1.0 / (1.0 + pow(posDist / max(wideSigma, 0.01), 1.75));
-      wideGlow *= mix(0.28, 1.0, pow(tDiff, 0.75));
+      wideGlow *= mix(0.36, 1.0, pow(tDiff, 0.75));
 
       vec3 col = u_bgColor;
 
       if (u_isLight < 0.5) {
-        float outerEnergy = wideGlow * 0.62 * u_intensity;
+        float outerEnergy = wideGlow * 0.72 * u_intensity;
         col = mix(col, u_outerColor, clamp(outerEnergy, 0.0, 1.0));
 
-        float midEnergy = pow(midGlow, 1.15) * 0.86 * u_intensity;
+        float midEnergy = pow(midGlow, 1.05) * 0.88 * u_intensity;
         col = mix(col, u_midColor, clamp(midEnergy, 0.0, 1.0));
 
-        float coreEnergy = pow(coreGlow, 1.25) * u_intensity;
-        col += u_coreColor * coreEnergy * 0.82;
-
-        col = col / (1.0 + col * 0.22);
-        col = mix(col, smoothstep(0.0, 1.0, col), 0.14);
+        float coreEnergy = pow(coreGlow, 1.18) * u_intensity;
+        col = mix(col, u_coreColor, clamp(coreEnergy * 0.92, 0.0, 1.0));
       } else {
-        float outerEnergy = wideGlow * 0.54 * u_intensity;
+        float outerEnergy = wideGlow * 0.56 * u_intensity;
         col = mix(col, u_outerColor, clamp(outerEnergy, 0.0, 1.0));
 
-        float midEnergy = pow(midGlow, 1.15) * 0.68 * u_intensity;
+        float midEnergy = pow(midGlow, 1.15) * 0.72 * u_intensity;
         col = mix(col, u_midColor, clamp(midEnergy, 0.0, 1.0));
 
-        float coreEnergy = pow(coreGlow, 1.20) * 0.64 * u_intensity;
+        float coreEnergy = pow(coreGlow, 1.20) * 0.68 * u_intensity;
         col = mix(col, u_coreColor, clamp(coreEnergy, 0.0, 1.0));
       }
 
       vec2 vigUV = gl_FragCoord.xy / u_resolution.xy - 0.5;
-      float vig = 1.0 - dot(vigUV, vigUV) * u_vignette * 1.35;
-      col *= clamp(vig, 0.35, 1.05);
+      float vig = 1.0 - dot(vigUV, vigUV) * u_vignette * 0.55;
+      col *= clamp(vig, 0.84, 1.02);
 
-      vec2 grainCoord = gl_FragCoord.xy * (1080.0 / max(minDim, 1.0));
-      float n1 = hash12(grainCoord + fract(u_seed * 71.3 + u_time * 0.013) * 100.0);
-      float n2 = hash12(grainCoord * 1.37 + vec2(17.1, 31.7) + fract(u_seed * 33.7) * 100.0);
-      float grainNoise = (n1 + n2 - 1.0);
+      gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
+    }
+  </script>
 
-      col += grainNoise * u_grain;
-      col = clamp(col, 0.0, 1.0);
+  <!-- Pass 2 Fragment Shader: Clean Shadow-Free Reeded / Fluted Architectural Glass -->
+  <script id="fluted-glass-fragment-shader" type="x-shader/x-fragment">
+    precision highp float;
 
-      gl_FragColor = vec4(col, 1.0);
+    uniform sampler2D u_bgTex;
+    uniform vec2 u_resolution;
+    uniform float u_dpr;
+    uniform float u_time;
+    uniform vec2 u_pointer;
+
+    uniform vec3 u_tintColor;
+    uniform float u_isLight;
+    uniform float u_ior;
+    uniform float u_refractionStrength;
+    uniform float u_dispersion;
+    uniform float u_blur;
+    uniform float u_vibrantColors;
+    uniform float u_grain;
+
+    float hash12(vec2 p) {
+      vec3 p3 = fract(vec3(p.xyx) * 0.1031);
+      p3 += dot(p3, p3.yzx + 33.33);
+      return fract((p3.x + p3.y) * p3.z);
+    }
+
+    // Анизотропная вертикальная выборка вдоль оси цилиндрической линзы
+    vec3 sampleFlutedAnisotropic(vec2 uv, vec2 offsetUv, float blurY, float blurX) {
+      vec2 c = clamp(uv + offsetUv, 0.002, 0.998);
+      vec2 texel = 1.0 / u_resolution;
+      vec3 acc = vec3(0.0);
+      const float GOLDEN_ANGLE = 2.39996323;
+      for (int i = 0; i < 12; i++) {
+        float fi = float(i);
+        float t = (fi + 0.5) / 12.0;
+        float r = sqrt(t);
+        float theta = fi * GOLDEN_ANGLE;
+        vec2 dir = vec2(cos(theta) * blurX, sin(theta) * blurY) * r * texel;
+        acc += texture2D(u_bgTex, clamp(c + dir, 0.002, 0.998)).rgb;
+      }
+      return acc / 12.0;
+    }
+
+    vec3 applyVibrancy(vec3 col, float amount) {
+      if (amount <= 0.001) return col;
+      float luma = dot(col, vec3(0.2126, 0.7152, 0.0722));
+      vec3 boosted = mix(vec3(luma), col, 1.0 + 0.36 * amount);
+      return clamp(boosted, 0.0, 1.0);
+    }
+
+    void main() {
+      vec2 uv = gl_FragCoord.xy / u_resolution;
+      vec2 px = gl_FragCoord.xy;
+      float minDim = min(u_resolution.x, u_resolution.y);
+
+      // Вертикальные цилиндрические флейты (~11 CSS px на полосу)
+      float ribWidth = 11.0 * u_dpr;
+      float phase = px.x / ribWidth;
+      float cell = fract(phase);          // 0 .. 1 поперёк одного цилиндра
+      float u = cell * 2.0 - 1.0;         // -1 .. +1
+      float absU = abs(u);
+
+      // Профиль выпуклой цилиндрической линзы
+      float powU = pow(max(absU, 1e-4), 2.15);
+      float h = (sqrt(max(0.0, 1.008 - powU)) - 0.0894) / 0.9146;
+      h = clamp(h, 0.0, 1.0);
+
+      // Аналитическая нормаль цилиндрической линзы
+      float dh_du = -0.5 * 2.15 * pow(max(absU, 1e-4), 1.15) * sign(u)
+                    / (0.9146 * sqrt(max(0.008, 1.008 - powU)));
+
+      float slopeX = -dh_du * 0.65 * u_refractionStrength;
+      vec3 N = normalize(vec3(slopeX, 0.0, 1.0));
+      vec3 V = vec3(0.0, 0.0, 1.0);
+
+      // Преломление по закону Снеллиуса
+      float eta = 1.0 / max(1.0001, u_ior);
+      vec3 refractedRay = refract(-V, N, eta);
+      if (dot(refractedRay, refractedRay) < 0.0001) {
+        refractedRay = reflect(-V, N);
+      }
+      float rayX = refractedRay.x / max(abs(refractedRay.z), 0.28);
+
+      // Горизонтальное преломление внутри ребра и вертикальный сдвиг призмы
+      float shiftX = rayX * ribWidth * 2.2 * (0.28 + 0.72 * h);
+      float verticalShear = -u * ribWidth * 2.5 + (1.0 - absU) * ribWidth * 1.25;
+      vec2 baseShiftUv = vec2(shiftX, verticalShear) / u_resolution;
+
+      // Мягкая краевая дисперсия
+      float rimBand = pow(smoothstep(0.25, 0.96, absU), 1.4);
+      float dispersionSpan = (max(1.0001, u_ior) - 1.0) * 0.75 * u_dispersion * rimBand;
+
+      // Анизотропное размытие: длинное вертикальное вытягивание и чёткие края по X
+      float blurY = (28.0 + u_blur * 22.0) * u_dpr;
+      float blurX = 0.85 * u_dpr;
+
+      vec3 refracted = vec3(0.0);
+      if (dispersionSpan > 0.002) {
+        vec3 sR = sampleFlutedAnisotropic(uv, baseShiftUv * (1.0 + dispersionSpan * 0.32), blurY, blurX);
+        vec3 sG = sampleFlutedAnisotropic(uv, baseShiftUv, blurY, blurX);
+        vec3 sB = sampleFlutedAnisotropic(uv, baseShiftUv * (1.0 - dispersionSpan * 0.32), blurY, blurX);
+        refracted = vec3(sR.r, sG.g, sB.b);
+      } else {
+        refracted = sampleFlutedAnisotropic(uv, baseShiftUv, blurY, blurX);
+      }
+
+      refracted = applyVibrancy(refracted, u_vibrantColors);
+
+      // Чистая световая модуляция без тёмных теневых полос на стыках
+      float lightShift = u_pointer.x * 2.0;
+      float cylLit = clamp(0.5 - 0.5 * sin((u - 0.16 - lightShift) * 1.42), 0.0, 1.0);
+      float bgLuma = dot(refracted, vec3(0.2126, 0.7152, 0.0722));
+      float fresnel = pow(1.0 - clamp(dot(N, V), 0.0, 1.0), 3.4);
+
+      vec3 finalGlass;
+      if (u_isLight < 0.5) {
+        float ribLight = mix(0.88, 1.07, pow(cylLit, 0.9));
+        finalGlass = refracted * ribLight;
+
+        float edgeHighlight = smoothstep(0.08, 0.30, cell) * (1.0 - smoothstep(0.30, 0.68, cell));
+        vec3 specTint = mix(u_tintColor, vec3(1.0), 0.62);
+        finalGlass += specTint * edgeHighlight * pow(bgLuma, 0.85) * 0.16;
+        finalGlass += u_tintColor * fresnel * bgLuma * 0.08;
+      } else {
+        float ribLight = mix(0.95, 1.03, pow(cylLit, 0.9));
+        finalGlass = refracted * ribLight;
+
+        float edgeHighlight = smoothstep(0.08, 0.30, cell) * (1.0 - smoothstep(0.30, 0.68, cell));
+        finalGlass += vec3(1.0) * edgeHighlight * 0.08;
+        finalGlass += vec3(1.0) * fresnel * 0.04;
+      }
+
+      // Мягкая компрессия пересветов
+      finalGlass = finalGlass / (1.0 + max(finalGlass - 0.90, 0.0) * 0.32);
+      finalGlass = clamp(finalGlass, 0.0, 1.0);
+
+      // Лёгкая текстура стекла
+      vec2 grainCoord = px * (1080.0 / max(minDim, 1.0));
+      float n1 = hash12(grainCoord + fract(u_time * 0.013) * 100.0);
+      float n2 = hash12(grainCoord * 1.37 + vec2(17.1, 31.7));
+      finalGlass += (n1 + n2 - 1.0) * u_grain;
+
+      gl_FragColor = vec4(clamp(finalGlass, 0.0, 1.0), 1.0);
     }
   </script>
 
@@ -2463,7 +2558,9 @@
     })();
 
     // -------------------------------------------------------------
-    // 0b. Real-Time Morphing Nimbus Wallpaper Engine (Fixed Site Palette)
+    // 0b. Two-Pass WebGL Wallpaper Engine:
+    //     Pass 1: Live Morphing Gradient -> FBO Texture (u_bgTex)
+    //     Pass 2: Shadow-Free Reeded Fluted Architectural Glass Shader
     // -------------------------------------------------------------
     (function initLiveNimbusWallpaper() {
       const canvas = document.getElementById('nimbusWallpaperCanvas');
@@ -2484,39 +2581,48 @@
         gl.shaderSource(shader, source);
         gl.compileShader(shader);
         if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-          console.warn('Nimbus shader error:', gl.getShaderInfoLog(shader));
+          console.warn('Shader error:', gl.getShaderInfoLog(shader));
           gl.deleteShader(shader);
           return null;
         }
         return shader;
       }
 
+      function createProgram(vsSrc, fsSrc) {
+        const vs = compileShader(gl.VERTEX_SHADER, vsSrc);
+        const fs = compileShader(gl.FRAGMENT_SHADER, fsSrc);
+        if (!vs || !fs) return null;
+        const prog = gl.createProgram();
+        gl.attachShader(prog, vs);
+        gl.attachShader(prog, fs);
+        gl.linkProgram(prog);
+        if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return null;
+        return prog;
+      }
+
       const vsSource = document.getElementById('nimbus-vertex-shader').textContent;
-      const fsSource = document.getElementById('nimbus-fragment-shader').textContent;
-      const vs = compileShader(gl.VERTEX_SHADER, vsSource);
-      const fs = compileShader(gl.FRAGMENT_SHADER, fsSource);
-      if (!vs || !fs) return;
+      const auraFsSource = document.getElementById('nimbus-fragment-shader').textContent;
+      const glassFsSource = document.getElementById('fluted-glass-fragment-shader').textContent;
 
-      const program = gl.createProgram();
-      gl.attachShader(program, vs);
-      gl.attachShader(program, fs);
-      gl.linkProgram(program);
-      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
+      const auraProgram = createProgram(vsSource, auraFsSource);
+      const glassProgram = createProgram(vsSource, glassFsSource);
+      if (!auraProgram || !glassProgram) return;
 
-      gl.useProgram(program);
-
-      const buffer = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      const quadBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, quadBuffer);
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
         -1, -1,  1, -1, -1,  1,
         -1,  1,  1, -1,  1,  1
       ]), gl.STATIC_DRAW);
 
-      const posLoc = gl.getAttribLocation(program, 'a_position');
-      gl.enableVertexAttribArray(posLoc);
-      gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+      function bindQuad(prog) {
+        gl.bindBuffer(gl.ARRAY_BUFFER, quadBuffer);
+        const posLoc = gl.getAttribLocation(prog, 'a_position');
+        gl.enableVertexAttribArray(posLoc);
+        gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+      }
 
-      const u = {};
+      const uAura = {};
       [
         'u_resolution', 'u_time',
         'u_offset', 'u_scale', 'u_aspect', 'u_rotation', 'u_morph', 'u_seed',
@@ -2525,8 +2631,28 @@
         'u_bgColor', 'u_outerColor', 'u_midColor', 'u_coreColor',
         'u_intensity', 'u_isLight', 'u_grain', 'u_vignette'
       ].forEach(name => {
-        u[name] = gl.getUniformLocation(program, name);
+        uAura[name] = gl.getUniformLocation(auraProgram, name);
       });
+
+      const uGlass = {};
+      [
+        'u_bgTex', 'u_resolution', 'u_dpr', 'u_time', 'u_pointer',
+        'u_tintColor', 'u_isLight', 'u_ior', 'u_refractionStrength',
+        'u_dispersion', 'u_blur', 'u_vibrantColors', 'u_grain'
+      ].forEach(name => {
+        uGlass[name] = gl.getUniformLocation(glassProgram, name);
+      });
+
+      const bgFramebuffer = gl.createFramebuffer();
+      const bgTexture = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, bgTexture);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+      let fboW = 0;
+      let fboH = 0;
 
       function hexToRgbNorm(hex) {
         const clean = (hex || '#000000').replace('#', '');
@@ -2538,106 +2664,69 @@
         ];
       }
 
-      // Fixed palettes locked strictly to existing MoltenGram theme & channel colors
-      // Includes multi-stop tonal gradations for smooth pixel-level text masking
       const FIXED_PALETTES = {
         'release-dark': {
-          bg: '#150D0C',
-          outer: '#7E1D0A',
-          mid: '#E56A54',
-          core: '#FFD8D1',
+          bg: '#96473B',
+          outer: '#C4685A',
+          mid: '#F09B8C',
+          core: '#FFF6F4',
+          glassTint: '#FFD8D1',
           isLight: 0.0,
-          intensityMul: 0.88,
-          gradations: {
-            title:  ['26, 5, 3',   '58, 13, 8',   '108, 28, 18',  '168, 62, 46',  '222, 130, 114', '246, 198, 188', '252, 236, 233'],
-            accent: ['44, 8, 4',   '86, 19, 10',  '138, 36, 22',  '188, 64, 45',  '226, 98, 76',   '246, 122, 99',  '254, 138, 115'],
-            sub:    ['30, 8, 5',   '66, 18, 12',  '116, 40, 30',  '162, 82, 70',  '198, 142, 132', '215, 180, 173', '223, 198, 192'],
-            muted:  ['38, 12, 9',  '74, 28, 22',  '112, 54, 46',  '140, 88, 80',  '156, 118, 112', '164, 134, 128', '168, 142, 136']
-          }
+          intensityMul: 0.94
         },
         'release-light': {
           bg: '#FFF7F5',
           outer: '#FFE4DE',
           mid: '#FF9E8A',
           core: '#C84630',
+          glassTint: '#FFF9F8',
           isLight: 1.0,
-          intensityMul: 0.82,
-          gradations: {
-            title:  ['18, 5, 3',   '26, 9, 7',    '32, 13, 10',   '36, 16, 13',   '38, 18, 15',    '40, 19, 16',    '40, 19, 16'],
-            accent: ['54, 10, 4',  '84, 19, 10',  '118, 31, 18',  '152, 45, 29',  '178, 58, 39',   '192, 66, 45',   '200, 70, 48'],
-            sub:    ['32, 12, 9',  '48, 22, 18',  '64, 34, 29',   '76, 46, 41',   '84, 54, 49',    '90, 60, 55',    '92, 62, 57'],
-            muted:  ['52, 24, 19', '78, 42, 36',  '104, 64, 58',  '124, 84, 78',  '138, 99, 93',   '144, 108, 102', '148, 113, 107']
-          }
+          intensityMul: 0.80
         },
         'beta-dark': {
-          bg: '#0D141F',
-          outer: '#0D4B80',
-          mid: '#4A9BE8',
-          core: '#D4EAFF',
+          bg: '#3E6A96',
+          outer: '#6093C7',
+          mid: '#9CCBF7',
+          core: '#F0F8FF',
+          glassTint: '#D4EAFF',
           isLight: 0.0,
-          intensityMul: 0.88,
-          gradations: {
-            title:  ['4, 16, 32',  '10, 36, 68',  '22, 68, 122',  '48, 114, 178', '114, 168, 222', '192, 220, 246', '236, 244, 255'],
-            accent: ['6, 24, 46',  '14, 52, 94',  '28, 86, 146',  '54, 126, 196', '86, 162, 232',  '110, 184, 248', '124, 196, 255'],
-            sub:    ['8, 22, 40',  '18, 46, 80',  '38, 80, 128',  '76, 122, 172', '132, 168, 208', '170, 196, 226', '189, 209, 235'],
-            muted:  ['14, 34, 58', '28, 58, 92',  '52, 88, 126',  '84, 116, 152', '110, 138, 170', '124, 149, 179', '132, 155, 184']
-          }
+          intensityMul: 0.94
         },
         'beta-light': {
           bg: '#F4F9FF',
           outer: '#DCEBFF',
           mid: '#7CC4FF',
           core: '#1B6EC2',
+          glassTint: '#F7FBFF',
           isLight: 1.0,
-          intensityMul: 0.82,
-          gradations: {
-            title:  ['4, 10, 18',  '7, 15, 26',   '10, 20, 34',   '12, 23, 38',   '13, 25, 41',    '14, 27, 43',    '14, 27, 43'],
-            accent: ['5, 28, 56',  '9, 44, 86',   '14, 62, 118',  '19, 80, 148',  '23, 96, 174',   '26, 105, 187',  '27, 110, 194'],
-            sub:    ['12, 24, 40', '22, 38, 58',  '32, 52, 76',   '40, 62, 88',   '46, 68, 95',    '50, 73, 100',   '52, 75, 102'],
-            muted:  ['24, 44, 68', '42, 66, 94',  '62, 88, 118',  '80, 105, 135', '94, 118, 147',  '100, 124, 153', '104, 127, 156']
-          }
+          intensityMul: 0.80
         },
         'canary-dark': {
-          bg: '#1B170B',
-          outer: '#6E5300',
-          mid: '#E5B526',
-          core: '#FFF0B8',
+          bg: '#876D2A',
+          outer: '#B8963D',
+          mid: '#EDD06B',
+          core: '#FFFAE0',
+          glassTint: '#FFF0B8',
           isLight: 0.0,
-          intensityMul: 0.88,
-          gradations: {
-            title:  ['28, 21, 2',  '62, 46, 4',   '112, 84, 8',   '168, 132, 24', '216, 184, 88',  '244, 228, 176', '255, 248, 230'],
-            accent: ['44, 32, 0',  '88, 66, 2',   '138, 106, 8',  '186, 148, 24', '224, 184, 52',  '246, 204, 70',  '255, 213, 79'],
-            sub:    ['34, 26, 4',  '72, 56, 12',  '120, 98, 34',  '164, 142, 78', '198, 182, 134', '218, 206, 166', '229, 217, 181'],
-            muted:  ['46, 36, 8',  '84, 68, 24',  '118, 102, 54', '142, 128, 86', '158, 146, 108', '166, 155, 118', '171, 160, 124']
-          }
+          intensityMul: 0.94
         },
         'canary-light': {
           bg: '#FFFDF2',
           outer: '#FFF1C2',
           mid: '#FFD54F',
           core: '#9E7400',
+          glassTint: '#FFFEF7',
           isLight: 1.0,
-          intensityMul: 0.82,
-          gradations: {
-            title:  ['16, 12, 1',  '22, 17, 2',   '28, 22, 3',    '32, 25, 4',    '34, 27, 5',     '36, 28, 5',     '36, 28, 5'],
-            accent: ['42, 28, 0',  '66, 46, 0',   '92, 66, 0',    '118, 86, 0',   '138, 101, 0',   '151, 110, 0',   '158, 116, 0'],
-            sub:    ['30, 23, 4',  '46, 36, 10',  '62, 50, 16',   '74, 60, 22',   '82, 67, 25',    '85, 70, 27',    '87, 72, 28'],
-            muted:  ['52, 42, 10', '78, 64, 22',  '104, 88, 38',  '122, 105, 54', '132, 116, 65',  '137, 120, 70',  '140, 123, 72']
-          }
+          intensityMul: 0.80
         },
         'nothing': {
-          bg: '#000000',
-          outer: '#222222',
-          mid: '#686868',
+          bg: '#636363',
+          outer: '#8E8E8E',
+          mid: '#C4C4C4',
           core: '#FFFFFF',
+          glassTint: '#F4F8FF',
           isLight: 0.0,
-          intensityMul: 0.78,
-          gradations: {
-            title:  ['0, 0, 0',    '28, 28, 28',  '68, 68, 68',   '124, 124, 124','186, 186, 186', '232, 232, 232', '255, 255, 255'],
-            accent: ['0, 0, 0',    '28, 28, 28',  '68, 68, 68',   '124, 124, 124','186, 186, 186', '232, 232, 232', '255, 255, 255'],
-            sub:    ['8, 8, 8',    '36, 36, 36',  '74, 74, 74',   '116, 116, 116','152, 152, 152', '174, 174, 174', '184, 184, 184'],
-            muted:  ['16, 16, 16', '42, 42, 42',  '68, 68, 68',   '88, 88, 88',   '104, 104, 104', '112, 112, 112', '115, 115, 115']
-          }
+          intensityMul: 0.94
         }
       };
 
@@ -2651,31 +2740,8 @@
         return FIXED_PALETTES[`${channel}-${theme}`] || FIXED_PALETTES['release-dark'];
       }
 
-      // Curated MD3 & Organic optical shapes from Nimbus
       const LIVE_SHAPES = [
-        0,  // Ring
-        1,  // Organic Aura
-        2,  // Crescent
-        4,  // Squircle
-        6,  // Arch
-        10, // Rounded Triangle
-        11, // MD3 Arrow
-        12, // MD3 Fan
-        13, // Diamond
-        14, // Crystal
-        16, // Hexagon
-        17, // Sunburst
-        18, // 8-Point Star
-        19, // 4-Wave Cookie
-        20, // 6-Wave Cookie
-        22, // 9-Wave Cookie
-        23, // 12-Wave Cookie
-        24, // 4-Lobe Clover
-        25, // 8-Lobe Clover
-        30, // Flower
-        31, // Cloud
-        32, // Petal
-        37  // Heart
+        0, 1, 2, 4, 6, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 22, 23, 24, 25, 30, 31, 32, 37
       ];
 
       function pickNextShape(excludeId) {
@@ -2688,29 +2754,28 @@
 
       function generatePreset(prevShape) {
         const shape = pickNextShape(prevShape);
-        const hollow = (shape === 0) ? 0 : (shape >= 3 && Math.random() > 0.62 ? 1 : 0);
         return {
           shape,
-          hollow,
-          anchorX: (Math.random() - 0.5) * 0.44,
-          anchorY: (Math.random() - 0.5) * 0.34,
-          scale: 0.25 + Math.random() * 0.16,
-          aspect: shape >= 3 ? (0.78 + Math.random() * 0.20) : (0.56 + Math.random() * 0.32),
+          hollow: 0,
+          anchorX: (Math.random() - 0.5) * 0.24,
+          anchorY: (Math.random() - 0.5) * 0.22,
+          scale: 0.36 + Math.random() * 0.12,
+          aspect: shape >= 3 ? (0.80 + Math.random() * 0.16) : (0.64 + Math.random() * 0.24),
           baseRot: (Math.random() * 240) - 120,
-          morph: shape === 1 ? (0.28 + Math.random() * 0.32) : (0.04 + Math.random() * 0.16),
-          baseFocus: (Math.random() * 360) - 180,
-          sharpness: 0.78 + Math.random() * 0.19,
-          diffusion: 0.70 + Math.random() * 0.38,
-          drift: 0.34 + Math.random() * 0.36,
-          intensity: 0.88 + Math.random() * 0.22
+          morph: shape === 1 ? (0.24 + Math.random() * 0.28) : (0.04 + Math.random() * 0.14),
+          baseFocus: -90 + (Math.random() * 140 - 70),
+          sharpness: 0.80 + Math.random() * 0.15,
+          diffusion: 0.78 + Math.random() * 0.28,
+          drift: 0.36 + Math.random() * 0.28,
+          intensity: 0.96 + Math.random() * 0.14
         };
       }
 
       let fromState = generatePreset(-1);
       let toState = generatePreset(fromState.shape);
 
-      const HOLD_DURATION = 4.2;   // Seconds holding & breathing before next morph
-      const MORPH_DURATION = 2.8;  // Seconds smoothly morphing shape, position & parameters
+      const HOLD_DURATION = 4.2;
+      const MORPH_DURATION = 2.8;
       const CYCLE_DURATION = HOLD_DURATION + MORPH_DURATION;
 
       let elapsedTime = 0;
@@ -2719,21 +2784,27 @@
       let pointerParallaxY = 0;
       let targetParallaxX = 0;
       let targetParallaxY = 0;
+      let currentDpr = 1;
 
       window.addEventListener('pointermove', (e) => {
         if (e.pointerType !== 'mouse') return;
-        targetParallaxX = ((e.clientX / Math.max(window.innerWidth, 1)) - 0.5) * 0.055;
-        targetParallaxY = -((e.clientY / Math.max(window.innerHeight, 1)) - 0.5) * 0.045;
+        targetParallaxX = ((e.clientX / Math.max(window.innerWidth, 1)) - 0.5) * 0.06;
+        targetParallaxY = -((e.clientY / Math.max(window.innerHeight, 1)) - 0.5) * 0.05;
       }, { passive: true });
 
       function resizeWallpaperCanvas() {
-        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-        const w = Math.max(1, Math.floor(window.innerWidth * dpr));
-        const h = Math.max(1, Math.floor(window.innerHeight * dpr));
+        currentDpr = Math.min(window.devicePixelRatio || 1, 1.75);
+        const w = Math.max(1, Math.floor(window.innerWidth * currentDpr));
+        const h = Math.max(1, Math.floor(window.innerHeight * currentDpr));
         if (canvas.width !== w || canvas.height !== h) {
           canvas.width = w;
           canvas.height = h;
-          gl.viewport(0, 0, w, h);
+        }
+        if (fboW !== w || fboH !== h) {
+          fboW = w;
+          fboH = h;
+          gl.bindTexture(gl.TEXTURE_2D, bgTexture);
+          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, fboW, fboH, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
         }
       }
 
@@ -2750,99 +2821,6 @@
         return a + diff * t;
       }
 
-      // -----------------------------------------------------------
-      // True Pixel-Level Glyph Masking (background-clip: text)
-      // Slices cleanly across individual letters with 12-stop smooth gradation
-      // -----------------------------------------------------------
-      const adaptiveTextNodes = [];
-
-      function collectAdaptiveTextNodes() {
-        adaptiveTextNodes.length = 0;
-        document.querySelectorAll('[data-adaptive-text]').forEach(el => {
-          el.classList.add('adaptive-mask-ready');
-          adaptiveTextNodes.push({
-            el,
-            role: el.getAttribute('data-adaptive-text') || 'title'
-          });
-        });
-      }
-
-      collectAdaptiveTextNodes();
-
-      function updatePixelTextMasks(params) {
-        if (adaptiveTextNodes.length === 0) return;
-
-        const vw = Math.max(window.innerWidth, 1);
-        const vh = Math.max(window.innerHeight, 1);
-        const minDim = Math.min(vw, vh);
-
-        const {
-          offsetX, offsetY, scale, aspect,
-          focusAngle, diffusion, drift,
-          intensity, pal
-        } = params;
-
-        const focusRad = (focusAngle * Math.PI) / 180;
-        const focusDirX = Math.cos(focusRad);
-        const focusDirY = Math.sin(focusRad);
-
-        // Exact screen coordinates of the sharp caustic core and the diffused plume
-        const coreScreenX = 0.5 * vw + offsetX * minDim;
-        const coreScreenY = 0.5 * vh - offsetY * minDim;
-
-        const plumeShiftUV = drift * scale * 0.44;
-        const plumeScreenX = coreScreenX - focusDirX * plumeShiftUV * minDim;
-        const plumeScreenY = coreScreenY + focusDirY * plumeShiftUV * minDim;
-
-        const basePx = scale * minDim;
-        const coreRx = basePx * (1.28 + diffusion * 0.36);
-        const coreRy = coreRx * (0.84 + aspect * 0.16);
-        const plumeRx = basePx * (1.92 + diffusion * 0.68);
-        const plumeRy = plumeRx * (0.86 + aspect * 0.14);
-
-        const coreAlphaScale = Math.max(0.65, Math.min(1.0, intensity / Math.max(pal.intensityMul, 0.1)));
-
-        for (let i = 0; i < adaptiveTextNodes.length; i++) {
-          const item = adaptiveTextNodes[i];
-          const rect = item.el.getBoundingClientRect();
-          if (rect.width <= 0 || rect.height <= 0) continue;
-          if (rect.bottom < -60 || rect.top > vh + 60) continue;
-
-          const stops = pal.gradations[item.role] || pal.gradations.title;
-          const relCoreX = (coreScreenX - rect.left).toFixed(2);
-          const relCoreY = (coreScreenY - rect.top).toFixed(2);
-          const relPlumeX = (plumeScreenX - rect.left).toFixed(2);
-          const relPlumeY = (plumeScreenY - rect.top).toFixed(2);
-
-          const a0 = (0.98 * coreAlphaScale).toFixed(3);
-          const a1 = (0.92 * coreAlphaScale).toFixed(3);
-          const a2 = (0.78 * coreAlphaScale).toFixed(3);
-          const a3 = (0.56 * coreAlphaScale).toFixed(3);
-          const a4 = (0.32 * coreAlphaScale).toFixed(3);
-          const a5 = (0.12 * coreAlphaScale).toFixed(3);
-
-          // Two-layer continuous elliptical radial mask:
-          // Top layer: deep core ink fading smoothly across 7 stops to transparent
-          // Bottom layer: diffused plume gradation fading smoothly across 6 stops to unlit text color
-          item.el.style.backgroundImage =
-            `radial-gradient(ellipse ${coreRx.toFixed(1)}px ${coreRy.toFixed(1)}px at ${relCoreX}px ${relCoreY}px, ` +
-              `rgba(${stops[0]}, ${a0}) 0%, ` +
-              `rgba(${stops[0]}, ${a1}) 18%, ` +
-              `rgba(${stops[1]}, ${a2}) 35%, ` +
-              `rgba(${stops[2]}, ${a3}) 52%, ` +
-              `rgba(${stops[3]}, ${a4}) 69%, ` +
-              `rgba(${stops[4]}, ${a5}) 85%, ` +
-              `rgba(${stops[5]}, 0) 100%), ` +
-            `radial-gradient(ellipse ${plumeRx.toFixed(1)}px ${plumeRy.toFixed(1)}px at ${relPlumeX}px ${relPlumeY}px, ` +
-              `rgb(${stops[1]}) 0%, ` +
-              `rgb(${stops[2]}) 24%, ` +
-              `rgb(${stops[3]}) 46%, ` +
-              `rgb(${stops[4]}) 66%, ` +
-              `rgb(${stops[5]}) 84%, ` +
-              `rgb(${stops[6]}) 100%)`;
-        }
-      }
-
       function renderWallpaper(now) {
         requestAnimationFrame(renderWallpaper);
 
@@ -2857,7 +2835,6 @@
         const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         elapsedTime += dt * (reduceMotion ? 0.25 : 1.0);
 
-        // Advance morph cycle between compositions (shapes, position, parameters only)
         while (elapsedTime >= CYCLE_DURATION) {
           elapsedTime -= CYCLE_DURATION;
           fromState = toState;
@@ -2869,78 +2846,97 @@
           : Math.min(1, (elapsedTime - HOLD_DURATION) / MORPH_DURATION);
         const blend = easeInOutCubic(rawBlend);
 
-        // Continuous real-time harmonic drift & breathing
         const t = now * 0.001 * (reduceMotion ? 0.25 : 1.0);
-        const floatX = Math.sin(t * 0.37) * 0.085 + Math.cos(t * 0.21) * 0.045;
-        const floatY = Math.cos(t * 0.31) * 0.075 + Math.sin(t * 0.19) * 0.040;
+        const floatX = Math.sin(t * 0.37) * 0.07 + Math.cos(t * 0.21) * 0.035;
+        const floatY = Math.cos(t * 0.31) * 0.065 + Math.sin(t * 0.19) * 0.03;
 
-        pointerParallaxX += (targetParallaxX - pointerParallaxX) * 0.05;
-        pointerParallaxY += (targetParallaxY - pointerParallaxY) * 0.05;
+        pointerParallaxX += (targetParallaxX - pointerParallaxX) * 0.06;
+        pointerParallaxY += (targetParallaxY - pointerParallaxY) * 0.06;
 
         const offsetX = lerp(fromState.anchorX, toState.anchorX, blend) + floatX + pointerParallaxX;
         const offsetY = lerp(fromState.anchorY, toState.anchorY, blend) + floatY + pointerParallaxY;
-        const scale = lerp(fromState.scale, toState.scale, blend) * (1.0 + Math.sin(t * 0.52) * 0.055);
-        const aspect = lerp(fromState.aspect, toState.aspect, blend) + Math.cos(t * 0.43) * 0.03;
-        const rotation = lerpAngle(fromState.baseRot, toState.baseRot, blend) + Math.sin(t * 0.24) * 18.0;
+        const scale = lerp(fromState.scale, toState.scale, blend) * (1.0 + Math.sin(t * 0.52) * 0.045);
+        const aspect = lerp(fromState.aspect, toState.aspect, blend) + Math.cos(t * 0.43) * 0.025;
+        const rotation = lerpAngle(fromState.baseRot, toState.baseRot, blend) + Math.sin(t * 0.24) * 16.0;
         const morph = Math.max(0, lerp(fromState.morph, toState.morph, blend) + Math.sin(t * 0.61) * 0.03);
-        const focusAngle = lerpAngle(fromState.baseFocus, toState.baseFocus, blend) + t * 14.0;
+        const focusAngle = lerpAngle(fromState.baseFocus, toState.baseFocus, blend) + t * 12.0;
         const sharpness = lerp(fromState.sharpness, toState.sharpness, blend);
-        const diffusion = lerp(fromState.diffusion, toState.diffusion, blend) + Math.sin(t * 0.47) * 0.05;
-        const drift = lerp(fromState.drift, toState.drift, blend) + Math.cos(t * 0.39) * 0.04;
+        const diffusion = lerp(fromState.diffusion, toState.diffusion, blend) + Math.sin(t * 0.47) * 0.04;
+        const drift = lerp(fromState.drift, toState.drift, blend) + Math.cos(t * 0.39) * 0.035;
 
-        // Fixed colors matching current site theme & channel
         const pal = getActiveFixedPalette();
         const bg = hexToRgbNorm(pal.bg);
         const outer = hexToRgbNorm(pal.outer);
         const mid = hexToRgbNorm(pal.mid);
         const core = hexToRgbNorm(pal.core);
+        const glassTint = hexToRgbNorm(pal.glassTint);
         const intensity = lerp(fromState.intensity, toState.intensity, blend) * pal.intensityMul;
 
-        gl.useProgram(program);
-        gl.uniform2f(u.u_resolution, canvas.width, canvas.height);
-        gl.uniform1f(u.u_time, t);
+        // PASS 1: Render live morphing gradient into FBO texture (u_bgTex)
+        gl.bindFramebuffer(gl.FRAMEBUFFER, bgFramebuffer);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, bgTexture, 0);
+        gl.viewport(0, 0, fboW, fboH);
 
-        gl.uniform2f(u.u_offset, offsetX, offsetY);
-        gl.uniform1f(u.u_scale, scale);
-        gl.uniform1f(u.u_aspect, aspect);
-        gl.uniform1f(u.u_rotation, (rotation * Math.PI) / 180);
-        gl.uniform1f(u.u_morph, morph);
-        gl.uniform1f(u.u_seed, 0.42);
+        gl.useProgram(auraProgram);
+        bindQuad(auraProgram);
 
-        gl.uniform1i(u.u_shapeA, fromState.shape);
-        gl.uniform1i(u.u_shapeB, toState.shape);
-        gl.uniform1i(u.u_hollowA, fromState.hollow);
-        gl.uniform1i(u.u_hollowB, toState.hollow);
-        gl.uniform1f(u.u_shapeBlend, blend);
+        gl.uniform2f(uAura.u_resolution, fboW, fboH);
+        gl.uniform1f(uAura.u_time, t);
+        gl.uniform2f(uAura.u_offset, offsetX, offsetY);
+        gl.uniform1f(uAura.u_scale, scale);
+        gl.uniform1f(uAura.u_aspect, aspect);
+        gl.uniform1f(uAura.u_rotation, (rotation * Math.PI) / 180);
+        gl.uniform1f(uAura.u_morph, morph);
+        gl.uniform1f(uAura.u_seed, 0.42);
 
-        gl.uniform1f(u.u_focusAngle, (focusAngle * Math.PI) / 180);
-        gl.uniform1f(u.u_sharpness, sharpness);
-        gl.uniform1f(u.u_diffusion, diffusion);
-        gl.uniform1f(u.u_drift, drift);
+        gl.uniform1i(uAura.u_shapeA, fromState.shape);
+        gl.uniform1i(uAura.u_shapeB, toState.shape);
+        gl.uniform1i(uAura.u_hollowA, fromState.hollow);
+        gl.uniform1i(uAura.u_hollowB, toState.hollow);
+        gl.uniform1f(uAura.u_shapeBlend, blend);
 
-        gl.uniform3f(u.u_bgColor, bg[0], bg[1], bg[2]);
-        gl.uniform3f(u.u_outerColor, outer[0], outer[1], outer[2]);
-        gl.uniform3f(u.u_midColor, mid[0], mid[1], mid[2]);
-        gl.uniform3f(u.u_coreColor, core[0], core[1], core[2]);
-        gl.uniform1f(u.u_intensity, intensity);
-        gl.uniform1f(u.u_isLight, pal.isLight);
+        gl.uniform1f(uAura.u_focusAngle, (focusAngle * Math.PI) / 180);
+        gl.uniform1f(uAura.u_sharpness, sharpness);
+        gl.uniform1f(uAura.u_diffusion, diffusion);
+        gl.uniform1f(uAura.u_drift, drift);
 
-        gl.uniform1f(u.u_grain, 0.032);
-        gl.uniform1f(u.u_vignette, 0.18);
+        gl.uniform3f(uAura.u_bgColor, bg[0], bg[1], bg[2]);
+        gl.uniform3f(uAura.u_outerColor, outer[0], outer[1], outer[2]);
+        gl.uniform3f(uAura.u_midColor, mid[0], mid[1], mid[2]);
+        gl.uniform3f(uAura.u_coreColor, core[0], core[1], core[2]);
+        gl.uniform1f(uAura.u_intensity, intensity);
+        gl.uniform1f(uAura.u_isLight, pal.isLight);
+        gl.uniform1f(uAura.u_grain, 0.0);
+        gl.uniform1f(uAura.u_vignette, 0.14);
 
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-        updatePixelTextMasks({
-          offsetX,
-          offsetY,
-          scale,
-          aspect,
-          focusAngle,
-          diffusion,
-          drift,
-          intensity,
-          pal
-        });
+        // PASS 2: Render Shadow-Free Reeded / Fluted Architectural Glass onto Screen
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.viewport(0, 0, canvas.width, canvas.height);
+
+        gl.useProgram(glassProgram);
+        bindQuad(glassProgram);
+
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, bgTexture);
+        gl.uniform1i(uGlass.u_bgTex, 0);
+
+        gl.uniform2f(uGlass.u_resolution, canvas.width, canvas.height);
+        gl.uniform1f(uGlass.u_dpr, currentDpr);
+        gl.uniform1f(uGlass.u_time, t);
+        gl.uniform2f(uGlass.u_pointer, pointerParallaxX, pointerParallaxY);
+
+        gl.uniform3f(uGlass.u_tintColor, glassTint[0], glassTint[1], glassTint[2]);
+        gl.uniform1f(uGlass.u_isLight, pal.isLight);
+        gl.uniform1f(uGlass.u_ior, 2.15);
+        gl.uniform1f(uGlass.u_refractionStrength, 1.85);
+        gl.uniform1f(uGlass.u_dispersion, 0.38);
+        gl.uniform1f(uGlass.u_blur, 0.45);
+        gl.uniform1f(uGlass.u_vibrantColors, 1.0);
+        gl.uniform1f(uGlass.u_grain, 0.020);
+
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
       }
 
       resizeWallpaperCanvas();
@@ -3493,7 +3489,7 @@
     })();
 
     // -------------------------------------------------------------
-    // 1c. Physically Draggable MD3 Expressive Shapes Arena (True 2D Rigid-Body Physics)
+    // 1c. Physically Draggable MD3 Expressive Shapes Arena (Bottom)
     // -------------------------------------------------------------
     (function initDraggableMd3Shapes() {
       const arena = document.getElementById('md3ShapesArena');
