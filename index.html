@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#150D0C" id="theme-color-meta">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   
-  <title>MoltenGram • Telegram с Material Design 3</title>
+  <title>MoltenGram</title>
   <meta name="description" content="Скачать MoltenGram (moltenstar) — минималистичный и быстрый Android-клиент Telegram с нативным Material 3 Expressive и без трекеров.">
   <meta name="keywords" content="MoltenGram, moltenstar, moltenstar.space, Скачать MoltenGram, Telegram Android, Material Design 3, Exteraless, exteraGram, F-Droid">
   <meta name="author" content="MoltenGram Team (moltenstar)">
@@ -390,6 +390,34 @@
 
     html[data-nothing="true"] .nothing-dots-overlay {
       opacity: 1;
+    }
+
+    /* -------------------------------------------------------------
+       1d. Real-Time Live WebGL Wallpaper Canvas (Fixed Site Palette)
+       ------------------------------------------------------------- */
+    #nimbusWallpaperCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      display: block;
+    }
+
+    /* True Pixel-Level Glyph Mask (background-clip: text) with Smooth Multi-Stop Gradation */
+    [data-adaptive-text].adaptive-mask-ready {
+      background-repeat: no-repeat;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent !important;
+      -webkit-text-fill-color: transparent;
+      transition: none !important;
+    }
+
+    [data-adaptive-text].adaptive-mask-ready::selection {
+      -webkit-text-fill-color: var(--on-primary-container);
+      background-color: var(--primary-container);
     }
 
     /* -------------------------------------------------------------
@@ -1609,6 +1637,9 @@
 </head>
 <body class="selection:bg-[var(--primary-container)] selection:text-[var(--on-primary-container)]">
 
+  <!-- Real-Time Morphing WebGL Wallpaper (Fixed Site Colors, Live Shapes & Motion) -->
+  <canvas id="nimbusWallpaperCanvas" aria-hidden="true"></canvas>
+
   <!-- Fixed Screen-Wide Inverting Dot Matrix Overlay for NOTHING (R) Easter Egg -->
   <div class="nothing-dots-overlay" aria-hidden="true"></div>
   <canvas id="dotMatrixPhysicsCanvas" aria-hidden="true"></canvas>
@@ -1642,7 +1673,7 @@
   </header>
 
   <!-- Main Minimalist Centerpiece -->
-  <main class="flex-1 flex flex-col items-center justify-center max-w-2xl w-full mx-auto px-5 pt-10 pb-4 gap-12">
+  <main class="relative z-10 flex-1 flex flex-col items-center justify-center max-w-2xl w-full mx-auto px-5 pt-10 pb-4 gap-12">
 
     <section class="text-center w-full">
       <!-- Expressive Material 3 12-Sided Scallop Cookie + Original Logo Asset -->
@@ -1671,11 +1702,12 @@
 
       <!-- Concise Headline -->
       <h1 class="reveal delay-1 text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.08] mb-4">
-        Telegram в стиле <br class="hidden sm:inline">
-        <span class="text-[var(--primary)]">Material 3 Expressive</span>
+        <span data-adaptive-text="title">Telegram в стиле</span> <br class="hidden sm:inline">
+        <span class="text-[var(--primary)]" data-adaptive-text="accent">Material 3 Expressive</span>
       </h1>
 
-      <p class="reveal delay-2 text-base sm:text-lg text-[var(--text-sub)] max-w-md mx-auto mb-9 font-normal">
+      <p class="reveal delay-2 text-base sm:text-lg text-[var(--text-sub)] max-w-md mx-auto mb-9 font-normal"
+         data-adaptive-text="sub">
         Быстрый, чистый и открытый клиент без аналитики и лишнего шума.
       </p>
 
@@ -1721,9 +1753,9 @@
       <div class="flex items-center justify-between px-1 mb-3">
         <div class="flex items-center gap-2">
           <span class="material-symbols-rounded text-[20px] text-[var(--primary)]">tune</span>
-          <h2 class="font-bold text-base tracking-tight">Настройки клиента</h2>
+          <h2 class="font-bold text-base tracking-tight" data-adaptive-text="title">Настройки клиента</h2>
         </div>
-        <span id="settingsCounterLabel" class="text-xs text-[var(--text-muted)] font-medium"></span>
+        <span id="settingsCounterLabel" class="text-xs text-[var(--text-muted)] font-medium" data-adaptive-text="muted"></span>
       </div>
 
       <!-- M3 Search Bar -->
@@ -1811,7 +1843,7 @@
   </main>
 
   <!-- Minimal Tonal Footer -->
-  <footer class="py-5 px-5 text-xs text-[var(--text-muted)]">
+  <footer class="relative z-10 py-5 px-5 text-xs text-[var(--text-muted)]">
     <div class="max-w-2xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 px-6 py-4 rounded-3xl bg-[var(--surface-container-low)]">
       <div class="flex items-center gap-2">
         <span class="font-bold text-[var(--text)]">MoltenGram</span>
@@ -2007,6 +2039,410 @@
     <span class="relative z-10" id="toastMessage">Скопировано в буфер обмена</span>
   </div>
 
+  <!-- WebGL Vertex & Fragment Shaders for Real-Time Morphing Nimbus Wallpaper -->
+  <script id="nimbus-vertex-shader" type="x-shader/x-vertex">
+    attribute vec2 a_position;
+    void main() {
+      gl_Position = vec4(a_position, 0.0, 1.0);
+    }
+  </script>
+
+  <script id="nimbus-fragment-shader" type="x-shader/x-fragment">
+    precision highp float;
+
+    uniform vec2 u_resolution;
+    uniform float u_time;
+
+    uniform vec2 u_offset;
+    uniform float u_scale;
+    uniform float u_aspect;
+    uniform float u_rotation;
+    uniform float u_morph;
+    uniform float u_seed;
+
+    uniform int u_shapeA;
+    uniform int u_shapeB;
+    uniform int u_hollowA;
+    uniform int u_hollowB;
+    uniform float u_shapeBlend;
+
+    uniform float u_focusAngle;
+    uniform float u_sharpness;
+    uniform float u_diffusion;
+    uniform float u_drift;
+
+    uniform vec3 u_bgColor;
+    uniform vec3 u_outerColor;
+    uniform vec3 u_midColor;
+    uniform vec3 u_coreColor;
+    uniform float u_intensity;
+    uniform float u_isLight;
+
+    uniform float u_grain;
+    uniform float u_vignette;
+
+    float dot2(vec2 v) {
+      return dot(v, v);
+    }
+
+    mat2 rot2D(float a) {
+      float s = sin(a);
+      float c = cos(a);
+      return mat2(c, -s, s, c);
+    }
+
+    float smin(float a, float b, float k) {
+      float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0);
+      return mix(b, a, h) - k * h * (1.0 - h);
+    }
+
+    float hash12(vec2 p) {
+      vec3 p3 = fract(vec3(p.xyx) * 0.1031);
+      p3 += dot(p3, p3.yzx + 33.33);
+      return fract((p3.x + p3.y) * p3.z);
+    }
+
+    float valueNoise(vec2 p) {
+      vec2 i = floor(p);
+      vec2 f = fract(p);
+      f = f * f * (3.0 - 2.0 * f);
+      float a = hash12(i);
+      float b = hash12(i + vec2(1.0, 0.0));
+      float c = hash12(i + vec2(0.0, 1.0));
+      float d = hash12(i + vec2(1.0, 1.0));
+      return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+    }
+
+    float sdEllipseApprox(vec2 p, vec2 ab) {
+      vec2 q = p / ab;
+      float r = length(q);
+      vec2 grad = q / ab;
+      float gLen = max(length(grad), 1e-4);
+      return (r - 1.0) / gLen;
+    }
+
+    float sdOrganicAura(vec2 p, float radius, float morphAmt, float seed, float time) {
+      vec2 c1 = vec2(-0.48, -0.02) * radius;
+      vec2 c2 = vec2(0.12, -0.22) * radius;
+      vec2 c3 = vec2(0.24, 0.24) * radius;
+
+      float s1 = sin(seed * 6.283 + time * 0.55) * 0.16 * morphAmt;
+      float s2 = cos(seed * 9.424 + time * 0.45) * 0.16 * morphAmt;
+
+      c1 += vec2(s1, s2) * radius;
+      c2 += vec2(-s2 * 0.7, s1 * 0.8) * radius;
+      c3 += vec2(s1 * 0.6, -s2 * 0.9) * radius;
+
+      float d1 = length(p - c1) - radius * (0.42 + 0.08 * morphAmt);
+      float d2 = length(p - c2) - radius * (0.56 + 0.06 * morphAmt);
+      float d3 = length(p - c3) - radius * (0.58 + 0.10 * morphAmt);
+
+      float k = radius * (0.48 + 0.25 * morphAmt);
+      float d = smin(d1, d2, k);
+      d = smin(d, d3, k * 1.1);
+
+      if (morphAmt > 0.01) {
+        float angle = atan(p.y, p.x + 1e-6);
+        float wave = sin(angle * 3.0 + seed * 12.0 + time * 0.4) * 0.035
+                   + cos(angle * 2.0 - seed * 7.0) * 0.025;
+        d += wave * radius * morphAmt;
+      }
+      return d;
+    }
+
+    float sdBox(vec2 p, vec2 b) {
+      vec2 d = abs(p) - b;
+      return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0);
+    }
+
+    float sdRoundBox(vec2 p, vec2 b, vec4 r) {
+      r.xy = (p.x > 0.0) ? r.xy : r.zw;
+      r.x  = (p.y > 0.0) ? r.x  : r.y;
+      vec2 q = abs(p) - b + r.x;
+      return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r.x;
+    }
+
+    float sdRegularNgon(vec2 p, float circumR, float n, float roundR) {
+      float an = 3.14159265 / n;
+      float rIn = circumR * cos(an) - roundR;
+      float bn = mod(atan(p.x, p.y + 1e-6) + an, 2.0 * an) - an;
+      vec2 q = length(p) * vec2(cos(bn), abs(sin(bn)));
+      q -= rIn * vec2(1.0, tan(an));
+      q.y += clamp(-q.y, 0.0, rIn * tan(an));
+      return length(q) * sign(q.x) - roundR;
+    }
+
+    float sdStarN(vec2 p, float outerR, float innerR, float n, float roundR) {
+      float an = 3.14159265 / n;
+      float bn = mod(atan(p.x, p.y + 1e-6) + an, 2.0 * an) - an;
+      vec2 q = length(p) * vec2(cos(bn), abs(sin(bn)));
+      vec2 a = vec2(outerR, 0.0);
+      vec2 b = innerR * vec2(cos(an), sin(an));
+      vec2 ab = b - a;
+      float h = clamp(dot(q - a, ab) / dot(ab, ab), 0.0, 1.0);
+      vec2 proj = a + ab * h;
+      float s = ab.x * (q.y - a.y) - ab.y * (q.x - a.x);
+      return -length(q - proj) * sign(s) - roundR;
+    }
+
+    float sdMd3Arrow(vec2 p, float r) {
+      p.x = abs(p.x);
+      vec2 a = vec2(0.0, r * 0.88);
+      vec2 b = vec2(r * 0.84, -r * 0.62);
+      vec2 c = vec2(0.0, -r * 0.34);
+      vec2 pa = p - a, ba = b - a;
+      float h1 = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
+      float d1 = length(pa - ba * h1);
+      vec2 pb = p - b, cb = c - b;
+      float h2 = clamp(dot(pb, cb) / dot(cb, cb), 0.0, 1.0);
+      float d2 = length(pb - cb * h2);
+      float d = min(d1, d2);
+      float s1 = (p.x - a.x) * (b.y - a.y) - (p.y - a.y) * (b.x - a.x);
+      float s2 = (p.x - b.x) * (c.y - b.y) - (p.y - b.y) * (c.x - b.x);
+      float inside = (s1 >= 0.0 && s2 >= 0.0) ? -1.0 : 1.0;
+      return d * inside - r * 0.14;
+    }
+
+    float sdMd3Ghost(vec2 p, float r) {
+      float w = r * 0.78;
+      float h = r * 0.84;
+      float xNorm = clamp(p.x / w, -1.0, 1.0);
+      float skirtWave = 0.5 + 0.5 * cos(xNorm * 6.2831853);
+      float bottomY = -h * (0.76 + 0.18 * skirtWave);
+      float topY = h * 0.92;
+      float midY = 0.5 * (topY + bottomY);
+      float halfH = 0.5 * (topY - bottomY);
+      float topR = min(w, halfH);
+      float botR = min(w * 0.22, halfH);
+      return sdRoundBox(vec2(p.x, p.y - midY), vec2(w, halfH), vec4(topR, botR, topR, botR));
+    }
+
+    float sdMd3Semicircle(vec2 p, float r) {
+      float w = r * 0.92;
+      float h = r * 0.54;
+      float rBot = r * 0.16;
+      float dBox = sdRoundBox(p, vec2(w, h), vec4(rBot));
+      float dArc = length(p - vec2(0.0, h - w)) - w;
+      return max(dBox, dArc);
+    }
+
+    float sdMd3Fan(vec2 p, float r) {
+      float s = r * 0.82;
+      float rSmall = s * 0.22;
+      float dBox = sdRoundBox(p, vec2(s), vec4(rSmall));
+      float dArc = length(p - vec2(-s + rSmall)) - (2.0 * s - rSmall);
+      return max(dBox, dArc);
+    }
+
+    float sdMd3Bun(vec2 p, float r) {
+      float w = r * 0.84;
+      float h = r * 0.44;
+      float dTop = sdRoundBox(p - vec2(0.0, h * 0.92), vec2(w, h * 0.94), vec4(h * 0.94));
+      float dBot = sdRoundBox(p + vec2(0.0, h * 0.92), vec2(w, h * 0.94), vec4(h * 0.94));
+      return min(dTop, dBot);
+    }
+
+    float sdMd3Heart(vec2 p, float radius) {
+      float s = radius * 1.48;
+      vec2 q = p / s;
+      q.y += 0.46;
+      q.x = abs(q.x);
+      float d = 0.0;
+      if (q.y + q.x > 1.0) {
+        d = sqrt(dot2(q - vec2(0.25, 0.75))) - 0.35355339;
+      } else {
+        d = sqrt(min(dot2(q - vec2(0.0, 1.0)),
+                     dot2(q - 0.5 * max(q.x + q.y, 0.0)))) * sign(q.x - q.y);
+      }
+      return d * s;
+    }
+
+    float evalMd3Shape(int id, vec2 p, float r) {
+      float a = atan(p.y, p.x + 1e-6);
+      if (id == 3)  return length(p) - r * 0.90;
+      if (id == 4)  return sdRoundBox(p, vec2(r * 0.82), vec4(r * 0.36));
+      if (id == 5)  return sdRoundBox(vec2(p.x - p.y * 0.21, p.y), vec2(r * 0.76, r * 0.78), vec4(r * 0.24));
+      if (id == 6)  return sdRoundBox(p, vec2(r * 0.80, r * 0.88), vec4(r * 0.80, r * 0.20, r * 0.80, r * 0.20));
+      if (id == 7)  return sdMd3Semicircle(p, r);
+      if (id == 8)  return sdEllipseApprox(p, vec2(r * 0.62, r * 0.98));
+      if (id == 9)  return sdRoundBox(p, vec2(r * 0.64, r * 0.98), vec4(r * 0.64));
+      if (id == 10) return sdRegularNgon(p, r * 1.04, 3.0, r * 0.22);
+      if (id == 11) return sdMd3Arrow(p, r);
+      if (id == 12) return sdMd3Fan(p, r);
+      if (id == 13) return sdRegularNgon(vec2(p.x * 1.28, p.y), r * 0.96, 4.0, r * 0.20) * 0.85;
+      if (id == 14) return sdRegularNgon(vec2(p.y, p.x * 0.66), r * 0.62, 6.0, r * 0.18);
+      if (id == 15) return sdRegularNgon(p, r * 0.94, 5.0, r * 0.20);
+      if (id == 16) return sdRegularNgon(p, r * 0.94, 6.0, r * 0.20);
+      if (id == 17) return sdStarN(p, r * 0.92, r * 0.68, 8.0, r * 0.08);
+      if (id == 18) return sdStarN(p, r * 0.94, r * 0.56, 8.0, r * 0.09);
+      if (id == 19) return length(p) - r * (0.80 + 0.185 * cos(4.0 * (a - 0.785398)));
+      if (id == 20) return length(p) - r * (0.84 + 0.125 * cos(6.0 * (a - 1.570796)));
+      if (id == 21) return length(p) - r * (0.85 + 0.105 * cos(7.0 * (a + 1.570796)));
+      if (id == 22) return length(p) - r * (0.86 + 0.090 * cos(9.0 * (a + 1.570796)));
+      if (id == 23) return length(p) - r * (0.87 + 0.088 * cos(12.0 * a));
+      if (id == 24) return length(p) - r * (0.70 + 0.25 * pow(max(abs(cos(2.0 * (a - 0.785398))), 0.0001), 0.82));
+      if (id == 25) return length(p) - r * (0.78 + 0.16 * pow(max(abs(cos(4.0 * (a - 0.392699))), 0.0001), 0.82));
+      if (id == 26) return sdStarN(p, r * 0.95, r * 0.63, 12.0, r * 0.015);
+      if (id == 27) return sdStarN(p, r * 0.92, r * 0.65, 10.0, r * 0.07);
+      if (id == 28) return sdStarN(p, r * 0.97, r * 0.36, 16.0, r * 0.01);
+      if (id == 29) return length(p) - r * (0.40 + 0.54 * pow(max(0.5 + 0.5 * cos(16.0 * a), 0.0001), 0.65));
+      if (id == 30) return length(p) - r * (0.68 + 0.24 * cos(8.0 * a));
+      if (id == 31) {
+        vec2 qp = vec2(p.x / 1.06, p.y / 0.80);
+        float wave = abs(cos(6.0 * atan(qp.y, qp.x + 1e-6)));
+        return (length(qp) - r * (0.72 + 0.16 * pow(max(wave, 0.0001), 0.75))) * 0.90;
+      }
+      if (id == 32) {
+        float d = pow(max(abs(cos(a)), 0.0001), 1.3) + pow(max(abs(sin(a)), 0.0001), 1.3);
+        float base = 0.72 / pow(max(d, 0.0001), 0.45);
+        float bump = 0.14 * abs(cos(4.0 * a));
+        return length(p) - r * (base + bump);
+      }
+      if (id == 33) return sdMd3Ghost(p, r);
+      if (id == 36) return sdMd3Bun(p, r);
+      return sdMd3Heart(p, r);
+    }
+
+    void evalShapeField(
+      int shapeId,
+      int hollow,
+      vec2 pRot,
+      vec2 focusDir,
+      float rimHalfWidth,
+      out float outDist,
+      out float outFill
+    ) {
+      outDist = 0.0;
+      outFill = 0.0;
+
+      if (shapeId == 0) {
+        vec2 ab = vec2(u_scale, u_scale * u_aspect);
+        float dEll = sdEllipseApprox(pRot, ab);
+        outDist = abs(dEll) - rimHalfWidth;
+      } else if (shapeId == 1) {
+        vec2 pAura = vec2(pRot.x, pRot.y / mix(0.75, 1.0, u_aspect));
+        outDist = sdOrganicAura(pAura, u_scale, u_morph, u_seed, u_time);
+        outFill = smoothstep(0.015, -u_scale * 0.45, outDist);
+      } else if (shapeId == 2) {
+        vec2 ab = vec2(u_scale, u_scale * u_aspect);
+        float dOuter = sdEllipseApprox(pRot, ab);
+        vec2 innerOffset = rot2D(-u_rotation) * (focusDir * u_scale * 0.14);
+        float dInner = sdEllipseApprox(pRot - innerOffset, ab * 0.86);
+        outDist = max(dOuter, -dInner);
+        outFill = smoothstep(0.01, -u_scale * 0.16, outDist) * 0.65;
+      } else {
+        vec2 pMd3 = vec2(pRot.x, pRot.y / mix(0.72, 1.0, u_aspect));
+        float rawD = evalMd3Shape(shapeId, pMd3, u_scale);
+        if (hollow == 1) {
+          outDist = abs(rawD) - rimHalfWidth;
+        } else {
+          outDist = rawD;
+          outFill = smoothstep(0.015, -u_scale * 0.42, outDist);
+        }
+      }
+    }
+
+    void main() {
+      float minDim = min(u_resolution.x, u_resolution.y);
+      vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / minDim;
+
+      vec2 focusDir = vec2(cos(u_focusAngle), sin(u_focusAngle));
+      vec2 p = uv - u_offset;
+
+      float refSpan = max(u_scale * 1.15, 0.15);
+      float focusAlign = clamp(dot(p, focusDir) / refSpan, -1.2, 1.2);
+      float tDiff = smoothstep(0.85, -0.95, focusAlign);
+      float tDiffPow = pow(tDiff, 1.35);
+
+      vec2 plumeShift = focusDir * (u_drift * u_scale * 0.52 * pow(tDiff, 1.65));
+      vec2 pShape = p + plumeShift;
+      vec2 pRot = rot2D(-u_rotation) * pShape;
+
+      if (u_morph > 0.001) {
+        float n = valueNoise(pRot * (3.2 / max(u_scale, 0.1)) + vec2(u_seed * 10.0, u_time * 0.25));
+        pRot += (n - 0.5) * u_scale * 0.16 * u_morph;
+      }
+
+      float rimHalfWidth = mix(0.0035, 0.022, tDiffPow) * (u_scale / 0.34);
+
+      float distA = 0.0;
+      float fillA = 0.0;
+      evalShapeField(u_shapeA, u_hollowA, pRot, focusDir, rimHalfWidth, distA, fillA);
+
+      float dist = distA;
+      float interiorFill = fillA;
+
+      if (u_shapeB != u_shapeA || u_hollowB != u_hollowA) {
+        float distB = 0.0;
+        float fillB = 0.0;
+        evalShapeField(u_shapeB, u_hollowB, pRot, focusDir, rimHalfWidth, distB, fillB);
+        float blend = smoothstep(0.0, 1.0, u_shapeBlend);
+        dist = mix(distA, distB, blend);
+        interiorFill = mix(fillA, fillB, blend);
+      }
+
+      float sharpSigma = mix(0.048, 0.0028, u_sharpness) * (u_scale / 0.34);
+      float softSigma = mix(0.04, 0.36, u_diffusion) * (u_scale / 0.34);
+      float localSigma = mix(sharpSigma, softSigma, tDiffPow);
+
+      float posDist = max(dist, 0.0);
+
+      float coreGlow = exp(-pow(posDist / max(localSigma * 0.42, 0.0018), 2.0));
+      if (interiorFill > 0.0) {
+        coreGlow = max(coreGlow, interiorFill * (1.0 - 0.38 * tDiffPow));
+      }
+
+      float midSigma = mix(sharpSigma * 2.4, softSigma * 0.95, pow(tDiff, 1.1));
+      float midGlow = exp(-posDist / max(midSigma, 0.004));
+      if (interiorFill > 0.0) {
+        midGlow = max(midGlow, smoothstep(0.05, -u_scale * 0.2, dist) * 0.85);
+      }
+
+      float wideSigma = mix(sharpSigma * 5.0, softSigma * 1.55, pow(tDiff, 0.85));
+      float wideGlow = 1.0 / (1.0 + pow(posDist / max(wideSigma, 0.01), 1.75));
+      wideGlow *= mix(0.28, 1.0, pow(tDiff, 0.75));
+
+      vec3 col = u_bgColor;
+
+      if (u_isLight < 0.5) {
+        float outerEnergy = wideGlow * 0.62 * u_intensity;
+        col = mix(col, u_outerColor, clamp(outerEnergy, 0.0, 1.0));
+
+        float midEnergy = pow(midGlow, 1.15) * 0.86 * u_intensity;
+        col = mix(col, u_midColor, clamp(midEnergy, 0.0, 1.0));
+
+        float coreEnergy = pow(coreGlow, 1.25) * u_intensity;
+        col += u_coreColor * coreEnergy * 0.82;
+
+        col = col / (1.0 + col * 0.22);
+        col = mix(col, smoothstep(0.0, 1.0, col), 0.14);
+      } else {
+        float outerEnergy = wideGlow * 0.54 * u_intensity;
+        col = mix(col, u_outerColor, clamp(outerEnergy, 0.0, 1.0));
+
+        float midEnergy = pow(midGlow, 1.15) * 0.68 * u_intensity;
+        col = mix(col, u_midColor, clamp(midEnergy, 0.0, 1.0));
+
+        float coreEnergy = pow(coreGlow, 1.20) * 0.64 * u_intensity;
+        col = mix(col, u_coreColor, clamp(coreEnergy, 0.0, 1.0));
+      }
+
+      vec2 vigUV = gl_FragCoord.xy / u_resolution.xy - 0.5;
+      float vig = 1.0 - dot(vigUV, vigUV) * u_vignette * 1.35;
+      col *= clamp(vig, 0.35, 1.05);
+
+      vec2 grainCoord = gl_FragCoord.xy * (1080.0 / max(minDim, 1.0));
+      float n1 = hash12(grainCoord + fract(u_seed * 71.3 + u_time * 0.013) * 100.0);
+      float n2 = hash12(grainCoord * 1.37 + vec2(17.1, 31.7) + fract(u_seed * 33.7) * 100.0);
+      float grainNoise = (n1 + n2 - 1.0);
+
+      col += grainNoise * u_grain;
+      col = clamp(col, 0.0, 1.0);
+
+      gl_FragColor = vec4(col, 1.0);
+    }
+  </script>
+
   <script>
     // -------------------------------------------------------------
     // 0. Generate Mathematical Material 3 12-Lobe Scallop Cookie SVG Path
@@ -2024,6 +2460,492 @@
         d += (i === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`);
       }
       pathEl.setAttribute('d', d + ' Z');
+    })();
+
+    // -------------------------------------------------------------
+    // 0b. Real-Time Morphing Nimbus Wallpaper Engine (Fixed Site Palette)
+    // -------------------------------------------------------------
+    (function initLiveNimbusWallpaper() {
+      const canvas = document.getElementById('nimbusWallpaperCanvas');
+      if (!canvas) return;
+
+      const gl = canvas.getContext('webgl', {
+        antialias: false,
+        alpha: false,
+        depth: false,
+        stencil: false,
+        powerPreference: 'low-power'
+      }) || canvas.getContext('experimental-webgl');
+
+      if (!gl) return;
+
+      function compileShader(type, source) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          console.warn('Nimbus shader error:', gl.getShaderInfoLog(shader));
+          gl.deleteShader(shader);
+          return null;
+        }
+        return shader;
+      }
+
+      const vsSource = document.getElementById('nimbus-vertex-shader').textContent;
+      const fsSource = document.getElementById('nimbus-fragment-shader').textContent;
+      const vs = compileShader(gl.VERTEX_SHADER, vsSource);
+      const fs = compileShader(gl.FRAGMENT_SHADER, fsSource);
+      if (!vs || !fs) return;
+
+      const program = gl.createProgram();
+      gl.attachShader(program, vs);
+      gl.attachShader(program, fs);
+      gl.linkProgram(program);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
+
+      gl.useProgram(program);
+
+      const buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+        -1, -1,  1, -1, -1,  1,
+        -1,  1,  1, -1,  1,  1
+      ]), gl.STATIC_DRAW);
+
+      const posLoc = gl.getAttribLocation(program, 'a_position');
+      gl.enableVertexAttribArray(posLoc);
+      gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+      const u = {};
+      [
+        'u_resolution', 'u_time',
+        'u_offset', 'u_scale', 'u_aspect', 'u_rotation', 'u_morph', 'u_seed',
+        'u_shapeA', 'u_shapeB', 'u_hollowA', 'u_hollowB', 'u_shapeBlend',
+        'u_focusAngle', 'u_sharpness', 'u_diffusion', 'u_drift',
+        'u_bgColor', 'u_outerColor', 'u_midColor', 'u_coreColor',
+        'u_intensity', 'u_isLight', 'u_grain', 'u_vignette'
+      ].forEach(name => {
+        u[name] = gl.getUniformLocation(program, name);
+      });
+
+      function hexToRgbNorm(hex) {
+        const clean = (hex || '#000000').replace('#', '');
+        const num = parseInt(clean, 16) || 0;
+        return [
+          ((num >> 16) & 255) / 255,
+          ((num >> 8) & 255) / 255,
+          (num & 255) / 255
+        ];
+      }
+
+      // Fixed palettes locked strictly to existing MoltenGram theme & channel colors
+      // Includes multi-stop tonal gradations for smooth pixel-level text masking
+      const FIXED_PALETTES = {
+        'release-dark': {
+          bg: '#150D0C',
+          outer: '#7E1D0A',
+          mid: '#E56A54',
+          core: '#FFD8D1',
+          isLight: 0.0,
+          intensityMul: 0.88,
+          gradations: {
+            title:  ['26, 5, 3',   '58, 13, 8',   '108, 28, 18',  '168, 62, 46',  '222, 130, 114', '246, 198, 188', '252, 236, 233'],
+            accent: ['44, 8, 4',   '86, 19, 10',  '138, 36, 22',  '188, 64, 45',  '226, 98, 76',   '246, 122, 99',  '254, 138, 115'],
+            sub:    ['30, 8, 5',   '66, 18, 12',  '116, 40, 30',  '162, 82, 70',  '198, 142, 132', '215, 180, 173', '223, 198, 192'],
+            muted:  ['38, 12, 9',  '74, 28, 22',  '112, 54, 46',  '140, 88, 80',  '156, 118, 112', '164, 134, 128', '168, 142, 136']
+          }
+        },
+        'release-light': {
+          bg: '#FFF7F5',
+          outer: '#FFE4DE',
+          mid: '#FF9E8A',
+          core: '#C84630',
+          isLight: 1.0,
+          intensityMul: 0.82,
+          gradations: {
+            title:  ['18, 5, 3',   '26, 9, 7',    '32, 13, 10',   '36, 16, 13',   '38, 18, 15',    '40, 19, 16',    '40, 19, 16'],
+            accent: ['54, 10, 4',  '84, 19, 10',  '118, 31, 18',  '152, 45, 29',  '178, 58, 39',   '192, 66, 45',   '200, 70, 48'],
+            sub:    ['32, 12, 9',  '48, 22, 18',  '64, 34, 29',   '76, 46, 41',   '84, 54, 49',    '90, 60, 55',    '92, 62, 57'],
+            muted:  ['52, 24, 19', '78, 42, 36',  '104, 64, 58',  '124, 84, 78',  '138, 99, 93',   '144, 108, 102', '148, 113, 107']
+          }
+        },
+        'beta-dark': {
+          bg: '#0D141F',
+          outer: '#0D4B80',
+          mid: '#4A9BE8',
+          core: '#D4EAFF',
+          isLight: 0.0,
+          intensityMul: 0.88,
+          gradations: {
+            title:  ['4, 16, 32',  '10, 36, 68',  '22, 68, 122',  '48, 114, 178', '114, 168, 222', '192, 220, 246', '236, 244, 255'],
+            accent: ['6, 24, 46',  '14, 52, 94',  '28, 86, 146',  '54, 126, 196', '86, 162, 232',  '110, 184, 248', '124, 196, 255'],
+            sub:    ['8, 22, 40',  '18, 46, 80',  '38, 80, 128',  '76, 122, 172', '132, 168, 208', '170, 196, 226', '189, 209, 235'],
+            muted:  ['14, 34, 58', '28, 58, 92',  '52, 88, 126',  '84, 116, 152', '110, 138, 170', '124, 149, 179', '132, 155, 184']
+          }
+        },
+        'beta-light': {
+          bg: '#F4F9FF',
+          outer: '#DCEBFF',
+          mid: '#7CC4FF',
+          core: '#1B6EC2',
+          isLight: 1.0,
+          intensityMul: 0.82,
+          gradations: {
+            title:  ['4, 10, 18',  '7, 15, 26',   '10, 20, 34',   '12, 23, 38',   '13, 25, 41',    '14, 27, 43',    '14, 27, 43'],
+            accent: ['5, 28, 56',  '9, 44, 86',   '14, 62, 118',  '19, 80, 148',  '23, 96, 174',   '26, 105, 187',  '27, 110, 194'],
+            sub:    ['12, 24, 40', '22, 38, 58',  '32, 52, 76',   '40, 62, 88',   '46, 68, 95',    '50, 73, 100',   '52, 75, 102'],
+            muted:  ['24, 44, 68', '42, 66, 94',  '62, 88, 118',  '80, 105, 135', '94, 118, 147',  '100, 124, 153', '104, 127, 156']
+          }
+        },
+        'canary-dark': {
+          bg: '#1B170B',
+          outer: '#6E5300',
+          mid: '#E5B526',
+          core: '#FFF0B8',
+          isLight: 0.0,
+          intensityMul: 0.88,
+          gradations: {
+            title:  ['28, 21, 2',  '62, 46, 4',   '112, 84, 8',   '168, 132, 24', '216, 184, 88',  '244, 228, 176', '255, 248, 230'],
+            accent: ['44, 32, 0',  '88, 66, 2',   '138, 106, 8',  '186, 148, 24', '224, 184, 52',  '246, 204, 70',  '255, 213, 79'],
+            sub:    ['34, 26, 4',  '72, 56, 12',  '120, 98, 34',  '164, 142, 78', '198, 182, 134', '218, 206, 166', '229, 217, 181'],
+            muted:  ['46, 36, 8',  '84, 68, 24',  '118, 102, 54', '142, 128, 86', '158, 146, 108', '166, 155, 118', '171, 160, 124']
+          }
+        },
+        'canary-light': {
+          bg: '#FFFDF2',
+          outer: '#FFF1C2',
+          mid: '#FFD54F',
+          core: '#9E7400',
+          isLight: 1.0,
+          intensityMul: 0.82,
+          gradations: {
+            title:  ['16, 12, 1',  '22, 17, 2',   '28, 22, 3',    '32, 25, 4',    '34, 27, 5',     '36, 28, 5',     '36, 28, 5'],
+            accent: ['42, 28, 0',  '66, 46, 0',   '92, 66, 0',    '118, 86, 0',   '138, 101, 0',   '151, 110, 0',   '158, 116, 0'],
+            sub:    ['30, 23, 4',  '46, 36, 10',  '62, 50, 16',   '74, 60, 22',   '82, 67, 25',    '85, 70, 27',    '87, 72, 28'],
+            muted:  ['52, 42, 10', '78, 64, 22',  '104, 88, 38',  '122, 105, 54', '132, 116, 65',  '137, 120, 70',  '140, 123, 72']
+          }
+        },
+        'nothing': {
+          bg: '#000000',
+          outer: '#222222',
+          mid: '#686868',
+          core: '#FFFFFF',
+          isLight: 0.0,
+          intensityMul: 0.78,
+          gradations: {
+            title:  ['0, 0, 0',    '28, 28, 28',  '68, 68, 68',   '124, 124, 124','186, 186, 186', '232, 232, 232', '255, 255, 255'],
+            accent: ['0, 0, 0',    '28, 28, 28',  '68, 68, 68',   '124, 124, 124','186, 186, 186', '232, 232, 232', '255, 255, 255'],
+            sub:    ['8, 8, 8',    '36, 36, 36',  '74, 74, 74',   '116, 116, 116','152, 152, 152', '174, 174, 174', '184, 184, 184'],
+            muted:  ['16, 16, 16', '42, 42, 42',  '68, 68, 68',   '88, 88, 88',   '104, 104, 104', '112, 112, 112', '115, 115, 115']
+          }
+        }
+      };
+
+      function getActiveFixedPalette() {
+        const root = document.documentElement;
+        if (root.getAttribute('data-nothing') === 'true') {
+          return FIXED_PALETTES['nothing'];
+        }
+        const channel = root.getAttribute('data-channel') || 'release';
+        const theme = root.getAttribute('data-theme') || 'dark';
+        return FIXED_PALETTES[`${channel}-${theme}`] || FIXED_PALETTES['release-dark'];
+      }
+
+      // Curated MD3 & Organic optical shapes from Nimbus
+      const LIVE_SHAPES = [
+        0,  // Ring
+        1,  // Organic Aura
+        2,  // Crescent
+        4,  // Squircle
+        6,  // Arch
+        10, // Rounded Triangle
+        11, // MD3 Arrow
+        12, // MD3 Fan
+        13, // Diamond
+        14, // Crystal
+        16, // Hexagon
+        17, // Sunburst
+        18, // 8-Point Star
+        19, // 4-Wave Cookie
+        20, // 6-Wave Cookie
+        22, // 9-Wave Cookie
+        23, // 12-Wave Cookie
+        24, // 4-Lobe Clover
+        25, // 8-Lobe Clover
+        30, // Flower
+        31, // Cloud
+        32, // Petal
+        37  // Heart
+      ];
+
+      function pickNextShape(excludeId) {
+        let candidate = excludeId;
+        for (let i = 0; i < 6 && candidate === excludeId; i++) {
+          candidate = LIVE_SHAPES[Math.floor(Math.random() * LIVE_SHAPES.length)];
+        }
+        return candidate;
+      }
+
+      function generatePreset(prevShape) {
+        const shape = pickNextShape(prevShape);
+        const hollow = (shape === 0) ? 0 : (shape >= 3 && Math.random() > 0.62 ? 1 : 0);
+        return {
+          shape,
+          hollow,
+          anchorX: (Math.random() - 0.5) * 0.44,
+          anchorY: (Math.random() - 0.5) * 0.34,
+          scale: 0.25 + Math.random() * 0.16,
+          aspect: shape >= 3 ? (0.78 + Math.random() * 0.20) : (0.56 + Math.random() * 0.32),
+          baseRot: (Math.random() * 240) - 120,
+          morph: shape === 1 ? (0.28 + Math.random() * 0.32) : (0.04 + Math.random() * 0.16),
+          baseFocus: (Math.random() * 360) - 180,
+          sharpness: 0.78 + Math.random() * 0.19,
+          diffusion: 0.70 + Math.random() * 0.38,
+          drift: 0.34 + Math.random() * 0.36,
+          intensity: 0.88 + Math.random() * 0.22
+        };
+      }
+
+      let fromState = generatePreset(-1);
+      let toState = generatePreset(fromState.shape);
+
+      const HOLD_DURATION = 4.2;   // Seconds holding & breathing before next morph
+      const MORPH_DURATION = 2.8;  // Seconds smoothly morphing shape, position & parameters
+      const CYCLE_DURATION = HOLD_DURATION + MORPH_DURATION;
+
+      let elapsedTime = 0;
+      let lastTick = performance.now();
+      let pointerParallaxX = 0;
+      let pointerParallaxY = 0;
+      let targetParallaxX = 0;
+      let targetParallaxY = 0;
+
+      window.addEventListener('pointermove', (e) => {
+        if (e.pointerType !== 'mouse') return;
+        targetParallaxX = ((e.clientX / Math.max(window.innerWidth, 1)) - 0.5) * 0.055;
+        targetParallaxY = -((e.clientY / Math.max(window.innerHeight, 1)) - 0.5) * 0.045;
+      }, { passive: true });
+
+      function resizeWallpaperCanvas() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        const w = Math.max(1, Math.floor(window.innerWidth * dpr));
+        const h = Math.max(1, Math.floor(window.innerHeight * dpr));
+        if (canvas.width !== w || canvas.height !== h) {
+          canvas.width = w;
+          canvas.height = h;
+          gl.viewport(0, 0, w, h);
+        }
+      }
+
+      function easeInOutCubic(t) {
+        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      }
+
+      function lerp(a, b, t) {
+        return a + (b - a) * t;
+      }
+
+      function lerpAngle(a, b, t) {
+        const diff = ((b - a + 540) % 360) - 180;
+        return a + diff * t;
+      }
+
+      // -----------------------------------------------------------
+      // True Pixel-Level Glyph Masking (background-clip: text)
+      // Slices cleanly across individual letters with 12-stop smooth gradation
+      // -----------------------------------------------------------
+      const adaptiveTextNodes = [];
+
+      function collectAdaptiveTextNodes() {
+        adaptiveTextNodes.length = 0;
+        document.querySelectorAll('[data-adaptive-text]').forEach(el => {
+          el.classList.add('adaptive-mask-ready');
+          adaptiveTextNodes.push({
+            el,
+            role: el.getAttribute('data-adaptive-text') || 'title'
+          });
+        });
+      }
+
+      collectAdaptiveTextNodes();
+
+      function updatePixelTextMasks(params) {
+        if (adaptiveTextNodes.length === 0) return;
+
+        const vw = Math.max(window.innerWidth, 1);
+        const vh = Math.max(window.innerHeight, 1);
+        const minDim = Math.min(vw, vh);
+
+        const {
+          offsetX, offsetY, scale, aspect,
+          focusAngle, diffusion, drift,
+          intensity, pal
+        } = params;
+
+        const focusRad = (focusAngle * Math.PI) / 180;
+        const focusDirX = Math.cos(focusRad);
+        const focusDirY = Math.sin(focusRad);
+
+        // Exact screen coordinates of the sharp caustic core and the diffused plume
+        const coreScreenX = 0.5 * vw + offsetX * minDim;
+        const coreScreenY = 0.5 * vh - offsetY * minDim;
+
+        const plumeShiftUV = drift * scale * 0.44;
+        const plumeScreenX = coreScreenX - focusDirX * plumeShiftUV * minDim;
+        const plumeScreenY = coreScreenY + focusDirY * plumeShiftUV * minDim;
+
+        const basePx = scale * minDim;
+        const coreRx = basePx * (1.28 + diffusion * 0.36);
+        const coreRy = coreRx * (0.84 + aspect * 0.16);
+        const plumeRx = basePx * (1.92 + diffusion * 0.68);
+        const plumeRy = plumeRx * (0.86 + aspect * 0.14);
+
+        const coreAlphaScale = Math.max(0.65, Math.min(1.0, intensity / Math.max(pal.intensityMul, 0.1)));
+
+        for (let i = 0; i < adaptiveTextNodes.length; i++) {
+          const item = adaptiveTextNodes[i];
+          const rect = item.el.getBoundingClientRect();
+          if (rect.width <= 0 || rect.height <= 0) continue;
+          if (rect.bottom < -60 || rect.top > vh + 60) continue;
+
+          const stops = pal.gradations[item.role] || pal.gradations.title;
+          const relCoreX = (coreScreenX - rect.left).toFixed(2);
+          const relCoreY = (coreScreenY - rect.top).toFixed(2);
+          const relPlumeX = (plumeScreenX - rect.left).toFixed(2);
+          const relPlumeY = (plumeScreenY - rect.top).toFixed(2);
+
+          const a0 = (0.98 * coreAlphaScale).toFixed(3);
+          const a1 = (0.92 * coreAlphaScale).toFixed(3);
+          const a2 = (0.78 * coreAlphaScale).toFixed(3);
+          const a3 = (0.56 * coreAlphaScale).toFixed(3);
+          const a4 = (0.32 * coreAlphaScale).toFixed(3);
+          const a5 = (0.12 * coreAlphaScale).toFixed(3);
+
+          // Two-layer continuous elliptical radial mask:
+          // Top layer: deep core ink fading smoothly across 7 stops to transparent
+          // Bottom layer: diffused plume gradation fading smoothly across 6 stops to unlit text color
+          item.el.style.backgroundImage =
+            `radial-gradient(ellipse ${coreRx.toFixed(1)}px ${coreRy.toFixed(1)}px at ${relCoreX}px ${relCoreY}px, ` +
+              `rgba(${stops[0]}, ${a0}) 0%, ` +
+              `rgba(${stops[0]}, ${a1}) 18%, ` +
+              `rgba(${stops[1]}, ${a2}) 35%, ` +
+              `rgba(${stops[2]}, ${a3}) 52%, ` +
+              `rgba(${stops[3]}, ${a4}) 69%, ` +
+              `rgba(${stops[4]}, ${a5}) 85%, ` +
+              `rgba(${stops[5]}, 0) 100%), ` +
+            `radial-gradient(ellipse ${plumeRx.toFixed(1)}px ${plumeRy.toFixed(1)}px at ${relPlumeX}px ${relPlumeY}px, ` +
+              `rgb(${stops[1]}) 0%, ` +
+              `rgb(${stops[2]}) 24%, ` +
+              `rgb(${stops[3]}) 46%, ` +
+              `rgb(${stops[4]}) 66%, ` +
+              `rgb(${stops[5]}) 84%, ` +
+              `rgb(${stops[6]}) 100%)`;
+        }
+      }
+
+      function renderWallpaper(now) {
+        requestAnimationFrame(renderWallpaper);
+
+        if (document.hidden) {
+          lastTick = now;
+          return;
+        }
+
+        const dt = Math.min(0.05, Math.max(0.001, (now - lastTick) / 1000));
+        lastTick = now;
+
+        const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        elapsedTime += dt * (reduceMotion ? 0.25 : 1.0);
+
+        // Advance morph cycle between compositions (shapes, position, parameters only)
+        while (elapsedTime >= CYCLE_DURATION) {
+          elapsedTime -= CYCLE_DURATION;
+          fromState = toState;
+          toState = generatePreset(fromState.shape);
+        }
+
+        const rawBlend = elapsedTime <= HOLD_DURATION
+          ? 0
+          : Math.min(1, (elapsedTime - HOLD_DURATION) / MORPH_DURATION);
+        const blend = easeInOutCubic(rawBlend);
+
+        // Continuous real-time harmonic drift & breathing
+        const t = now * 0.001 * (reduceMotion ? 0.25 : 1.0);
+        const floatX = Math.sin(t * 0.37) * 0.085 + Math.cos(t * 0.21) * 0.045;
+        const floatY = Math.cos(t * 0.31) * 0.075 + Math.sin(t * 0.19) * 0.040;
+
+        pointerParallaxX += (targetParallaxX - pointerParallaxX) * 0.05;
+        pointerParallaxY += (targetParallaxY - pointerParallaxY) * 0.05;
+
+        const offsetX = lerp(fromState.anchorX, toState.anchorX, blend) + floatX + pointerParallaxX;
+        const offsetY = lerp(fromState.anchorY, toState.anchorY, blend) + floatY + pointerParallaxY;
+        const scale = lerp(fromState.scale, toState.scale, blend) * (1.0 + Math.sin(t * 0.52) * 0.055);
+        const aspect = lerp(fromState.aspect, toState.aspect, blend) + Math.cos(t * 0.43) * 0.03;
+        const rotation = lerpAngle(fromState.baseRot, toState.baseRot, blend) + Math.sin(t * 0.24) * 18.0;
+        const morph = Math.max(0, lerp(fromState.morph, toState.morph, blend) + Math.sin(t * 0.61) * 0.03);
+        const focusAngle = lerpAngle(fromState.baseFocus, toState.baseFocus, blend) + t * 14.0;
+        const sharpness = lerp(fromState.sharpness, toState.sharpness, blend);
+        const diffusion = lerp(fromState.diffusion, toState.diffusion, blend) + Math.sin(t * 0.47) * 0.05;
+        const drift = lerp(fromState.drift, toState.drift, blend) + Math.cos(t * 0.39) * 0.04;
+
+        // Fixed colors matching current site theme & channel
+        const pal = getActiveFixedPalette();
+        const bg = hexToRgbNorm(pal.bg);
+        const outer = hexToRgbNorm(pal.outer);
+        const mid = hexToRgbNorm(pal.mid);
+        const core = hexToRgbNorm(pal.core);
+        const intensity = lerp(fromState.intensity, toState.intensity, blend) * pal.intensityMul;
+
+        gl.useProgram(program);
+        gl.uniform2f(u.u_resolution, canvas.width, canvas.height);
+        gl.uniform1f(u.u_time, t);
+
+        gl.uniform2f(u.u_offset, offsetX, offsetY);
+        gl.uniform1f(u.u_scale, scale);
+        gl.uniform1f(u.u_aspect, aspect);
+        gl.uniform1f(u.u_rotation, (rotation * Math.PI) / 180);
+        gl.uniform1f(u.u_morph, morph);
+        gl.uniform1f(u.u_seed, 0.42);
+
+        gl.uniform1i(u.u_shapeA, fromState.shape);
+        gl.uniform1i(u.u_shapeB, toState.shape);
+        gl.uniform1i(u.u_hollowA, fromState.hollow);
+        gl.uniform1i(u.u_hollowB, toState.hollow);
+        gl.uniform1f(u.u_shapeBlend, blend);
+
+        gl.uniform1f(u.u_focusAngle, (focusAngle * Math.PI) / 180);
+        gl.uniform1f(u.u_sharpness, sharpness);
+        gl.uniform1f(u.u_diffusion, diffusion);
+        gl.uniform1f(u.u_drift, drift);
+
+        gl.uniform3f(u.u_bgColor, bg[0], bg[1], bg[2]);
+        gl.uniform3f(u.u_outerColor, outer[0], outer[1], outer[2]);
+        gl.uniform3f(u.u_midColor, mid[0], mid[1], mid[2]);
+        gl.uniform3f(u.u_coreColor, core[0], core[1], core[2]);
+        gl.uniform1f(u.u_intensity, intensity);
+        gl.uniform1f(u.u_isLight, pal.isLight);
+
+        gl.uniform1f(u.u_grain, 0.032);
+        gl.uniform1f(u.u_vignette, 0.18);
+
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+        updatePixelTextMasks({
+          offsetX,
+          offsetY,
+          scale,
+          aspect,
+          focusAngle,
+          diffusion,
+          drift,
+          intensity,
+          pal
+        });
+      }
+
+      resizeWallpaperCanvas();
+      window.addEventListener('resize', resizeWallpaperCanvas, { passive: true });
+      requestAnimationFrame(renderWallpaper);
     })();
 
     // -------------------------------------------------------------
