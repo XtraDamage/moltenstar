@@ -726,9 +726,9 @@
       overflow: hidden;
       flex-shrink: 0;
       background-color: var(--surface-container);
-      border: 1px solid var(--carousel-card-border);
+      border: none;
       transform: translateZ(0);
-      transition: background-color 0.25s ease, border-color 0.25s ease;
+      transition: background-color 0.25s ease;
     }
 
     .m3-carousel-image {
@@ -1746,7 +1746,7 @@
         </a>
       </div>
 
-      <div id="latestDownloadsNote" class="reveal delay-2 mt-3.5 hidden items-center justify-center gap-1.5 text-xs text-[var(--text-muted)] font-medium">
+      <div id="latestDownloadsNote" class="reveal delay-2 mt-3.5 hidden items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[var(--surface-container-low)]/90 backdrop-blur-md text-xs text-[var(--text)] font-semibold">
         <span class="material-symbols-rounded text-[15px] text-[var(--primary)]">download_done</span>
         <span id="latestDownloadsText"></span>
       </div>
@@ -1769,7 +1769,7 @@
           <span class="material-symbols-rounded text-[20px] text-[var(--primary)]">tune</span>
           <h2 class="font-bold text-base tracking-tight text-[var(--text)]">Настройки клиента</h2>
         </div>
-        <span id="settingsCounterLabel" class="text-xs text-[var(--text-muted)] font-medium"></span>
+        <span id="settingsCounterLabel" class="text-xs text-[var(--text-sub)] font-semibold"></span>
       </div>
 
       <!-- M3 Search Bar -->
