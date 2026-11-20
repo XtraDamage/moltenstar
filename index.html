@@ -1745,6 +1745,11 @@
           <span class="sm:hidden">Канал в Telegram</span>
         </a>
       </div>
+
+      <div id="latestDownloadsNote" class="reveal delay-2 mt-3.5 hidden items-center justify-center gap-1.5 text-xs text-[var(--text-muted)] font-medium">
+        <span class="material-symbols-rounded text-[15px] text-[var(--primary)]">download_done</span>
+        <span id="latestDownloadsText"></span>
+      </div>
     </section>
 
     <!-- Material 3 Multi-browse Carousel (All 21 icons from icons/appicons/) -->
@@ -5256,6 +5261,7 @@
                 buildNum: buildNum,
                 date: apk.updated_at ? new Date(apk.updated_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' }) : '',
                 size: apk.size ? (apk.size / (1024 * 1024)).toFixed(1) + ' МБ' : '',
+                downloads: typeof apk.download_count === 'number' ? apk.download_count : 0,
                 downloadUrl: apk.browser_download_url,
                 releaseUrl: r.html_url,
                 isPre: true
@@ -5265,6 +5271,7 @@
             const apks = (r.assets || []).filter(a => a.name && a.name.endsWith('.apk'));
             apks.sort((a, b) => new Date(b.updated_at || 0) - new Date(a.updated_at || 0));
             const mainApk = apks[0];
+            const relDownloads = apks.reduce((sum, a) => sum + (a.download_count || 0), 0);
             archiveData.beta.push({
               version: r.tag_name,
               name: name,
@@ -5272,6 +5279,7 @@
               commit: (r.target_commitish && r.target_commitish.length === 40) ? r.target_commitish.substring(0, 7) : '',
               date: r.created_at ? new Date(r.created_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' }) : '',
               size: mainApk && mainApk.size ? (mainApk.size / (1024 * 1024)).toFixed(1) + ' МБ' : '',
+              downloads: relDownloads,
               downloadUrl: mainApk ? mainApk.browser_download_url : (r.html_url || ''),
               releaseUrl: r.html_url,
               isPre: true,
@@ -5281,6 +5289,7 @@
             const apks = (r.assets || []).filter(a => a.name && a.name.endsWith('.apk'));
             apks.sort((a, b) => new Date(b.updated_at || 0) - new Date(a.updated_at || 0));
             const mainApk = apks[0];
+            const relDownloads = apks.reduce((sum, a) => sum + (a.download_count || 0), 0);
             archiveData.release.push({
               version: r.tag_name,
               name: name,
@@ -5288,6 +5297,7 @@
               commit: (r.target_commitish && r.target_commitish.length === 40) ? r.target_commitish.substring(0, 7) : '',
               date: r.created_at ? new Date(r.created_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' }) : '',
               size: mainApk && mainApk.size ? (mainApk.size / (1024 * 1024)).toFixed(1) + ' МБ' : '',
+              downloads: relDownloads,
               downloadUrl: mainApk ? mainApk.browser_download_url : (r.html_url || ''),
               releaseUrl: r.html_url,
               isPre: false,
@@ -5429,6 +5439,13 @@
                       <span>${item.size}</span>
                     </span>
                   ` : ''}
+                  ${typeof item.downloads === 'number' ? `
+                    ${(item.date || item.size) ? `<span class="opacity-40">•</span>` : ''}
+                    <span class="flex items-center gap-1" title="Скачиваний на GitHub">
+                      <span class="material-symbols-rounded text-[13px] opacity-70">download</span>
+                      <span>${item.downloads.toLocaleString('ru-RU')}</span>
+                    </span>
+                  ` : ''}
                 </div>
               </div>
             </div>
@@ -5506,9 +5523,10 @@
           if (activeChannel === 'beta' && (!rel.prerelease || tagLower === 'canary')) return;
           if (activeChannel === 'release' && (rel.prerelease || tagLower === 'canary')) return;
 
-          (rel.assets || []).forEach(apk => {
-            if (!apk.name || !apk.name.toLowerCase().endsWith('.apk') || !apk.browser_download_url) return;
+          const relApks = (rel.assets || []).filter(a => a.name && a.name.toLowerCase().endsWith('.apk') && a.browser_download_url);
+          const relDownloads = relApks.reduce((sum, a) => sum + (a.download_count || 0), 0);
 
+          relApks.forEach(apk => {
             const timestamp = new Date(
               apk.updated_at || apk.created_at || rel.published_at || rel.created_at || 0
             ).getTime();
@@ -5528,6 +5546,7 @@
               name: apk.name,
               url: apk.browser_download_url,
               size: apk.size || 0,
+              downloads: tagLower === 'canary' ? (apk.download_count || 0) : relDownloads,
               timestamp,
               buildNum,
               archPriority,
@@ -5593,6 +5612,18 @@
 
         if (versionBadge) versionBadge.textContent = badgeLabel;
         if (apkBtnVersion) apkBtnVersion.textContent = btnLabel;
+
+        const dlNote = document.getElementById('latestDownloadsNote');
+        const dlText = document.getElementById('latestDownloadsText');
+        if (dlNote && dlText && typeof latest.downloads === 'number') {
+          const n = latest.downloads;
+          const mod100 = n % 100;
+          const mod10 = n % 10;
+          const word = (mod100 >= 11 && mod100 <= 14) ? 'раз' : (mod10 >= 2 && mod10 <= 4 ? 'раза' : 'раз');
+          dlText.textContent = `Последний апдейт скачали ${n.toLocaleString('ru-RU')} ${word}`;
+          dlNote.classList.remove('hidden');
+          dlNote.classList.add('inline-flex');
+        }
       } catch (e) {
         // Fallback silently to default link
       }
