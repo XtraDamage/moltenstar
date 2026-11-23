@@ -16,8 +16,12 @@ module.exports = async (req, res) => {
     headers['Authorization'] = `Bearer ${process.env.GITHUB_TOKEN}`;
   }
 
+  const repoParam = (req.query.repo || 'android').toString().toLowerCase().trim();
+  const repoSlug = repoParam === 'desktop' ? 'MoltenSt4r/MoltenGram-Desktop' : 'MoltenSt4r/MoltenGram';
+  const perPage = repoParam === 'desktop' ? 20 : 40;
+
   try {
-    const ghRes = await fetch('https://api.github.com/repos/MoltenSt4r/MoltenGram/releases?per_page=40', { headers });
+    const ghRes = await fetch(`https://api.github.com/repos/${repoSlug}/releases?per_page=${perPage}`, { headers });
     if (!ghRes.ok) {
       res.statusCode = ghRes.status;
       res.setHeader('Content-Type', 'application/json');

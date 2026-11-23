@@ -1656,15 +1656,25 @@
 
   <!-- Real Frosted Glass Top App Bar with Seamless Concave Edge Wrapping -->
   <header class="m3-top-dock">
-    <div class="m3-top-dock-inner max-w-3xl mx-auto flex items-center justify-between">
-      <a href="#" class="relative z-10 flex items-center gap-3 pl-1 group">
+    <div class="m3-top-dock-inner relative max-w-3xl mx-auto flex items-center justify-between gap-2">
+      <a href="#" class="relative z-10 flex items-center gap-2.5 sm:gap-3 pl-1 group shrink-0">
         <img src="assets/icons/ic_launcher_moltengram.png?v=2" 
              alt="MoltenGram Logo" 
              class="monochrome-target-logo w-9 h-9 rounded-[30%] object-cover group-hover:scale-105">
-        <span class="font-bold text-lg tracking-tight">MoltenGram</span>
+        <span class="font-bold text-base sm:text-lg tracking-tight">MoltenGram</span>
       </a>
 
-      <div class="relative z-10 flex items-center gap-2">
+      <button id="headerOsBtn"
+              type="button"
+              onclick="cyclePlatformOverride()"
+              class="relative sm:absolute sm:left-1/2 sm:-translate-x-1/2 z-10 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-[var(--surface-container-high)]/80 hover:bg-[var(--secondary-container)] text-[var(--text)] border border-[var(--glass-border)] text-xs font-semibold transition-all cursor-pointer"
+              title="Определённая платформа (нажмите, чтобы переключить)"
+              aria-label="Текущая платформа">
+        <span id="headerOsIcon" class="w-4 h-4 inline-flex items-center justify-center shrink-0"></span>
+        <span id="headerOsLabel" class="hidden sm:inline">Android</span>
+      </button>
+
+      <div class="relative z-10 flex items-center gap-2 shrink-0">
         <a href="#settings-catalog" id="headerSearchBtn" class="m3-icon-btn" title="Поиск по настройкам клиента" aria-label="Поиск по настройкам">
           <span class="material-symbols-rounded text-[20px]">search</span>
         </a>
@@ -1705,7 +1715,7 @@
         <span class="w-2 h-2 rounded-full bg-[var(--primary)]"></span>
         <span id="versionBadge">v12.10.6</span>
         <span class="opacity-40">•</span>
-        <span>Android 8.0+</span>
+        <span id="osRequirementBadge">Android 8.0+</span>
         <span class="opacity-40">•</span>
         <span>0% трекеров</span>
       </div>
@@ -5088,6 +5098,7 @@
     let archiveLoaded = false;
     let archiveData = { release: [], beta: [], canary: [] };
     let sharedReleasesPromise = null;
+    let sharedDesktopReleasesPromise = null;
 
     function getGithubReleases() {
       if (!sharedReleasesPromise) {
@@ -5107,6 +5118,26 @@
           });
       }
       return sharedReleasesPromise;
+    }
+
+    function getDesktopReleases() {
+      if (!sharedDesktopReleasesPromise) {
+        sharedDesktopReleasesPromise = fetch('/api/releases?repo=desktop')
+          .then(res => {
+            if (!res.ok) throw new Error('API HTTP ' + res.status);
+            return res.json();
+          })
+          .catch(() => fetch('https://api.github.com/repos/MoltenSt4r/MoltenGram-Desktop/releases?per_page=20')
+            .then(res => {
+              if (!res.ok) throw new Error('HTTP ' + res.status);
+              return res.json();
+            }))
+          .catch(err => {
+            sharedDesktopReleasesPromise = null;
+            throw err;
+          });
+      }
+      return sharedDesktopReleasesPromise;
     }
 
     function openArchiveModal() {
@@ -5484,7 +5515,7 @@
     }
 
     // -------------------------------------------------------------
-    // 5. Channel Detection (/ , /beta , /canary) & Auto-fetch Latest APK per Channel
+    // 5. Local OS Detection & Channel-aware Latest Build Resolver
     // -------------------------------------------------------------
     const activeChannel = (() => {
       const host = (window.location.hostname || '').toLowerCase();
@@ -5495,35 +5526,222 @@
     })();
     document.documentElement.setAttribute('data-channel', activeChannel);
 
-    (function applyChannelUiDefaults() {
+    function detectLocalOs() {
+      const uaDataPlat = (navigator.userAgentData && navigator.userAgentData.platform || '').toLowerCase();
+      const ua = (navigator.userAgent || '').toLowerCase();
+      const plat = (navigator.platform || '').toLowerCase();
+      const combined = `${uaDataPlat} ${ua} ${plat}`;
+      if (combined.includes('android')) return 'android';
+      if (combined.includes('win')) return 'windows';
+      if (combined.includes('mac') || combined.includes('darwin')) return 'macos';
+      if (combined.includes('linux') || combined.includes('x11')) return 'linux';
+      return 'android';
+    }
+
+    function detectMacArch() {
+      try {
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        if (gl) {
+          const dbg = gl.getExtension('WEBGL_debug_renderer_info');
+          const renderer = dbg ? (gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) || '') : '';
+          if (/apple\s*m\d/i.test(renderer) || /apple gpu/i.test(renderer)) return 'arm64';
+        }
+      } catch (e) {}
+      if (navigator.userAgentData && navigator.userAgentData.architecture === 'arm') return 'arm64';
+      return 'arm64';
+    }
+
+    const OS_META = {
+      android: {
+        label: 'Android',
+        req: 'Android 8.0+',
+        btnPrefix: activeChannel === 'beta' ? 'Скачать Beta APK' : (activeChannel === 'canary' ? 'Скачать Canary APK' : 'Скачать APK'),
+        repoUrl: activeChannel === 'beta'
+          ? 'https://github.com/MoltenSt4r/MoltenGram/tree/beta'
+          : (activeChannel === 'canary' ? 'https://github.com/MoltenSt4r/MoltenGram/tree/canary' : 'https://github.com/MoltenSt4r/MoltenGram'),
+        svg: '<svg viewBox="0 0 24 24" class="w-4 h-4 fill-current" aria-hidden="true"><path d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.26-.85-.29-.15-.65-.06-.83.22l-1.88 3.24a11.463 11.463 0 0 0-8.94 0L5.65 5.67c-.19-.28-.54-.37-.83-.22-.3.16-.42.54-.26.85l1.84 3.18C4.8 10.85 3.5 12.62 3.5 14.5h17c0-1.88-1.3-3.65-2.9-5.02zM9 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5zm6 0a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5z"/></svg>'
+      },
+      windows: {
+        label: 'Windows',
+        req: 'Windows 10/11 x64',
+        btnPrefix: 'Скачать для Windows',
+        repoUrl: 'https://github.com/MoltenSt4r/MoltenGram-Desktop',
+        svg: '<svg viewBox="0 0 24 24" class="w-4 h-4 fill-current" aria-hidden="true"><path d="M3 5.557L10.353 4.5v7.143H3V5.557zm8.248-1.186L21 3v8.643h-9.752V4.371zM3 12.557h7.353v7.07L3 18.571v-6.014zm8.248 0H21V21l-9.752-1.372v-7.071z"/></svg>'
+      },
+      macos: {
+        label: 'macOS',
+        req: 'macOS 12+',
+        btnPrefix: 'Скачать для macOS',
+        repoUrl: 'https://github.com/MoltenSt4r/MoltenGram-Desktop',
+        svg: '<svg viewBox="0 0 24 24" class="w-4 h-4 fill-current" aria-hidden="true"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.33c.64-.78 1.08-1.86.96-2.94-.93.04-2.05.62-2.71 1.4-.58.68-1.1 1.78-.96 2.84 1.04.08 2.07-.52 2.71-1.3z"/></svg>'
+      },
+      linux: {
+        label: 'Linux',
+        req: 'Linux x64',
+        btnPrefix: 'Скачать для Linux',
+        repoUrl: 'https://github.com/MoltenSt4r/MoltenGram-Desktop',
+        svg: '<svg viewBox="0 0 24 24" class="w-4 h-4 fill-current" aria-hidden="true"><path d="M12 2a4.5 4.5 0 0 0-4.5 4.5v1.6c-.95.98-1.5 2.46-1.5 4.15 0 2.05.78 3.9 2 5.05-.65.45-1.1.95-1.1 1.45 0 .7 1.15 1.25 2.55 1.25.95 0 1.78-.25 2.22-.63.11.02.22.03.33.03s.22-.01.33-.03c.44.38 1.27.63 2.22.63 1.4 0 2.55-.55 2.55-1.25 0-.5-.45-1-1.1-1.45 1.22-1.15 2-3 2-5.05 0-1.69-.55-3.17-1.5-4.15V6.5A4.5 4.5 0 0 0 12 2zm-1.6 4.8a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5zm3.2 0a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5zM12 10.6c-.85 0-1.55-.42-1.55-.9 0-.35.7-.6 1.55-.6s1.55.25 1.55.6c0 .48-.7.9-1.55.9z"/></svg>'
+      }
+    };
+
+    const OS_ORDER = ['android', 'windows', 'macos', 'linux'];
+    let currentOs = detectLocalOs();
+
+    function renderHeaderOsBadge(os) {
+      const meta = OS_META[os] || OS_META.android;
+      const iconEl = document.getElementById('headerOsIcon');
+      const labelEl = document.getElementById('headerOsLabel');
+      const btnEl = document.getElementById('headerOsBtn');
+      const reqEl = document.getElementById('osRequirementBadge');
+      if (iconEl) iconEl.innerHTML = meta.svg;
+      if (labelEl) labelEl.textContent = meta.label;
+      if (btnEl) btnEl.title = `Платформа: ${meta.label} (определена локально • нажмите для смены)`;
+      if (reqEl) reqEl.textContent = meta.req;
+    }
+
+    function applyPlatformUiDefaults(os) {
+      const meta = OS_META[os] || OS_META.android;
       const mainBtn = document.getElementById('mainApkBtn');
       const mainLabel = document.getElementById('mainApkBtnLabel');
       const versionBadge = document.getElementById('versionBadge');
-      const ghBranchUrl = activeChannel === 'beta'
-        ? 'https://github.com/MoltenSt4r/MoltenGram/tree/beta'
-        : activeChannel === 'canary'
-          ? 'https://github.com/MoltenSt4r/MoltenGram/tree/canary'
-          : 'https://github.com/MoltenSt4r/MoltenGram';
-      document.querySelectorAll('a[href="https://github.com/MoltenSt4r/MoltenGram"]').forEach((a) => {
-        a.href = ghBranchUrl;
-      });
-      if (activeChannel === 'beta') {
-        document.title = 'MoltenGram Beta • Telegram с Material Design 3';
-        if (mainBtn) mainBtn.href = '/download/beta';
-        if (mainLabel) mainLabel.textContent = 'Скачать Beta APK';
-        if (versionBadge) versionBadge.textContent = 'Beta';
-      } else if (activeChannel === 'canary') {
-        document.title = 'MoltenGram Canary • Telegram с Material Design 3';
-        if (mainBtn) mainBtn.href = '/download/canary';
-        if (mainLabel) mainLabel.textContent = 'Скачать Canary APK';
-        if (versionBadge) versionBadge.textContent = 'Canary';
-      } else {
-        if (mainBtn) mainBtn.href = '/download';
-        if (mainLabel) mainLabel.textContent = 'Скачать APK';
-      }
-    })();
+      const apkBtnVersion = document.getElementById('apkBtnVersion');
 
-    (async function resolveLatestApkFile() {
+      renderHeaderOsBadge(os);
+
+      document.querySelectorAll('a[href^="https://github.com/MoltenSt4r/MoltenGram"]').forEach((a) => {
+        if (a.closest('header')) a.href = meta.repoUrl;
+      });
+
+      if (os === 'android') {
+        if (activeChannel === 'beta') {
+          document.title = 'MoltenGram Beta • Telegram с Material Design 3';
+          if (mainBtn) mainBtn.href = '/download/beta';
+          if (versionBadge) versionBadge.textContent = 'Beta';
+        } else if (activeChannel === 'canary') {
+          document.title = 'MoltenGram Canary • Telegram с Material Design 3';
+          if (mainBtn) mainBtn.href = '/download/canary';
+          if (versionBadge) versionBadge.textContent = 'Canary';
+        } else {
+          document.title = 'MoltenGram • Telegram с Material Design 3';
+          if (mainBtn) mainBtn.href = '/download';
+        }
+        if (mainLabel) mainLabel.textContent = meta.btnPrefix;
+      } else {
+        document.title = `MoltenGram Desktop (${meta.label}) • Telegram в стиле Material 3`;
+        if (mainBtn) mainBtn.href = 'https://github.com/MoltenSt4r/MoltenGram-Desktop/releases';
+        if (mainLabel) mainLabel.textContent = meta.btnPrefix;
+        if (versionBadge) versionBadge.textContent = 'Desktop';
+        if (apkBtnVersion) apkBtnVersion.textContent = meta.label;
+      }
+    }
+
+    function cyclePlatformOverride() {
+      const idx = OS_ORDER.indexOf(currentOs);
+      currentOs = OS_ORDER[(idx + 1) % OS_ORDER.length];
+      applyPlatformUiDefaults(currentOs);
+      resolveLatestBuildForOs(currentOs);
+    }
+
+    async function resolveLatestBuildForOs(os) {
+      const mainBtn = document.getElementById('mainApkBtn');
+      const versionBadge = document.getElementById('versionBadge');
+      const apkBtnVersion = document.getElementById('apkBtnVersion');
+      const dlNote = document.getElementById('latestDownloadsNote');
+      const dlText = document.getElementById('latestDownloadsText');
+
+      if (os !== 'android') {
+        try {
+          const releases = await getDesktopReleases();
+          const macArch = os === 'macos' ? detectMacArch() : 'x64';
+          const matches = [];
+
+          (Array.isArray(releases) ? releases : []).forEach(rel => {
+            const tag = (rel.tag_name || '').trim();
+            const relAssets = Array.isArray(rel.assets) ? rel.assets : [];
+            const relDownloads = relAssets.reduce((sum, a) => sum + (a.download_count || 0), 0);
+
+            relAssets.forEach(asset => {
+              const name = (asset.name || '').toLowerCase();
+              if (!asset.browser_download_url) return;
+              let priority = 0;
+
+              if (os === 'windows') {
+                if (name.includes('setup') && name.endsWith('.exe')) priority = 3;
+                else if (name.endsWith('.exe')) priority = 2;
+                else if (name.includes('windows') || name.includes('portable')) priority = 1;
+              } else if (os === 'macos') {
+                if (name.includes('macos') || name.endsWith('.dmg')) {
+                  if (name.includes(macArch) && name.endsWith('.dmg')) priority = 4;
+                  else if (name.endsWith('.dmg')) priority = 3;
+                  else if (name.includes(macArch) && name.endsWith('.zip')) priority = 2;
+                  else if (name.endsWith('.zip')) priority = 1;
+                }
+              } else if (os === 'linux') {
+                if (name.includes('linux') && name.endsWith('.tar.gz')) priority = 3;
+                else if (name.endsWith('.appimage')) priority = 2;
+                else if (name.includes('linux')) priority = 1;
+              }
+
+              if (priority > 0) {
+                matches.push({
+                  name: asset.name,
+                  url: asset.browser_download_url,
+                  size: asset.size || 0,
+                  downloads: relDownloads,
+                  priority,
+                  timestamp: new Date(asset.updated_at || asset.created_at || rel.published_at || rel.created_at || 0).getTime(),
+                  tag
+                });
+              }
+            });
+          });
+
+          if (matches.length === 0) {
+            if (mainBtn) {
+              mainBtn.href = 'https://github.com/MoltenSt4r/MoltenGram-Desktop/releases';
+              mainBtn.title = 'Открыть релизы MoltenGram Desktop на GitHub';
+            }
+            if (versionBadge) versionBadge.textContent = 'Desktop';
+            if (apkBtnVersion) apkBtnVersion.textContent = 'Скоро релиз';
+            if (dlNote) {
+              dlNote.classList.add('hidden');
+              dlNote.classList.remove('inline-flex');
+            }
+            return;
+          }
+
+          matches.sort((a, b) => {
+            const timeDiff = b.timestamp - a.timestamp;
+            if (Math.abs(timeDiff) > 60000) return timeDiff;
+            return b.priority - a.priority;
+          });
+
+          const best = matches[0];
+          if (mainBtn) {
+            mainBtn.href = best.url;
+            const sizeStr = best.size ? ` (${(best.size / (1024 * 1024)).toFixed(1)} МБ)` : '';
+            mainBtn.title = `Скачать для ${OS_META[os].label}: ${best.name}${sizeStr}`;
+          }
+          const cleanTag = (best.tag || 'Desktop').replace(/^v/i, '');
+          if (versionBadge) versionBadge.textContent = best.tag || 'Desktop';
+          if (apkBtnVersion) apkBtnVersion.textContent = cleanTag;
+
+          if (dlNote && dlText && typeof best.downloads === 'number') {
+            const n = best.downloads;
+            const mod100 = n % 100;
+            const mod10 = n % 10;
+            const word = (mod100 >= 11 && mod100 <= 14) ? 'раз' : (mod10 >= 2 && mod10 <= 4 ? 'раза' : 'раз');
+            dlText.textContent = `Последний апдейт скачали ${n.toLocaleString('ru-RU')} ${word}`;
+            dlNote.classList.remove('hidden');
+            dlNote.classList.add('inline-flex');
+          }
+        } catch (err) {
+          console.warn('Could not auto-fetch latest Desktop build:', err);
+        }
+        return;
+      }
+
       try {
         const releases = await getGithubReleases();
         const allApkFiles = [];
@@ -5580,9 +5798,6 @@
         });
 
         const latest = allApkFiles[0];
-        const mainBtn = document.getElementById('mainApkBtn');
-        const versionBadge = document.getElementById('versionBadge');
-        const apkBtnVersion = document.getElementById('apkBtnVersion');
 
         if (mainBtn) {
           mainBtn.href = latest.url;
@@ -5624,8 +5839,6 @@
         if (versionBadge) versionBadge.textContent = badgeLabel;
         if (apkBtnVersion) apkBtnVersion.textContent = btnLabel;
 
-        const dlNote = document.getElementById('latestDownloadsNote');
-        const dlText = document.getElementById('latestDownloadsText');
         if (dlNote && dlText && typeof latest.downloads === 'number') {
           const n = latest.downloads;
           const mod100 = n % 100;
@@ -5638,7 +5851,10 @@
       } catch (e) {
         // Fallback silently to default link
       }
-    })();
+    }
+
+    applyPlatformUiDefaults(currentOs);
+    resolveLatestBuildForOs(currentOs);
 
     // -------------------------------------------------------------
     // 6. Deep-link & Hash Routing (#canary, #beta, #archive)
