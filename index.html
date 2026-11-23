@@ -1723,7 +1723,7 @@
       <!-- Expressive Action Bar -->
       <div class="reveal delay-2 flex flex-col sm:flex-row items-center justify-center gap-3">
         <a id="mainApkBtn"
-           href="/download/release" 
+           href="/download" 
            class="m3-btn m3-btn-filled w-full sm:w-auto ripple-btn">
           <span class="material-symbols-rounded text-[24px]">download</span>
           <span id="mainApkBtnLabel">Скачать APK</span>
@@ -5506,7 +5506,7 @@
         if (mainLabel) mainLabel.textContent = 'Скачать Canary APK';
         if (versionBadge) versionBadge.textContent = 'Canary';
       } else {
-        if (mainBtn) mainBtn.href = '/download/release';
+        if (mainBtn) mainBtn.href = '/download';
         if (mainLabel) mainLabel.textContent = 'Скачать APK';
       }
     })();
@@ -5521,7 +5521,6 @@
           const tagLower = tag.toLowerCase();
           if (activeChannel === 'canary' && tagLower !== 'canary') return;
           if (activeChannel === 'beta' && (!rel.prerelease || tagLower === 'canary')) return;
-          if (activeChannel === 'release' && (rel.prerelease || tagLower === 'canary')) return;
 
           const relApks = (rel.assets || []).filter(a => a.name && a.name.toLowerCase().endsWith('.apk') && a.browser_download_url);
           const relDownloads = relApks.reduce((sum, a) => sum + (a.download_count || 0), 0);

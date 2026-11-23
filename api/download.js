@@ -8,8 +8,8 @@ module.exports = async (req, res) => {
     return res.end();
   }
 
-  // Parse channel from query (?channel=canary | beta | release)
-  let channel = (req.query.channel || 'release').toString().toLowerCase().trim();
+  // Parse channel from query (?channel=latest | canary | beta | release)
+  let channel = (req.query.channel || 'latest').toString().toLowerCase().trim();
   if (channel === 'stable') channel = 'release';
   if (channel === 'nightly') channel = 'canary';
 
@@ -39,12 +39,29 @@ module.exports = async (req, res) => {
     let targetApk = null;
     let targetRel = null;
 
-    if (channel === 'canary') {
+    const pickLatestApk = (rel) => {
+      if (!rel || !Array.isArray(rel.assets)) return null;
+      const apks = rel.assets.filter(a => a.name && a.name.toLowerCase().endsWith('.apk') && a.browser_download_url);
+      apks.sort((a, b) => new Date(b.updated_at || b.created_at || 0) - new Date(a.updated_at || a.created_at || 0));
+      return apks[0] || null;
+    };
+
+    if (channel === 'latest') {
+      let bestTs = -1;
+      for (const rel of releases) {
+        const apk = pickLatestApk(rel);
+        if (!apk) continue;
+        const ts = new Date(apk.updated_at || apk.created_at || rel.published_at || rel.created_at || 0).getTime();
+        if (ts > bestTs) {
+          bestTs = ts;
+          targetApk = apk;
+          targetRel = rel;
+        }
+      }
+    } else if (channel === 'canary') {
       const canaryRel = releases.find(r => (r.tag_name || '').toLowerCase() === 'canary');
-      if (canaryRel && Array.isArray(canaryRel.assets)) {
-        const apks = canaryRel.assets.filter(a => a.name && a.name.endsWith('.apk'));
-        apks.sort((a, b) => new Date(b.updated_at || 0) - new Date(a.updated_at || 0));
-        targetApk = apks[0];
+      if (canaryRel) {
+        targetApk = pickLatestApk(canaryRel);
         targetRel = canaryRel;
       }
     } else if (channel === 'beta') {
@@ -52,8 +69,8 @@ module.exports = async (req, res) => {
         const tag = (r.tag_name || '').toLowerCase();
         return tag !== 'canary' && (tag.includes('beta') || r.prerelease);
       });
-      if (betaRel && Array.isArray(betaRel.assets)) {
-        targetApk = betaRel.assets.find(a => a.name && a.name.endsWith('.apk'));
+      if (betaRel) {
+        targetApk = pickLatestApk(betaRel);
         targetRel = betaRel;
       }
     } else {
@@ -62,8 +79,8 @@ module.exports = async (req, res) => {
         const tag = (r.tag_name || '').toLowerCase();
         return tag !== 'canary' && !tag.includes('beta') && !r.prerelease;
       });
-      if (stableRel && Array.isArray(stableRel.assets)) {
-        targetApk = stableRel.assets.find(a => a.name && a.name.endsWith('.apk'));
+      if (stableRel) {
+        targetApk = pickLatestApk(stableRel);
         targetRel = stableRel;
       }
     }
