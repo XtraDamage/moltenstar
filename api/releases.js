@@ -29,7 +29,8 @@ module.exports = async (req, res) => {
     }
 
     const releases = await ghRes.json();
-    res.setHeader('Cache-Control', 'public, s-maxage=120, stale-while-revalidate=600');
+    const maxAge = Array.isArray(releases) && releases.length === 0 ? 10 : 45;
+    res.setHeader('Cache-Control', `public, s-maxage=${maxAge}, stale-while-revalidate=120`);
     res.setHeader('Content-Type', 'application/json');
     res.statusCode = 200;
     return res.end(JSON.stringify(releases));
