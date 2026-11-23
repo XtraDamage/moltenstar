@@ -5262,6 +5262,7 @@
                 date: apk.updated_at ? new Date(apk.updated_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' }) : '',
                 size: apk.size ? (apk.size / (1024 * 1024)).toFixed(1) + ' МБ' : '',
                 downloads: typeof apk.download_count === 'number' ? apk.download_count : 0,
+                timestamp: new Date(apk.updated_at || apk.created_at || 0).getTime(),
                 downloadUrl: apk.browser_download_url,
                 releaseUrl: r.html_url,
                 isPre: true
@@ -5280,6 +5281,7 @@
               date: r.created_at ? new Date(r.created_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' }) : '',
               size: mainApk && mainApk.size ? (mainApk.size / (1024 * 1024)).toFixed(1) + ' МБ' : '',
               downloads: relDownloads,
+              timestamp: new Date((mainApk && (mainApk.updated_at || mainApk.created_at)) || r.published_at || r.created_at || 0).getTime(),
               downloadUrl: mainApk ? mainApk.browser_download_url : (r.html_url || ''),
               releaseUrl: r.html_url,
               isPre: true,
@@ -5298,6 +5300,7 @@
               date: r.created_at ? new Date(r.created_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' }) : '',
               size: mainApk && mainApk.size ? (mainApk.size / (1024 * 1024)).toFixed(1) + ' МБ' : '',
               downloads: relDownloads,
+              timestamp: new Date((mainApk && (mainApk.updated_at || mainApk.created_at)) || r.published_at || r.created_at || 0).getTime(),
               downloadUrl: mainApk ? mainApk.browser_download_url : (r.html_url || ''),
               releaseUrl: r.html_url,
               isPre: false,
@@ -5309,6 +5312,10 @@
         document.getElementById('releaseCount').textContent = `(${archiveData.release.length})`;
         document.getElementById('betaCount').textContent = `(${archiveData.beta.length})`;
         document.getElementById('canaryCount').textContent = `(${archiveData.canary.length})`;
+
+        const allArchiveItems = [...archiveData.release, ...archiveData.beta, ...archiveData.canary];
+        window.latestArchiveItem = allArchiveItems.reduce((best, cur) =>
+          (!best || (cur.timestamp || 0) > (best.timestamp || 0)) ? cur : best, null);
 
         archiveLoaded = true;
         renderArchiveTab();
@@ -5380,7 +5387,7 @@
       }
 
       listEl.innerHTML = items.map((item, idx) => {
-        const isLatest = idx === 0 && !q;
+        const isLatest = !q && item === window.latestArchiveItem;
         const isCanary = archiveCurrentTab === 'canary';
         const isBeta = archiveCurrentTab === 'beta';
         
