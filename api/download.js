@@ -8,10 +8,62 @@ module.exports = async (req, res) => {
     return res.end();
   }
 
-  // Parse channel from query (?channel=latest | canary | beta | release)
+  // Parse OS or channel from query (?os=windows|macos|linux|android or ?channel=latest|canary|beta|release)
+  const osParam = (req.query.os || '').toString().toLowerCase().trim();
   let channel = (req.query.channel || 'latest').toString().toLowerCase().trim();
   if (channel === 'stable') channel = 'release';
   if (channel === 'nightly') channel = 'canary';
+
+  if (osParam === 'windows' || osParam === 'macos' || osParam === 'linux') {
+    try {
+      const ghRes = await fetch('https://api.github.com/repos/MoltenSt4r/MoltenGram-Desktop/releases?per_page=10', {
+        headers: {
+          'User-Agent': 'MoltenStar-Site-Download-Resolver/1.0',
+          'Accept': 'application/vnd.github.v3+json'
+        }
+      });
+      if (!ghRes.ok) throw new Error(`GitHub API HTTP ${ghRes.status}`);
+      const desktopReleases = await ghRes.json();
+      let best = null;
+      let bestScore = -1;
+      for (const rel of desktopReleases) {
+        for (const a of (rel.assets || [])) {
+          const n = (a.name || '').toLowerCase();
+          if (!a.browser_download_url) continue;
+          let prio = 0;
+          if (osParam === 'windows') {
+            if (n.includes('setup') && n.endsWith('.exe')) prio = 3;
+            else if (n.endsWith('.exe')) prio = 2;
+            else if (n.includes('windows') || n.includes('portable')) prio = 1;
+          } else if (osParam === 'macos') {
+            if (n.includes('arm64') && n.endsWith('.dmg')) prio = 4;
+            else if (n.endsWith('.dmg')) prio = 3;
+            else if (n.includes('macos') && n.endsWith('.zip')) prio = 2;
+          } else if (osParam === 'linux') {
+            if (n.includes('linux') && n.endsWith('.tar.gz')) prio = 3;
+            else if (n.endsWith('.appimage')) prio = 2;
+          }
+          if (prio > 0) {
+            const ts = new Date(a.updated_at || a.created_at || rel.published_at || 0).getTime();
+            const score = ts + prio;
+            if (score > bestScore) {
+              bestScore = score;
+              best = a;
+            }
+          }
+        }
+      }
+      const targetUrl = best ? best.browser_download_url : 'https://github.com/MoltenSt4r/MoltenGram-Desktop/releases';
+      res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
+      res.statusCode = 302;
+      res.setHeader('Location', targetUrl);
+      return res.end();
+    } catch (e) {
+      res.statusCode = 302;
+      res.setHeader('Location', 'https://github.com/MoltenSt4r/MoltenGram-Desktop/releases');
+      return res.end();
+    }
+  }
 
   const acceptsJson = req.query.json === 'true' || req.query.json === '1' || 
     (req.headers['accept'] && req.headers['accept'].includes('application/json'));

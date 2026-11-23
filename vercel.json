@@ -3,6 +3,10 @@
   "outputDirectory": ".",
   "framework": null,
   "rewrites": [
+    { "source": "/download/android", "destination": "/api/download?channel=latest" },
+    { "source": "/download/windows", "destination": "/api/download?os=windows" },
+    { "source": "/download/macos", "destination": "/api/download?os=macos" },
+    { "source": "/download/linux", "destination": "/api/download?os=linux" },
     { "source": "/download/canary", "destination": "/api/download?channel=canary" },
     { "source": "/download/beta", "destination": "/api/download?channel=beta" },
     { "source": "/download/release", "destination": "/api/download?channel=release" },

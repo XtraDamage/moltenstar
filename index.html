@@ -5526,6 +5526,14 @@
     document.documentElement.setAttribute('data-channel', activeChannel);
 
     function detectLocalOs() {
+      const pathOs = (window.location.pathname || '').replace(/^\/+|\/+$/g, '').toLowerCase();
+      if (pathOs === 'android' || pathOs === 'windows' || pathOs === 'macos' || pathOs === 'linux') {
+        return pathOs;
+      }
+      const qOs = (new URLSearchParams(window.location.search).get('os') || '').toLowerCase();
+      if (qOs === 'android' || qOs === 'windows' || qOs === 'macos' || qOs === 'linux') {
+        return qOs;
+      }
       const uaDataPlat = (navigator.userAgentData && navigator.userAgentData.platform || '').toLowerCase();
       const ua = (navigator.userAgent || '').toLowerCase();
       const plat = (navigator.platform || '').toLowerCase();
@@ -5643,6 +5651,10 @@
     function cyclePlatformOverride() {
       const idx = OS_ORDER.indexOf(currentOs);
       currentOs = OS_ORDER[(idx + 1) % OS_ORDER.length];
+      try {
+        const nextPath = '/' + currentOs + (window.location.search || '') + (window.location.hash || '');
+        window.history.replaceState(null, '', nextPath);
+      } catch (e) {}
       applyPlatformUiDefaults(currentOs);
       resolveLatestBuildForOs(currentOs);
     }
