@@ -1,0 +1,29 @@
+# MoltenGram (moltenstar.space)
+
+> MoltenGram — независимый кастомный клиент Telegram с открытым исходным кодом, нулевой телеметрией и трекерами, для Android и Desktop (Windows, macOS, Linux).
+
+## Основные ссылки
+- Официальный сайт: https://moltenstar.space
+- Версия для Android: https://moltenstar.space/android
+- Версия для Windows: https://moltenstar.space/windows
+- Версия для macOS: https://moltenstar.space/macos
+- Версия для Linux: https://moltenstar.space/linux
+- Бета-канал: https://beta.moltenstar.space
+- Canary-канал: https://canary.moltenstar.space
+- Telegram-канал: https://t.me/MoltenGram
+- Бот поддержки: https://t.me/MoltenGramBot
+- Исходный код (Android): https://github.com/MoltenSt4r/MoltenGram
+- Исходный код (Desktop): https://github.com/MoltenSt4r/MoltenGram-Desktop
+- Подробная документация для ИИ: https://moltenstar.space/llms-full.txt
+
+## Ключевые факты (Android)
+- Базируется на открытых наработках Telegram-комьюнити (DrKLO/Telegram, exteraGram, NagramX, AyuGram) с собственными модулями и визуальной полировкой.
+- Liquid Glass: реальный рефракционный шейдер преломления и размытия света с гибкой настройкой толщины, дисперсии, бликов и прозрачности для поддерживаемых элементов (шапки, меню, вкладки, диалоги, шторки, FAB, пузыри чатов и опционально мини-плеер).
+- Material You (Monet) и Material 3 Expressive: динамические палитры из обоев, плавающая Expressive-панель навигации с кнопкой действия рядом, настройка форм аватаров/FAB/мини-плеера, 3D-скролл чата, заголовки Ndot.
+- Приватность и сеть: встроенный Tor (`tor-android`) с мостами (`obfs4`, `snowflake`, `webtunnel`), режим призрака и история удалённых/изменённых сообщений (AyuMoments), Device Spoof.
+- Встроенные инструменты: Voice Changer в реальном времени (во время записи голосовых, кружков и в аудио), офлайн-расшифровка речи Vosk (локально на устройстве без Telegram Premium), плеер и мини-плеер с SongRec и текстами песен, подключаемый OpenAI-совместимый AI, лента каналов (Feed).
+- Расширяемость: магазин плагинов, облачный бэкап настроек, Shizuku, Nothing Glyph, OTA-обновления и диплинки `tg://moltengram/...`.
+
+## Ключевые факты (Desktop)
+- Кросс-платформенный клиент для Windows x64 (`setup-x64.exe`, `portable-x64.zip`), macOS (`arm64` Apple Silicon и `x64` Intel `.dmg`/`.zip`) и Linux x64 (`.tar.gz`).
+- Построен на базе `exDesktop` (C++20 / Qt 6) с переносом ключевых инструментов MoltenGram: Now Playing, SongRec (Shazam/AudD), Voice Changer & Pitch Shifter, QR-карточки, функции AyuGram и поддержка плагинов.
