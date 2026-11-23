@@ -8,9 +8,9 @@ module.exports = async (req, res) => {
     return res.end();
   }
 
-  // Parse OS or channel from query (?os=windows|macos|linux|android or ?channel=latest|canary|beta|release)
+  // Parse OS or channel from query (?os=windows|macos|linux|android or ?channel=canary|beta|release)
   const osParam = (req.query.os || '').toString().toLowerCase().trim();
-  let channel = (req.query.channel || 'latest').toString().toLowerCase().trim();
+  let channel = (req.query.channel || 'release').toString().toLowerCase().trim();
   if (channel === 'stable') channel = 'release';
   if (channel === 'nightly') channel = 'canary';
 

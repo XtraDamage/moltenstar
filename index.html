@@ -5674,6 +5674,10 @@
 
           (Array.isArray(releases) ? releases : []).forEach(rel => {
             const tag = (rel.tag_name || '').trim();
+            const tagLower = tag.toLowerCase();
+            if (activeChannel === 'canary' && tagLower !== 'canary') return;
+            if (activeChannel === 'beta' && (!rel.prerelease || tagLower === 'canary')) return;
+            if (activeChannel === 'release' && (rel.prerelease || tagLower === 'canary')) return;
             const relAssets = Array.isArray(rel.assets) ? rel.assets : [];
             const relDownloads = relAssets.reduce((sum, a) => sum + (a.download_count || 0), 0);
 
@@ -5767,6 +5771,7 @@
           const tagLower = tag.toLowerCase();
           if (activeChannel === 'canary' && tagLower !== 'canary') return;
           if (activeChannel === 'beta' && (!rel.prerelease || tagLower === 'canary')) return;
+          if (activeChannel === 'release' && (rel.prerelease || tagLower === 'canary')) return;
 
           const relApks = (rel.assets || []).filter(a => a.name && a.name.toLowerCase().endsWith('.apk') && a.browser_download_url);
           const relDownloads = relApks.reduce((sum, a) => sum + (a.download_count || 0), 0);
