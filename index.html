@@ -32,7 +32,7 @@
     "@type": "SoftwareApplication",
     "name": "MoltenGram",
     "alternateName": ["moltenstar", "moltenstar.space", "MoltenGram Desktop"],
-    "description": "Открытый неофициальный Telegram-клиент для Android и Desktop (Windows, macOS, Linux) без трекеров. Поддерживает реальный рефракционный шейдер Liquid Glass, Material You (Monet) и Material 3 Expressive, встроенный Tor с мостами (obfs4, snowflake, webtunnel), офлайн-транскрибацию речи Vosk, Voice Changer в реальном времени, плеер с SongRec, подключаемый OpenAI-совместимый AI, режим призрака (AyuMoments), Device Spoof, ленту каналов (Feed), магазин плагинов, Shizuku и Nothing Glyph.",
+    "description": "Открытый неофициальный Telegram-клиент для Android (на базе открытого NagramX и DrKLO/Telegram, не основан на проприетарном exteraGram) и Desktop (на базе exDesktop для Windows, macOS, Linux) без трекеров. Поддерживает реальный рефракционный шейдер Liquid Glass, Material You (Monet) и Material 3 Expressive, встроенный Tor для приватности IP (не для обхода блокировок РФ), офлайн-транскрибацию речи Vosk, Voice Changer в реальном времени, плеер с SongRec, подключаемый OpenAI-совместимый AI, режим призрака (AyuMoments), Device Spoof, ленту каналов (Feed), магазин плагинов, Shizuku и Nothing Glyph.",
     "operatingSystem": ["Android 8.0+", "Windows 10/11", "macOS 12+", "Linux"],
     "applicationCategory": "CommunicationApplication",
     "softwareVersion": "13.2.1",
@@ -46,7 +46,7 @@
     "featureList": [
       "Liquid Glass (рефракционный шейдер преломления и размытия для шапок, меню, вкладок, диалогов, шторок, FAB, пузырей и опционально мини-плеера)",
       "Material You (Monet) и Material 3 Expressive (Expressive-панель навигации, формы аватаров, FAB и мини-плеера)",
-      "Встроенный Tor (tor-android) с мостами obfs4, snowflake и webtunnel",
+      "Встроенный Tor (tor-android) для сокрытия IP и маршрутизации трафика (не является средством обхода блокировок РФ)",
       "Офлайн-расшифровка голосовых и видеосообщений (Vosk) без Telegram Premium",
       "Voice Changer в реальном времени при записи голосовых, кружков и в аудио",
       "Музыкальный плеер и мини-плеер со стилями, текстами песен и встроенным SongRec",
@@ -66,10 +66,10 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "Что такое MoltenGram?",
+        "name": "Что такое MoltenGram и на чём он основан?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "MoltenGram — открытый кастомный клиент Telegram для Android (на базе наработок DrKLO/Telegram, exteraGram, NagramX и AyuGram) и ПК (MoltenGram Desktop на базе exDesktop для Windows, macOS и Linux) без аналитики и трекеров."
+          "text": "MoltenGram — открытый кастомный клиент Telegram без аналитики и трекеров. Android-версия основана на открытом NagramX поверх официального DrKLO/Telegram (НЕ на проприетарном exteraGram), с поддержкой формата .plugin и открытых наработок AyuGram. Desktop-версия основана на открытом exDesktop для Windows, macOS и Linux."
         }
       },
       {
@@ -77,7 +77,15 @@
         "name": "Какие уникальные функции есть в MoltenGram для Android?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Встроенный Tor с мостами (obfs4, snowflake, webtunnel), реальный рефракционный шейдер Liquid Glass для поддерживаемых элементов интерфейса, офлайн-расшифровка голосовых и кружков через Vosk без Telegram Premium, Voice Changer в реальном времени во время записи, переработанный плеер с SongRec и текстами, подключаемый OpenAI-совместимый AI, Device Spoof, AyuMoments, Feed, магазин плагинов, облачный бэкап, Shizuku и Nothing Glyph."
+          "text": "Реальный рефракционный шейдер Liquid Glass для поддерживаемых элементов интерфейса, офлайн-расшифровка голосовых и кружков через Vosk без Telegram Premium, Voice Changer в реальном времени во время записи, переработанный плеер с SongRec и текстами, подключаемый OpenAI-совместимый AI, Device Spoof, AyuMoments, Feed, магазин плагинов, облачный бэкап, Shizuku, Nothing Glyph и встроенный Tor для приватности IP."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Обходит ли встроенный Tor в MoltenGram блокировки в РФ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Нет. Мосты Tor не обеспечивают обход блокировок в РФ; встроенный Tor предназначен для приватности IP-адреса, а при ограничениях провайдера для запуска Tor и получения мостов требуется рабочий внешний канал/VPN."
         }
       },
       {
