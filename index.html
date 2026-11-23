@@ -5091,11 +5091,16 @@
 
     function getGithubReleases() {
       if (!sharedReleasesPromise) {
-        sharedReleasesPromise = fetch('https://api.github.com/repos/MoltenSt4r/MoltenGram/releases?per_page=40')
+        sharedReleasesPromise = fetch('/api/releases')
           .then(res => {
-            if (!res.ok) throw new Error('HTTP ' + res.status);
+            if (!res.ok) throw new Error('API HTTP ' + res.status);
             return res.json();
           })
+          .catch(() => fetch('https://api.github.com/repos/MoltenSt4r/MoltenGram/releases?per_page=40')
+            .then(res => {
+              if (!res.ok) throw new Error('HTTP ' + res.status);
+              return res.json();
+            }))
           .catch(err => {
             sharedReleasesPromise = null;
             throw err;
